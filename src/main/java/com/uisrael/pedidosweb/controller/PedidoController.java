@@ -11,4 +11,5 @@ public class PedidoController {
 	public String leerpagina() {
 		return "/pedidos/listarpedidos";//ruta fisica de la paguina 
 	}
+	//erik
 }
