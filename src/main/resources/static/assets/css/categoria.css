@@ -1,0 +1,35 @@
+@charset "UTF-8";
+.categoria-icono {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #eef2ff;
+    color: #365cf5;
+    font-size: 20px;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+.table thead th {
+    font-size: 13px;
+    font-weight: 700;
+    color: #5d657b;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.badge {
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}

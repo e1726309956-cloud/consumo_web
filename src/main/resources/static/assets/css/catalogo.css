@@ -1,0 +1,305 @@
+:root {
+    --dulce-rosa: #f83f7c;
+    --dulce-rosa-oscuro: #e72e68;
+    --dulce-rosa-claro: #fff0f5;
+    --dulce-borde: #ffd2e0;
+    --dulce-texto: #242431;
+    --dulce-gris: #777783;
+}
+
+.catalogo-dulceflor {
+    min-height: calc(100vh - 150px);
+    background: #fffafb;
+}
+
+.catalogo-dulceflor .container-fluid {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.catalogo-etiqueta {
+    display: inline-block;
+    margin-bottom: 5px;
+    color: var(--dulce-rosa);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.catalogo-dulceflor .title h2 {
+    margin-bottom: 4px;
+    font-size: 31px;
+    font-weight: 700;
+}
+
+.catalogo-subtitulo {
+    margin: 0;
+    color: var(--dulce-gris);
+    font-size: 15px;
+}
+
+.dulce-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dulce-rosa) !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+.dulce-btn:hover {
+    background: var(--dulce-rosa-oscuro) !important;
+}
+
+.cantidad-carrito {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    margin-left: 8px;
+    padding: 0 6px;
+    border-radius: 20px;
+    background: #fff;
+    color: var(--dulce-rosa);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.catalogo-filtros {
+    padding: 28px !important;
+    border: 1px solid #eee7ea !important;
+    border-radius: 14px !important;
+}
+
+.catalog-label {
+    display: block;
+    margin-bottom: 9px;
+    color: var(--dulce-texto);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.catalog-search-box {
+    width: 100%;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 17px;
+    border: 1px solid #dddde5;
+    border-radius: 9px;
+    background: #fff;
+}
+
+.catalog-search-box i {
+    color: #8e8e99;
+    font-size: 18px;
+}
+
+.catalog-search-box input {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    font-size: 15px;
+}
+
+.catalogo-filtros .select-style-1 select {
+    height: 56px;
+    border: 1px solid #dddde5;
+    border-radius: 9px;
+    background: #fff;
+}
+
+.catalogo-filtros .main-btn {
+    height: 56px;
+}
+
+.categorias-rapidas {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #eeeeee;
+}
+
+.categoria-chip {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 17px;
+    border-radius: 25px;
+    background: var(--dulce-rosa-claro);
+    color: var(--dulce-rosa-oscuro);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.categoria-chip:hover,
+.categoria-chip.active {
+    background: var(--dulce-rosa);
+    color: #fff;
+}
+
+.orden-productos select {
+    min-width: 170px;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #dddde5;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.estado-vacio {
+    padding: 60px 30px !important;
+    text-align: center;
+}
+
+.estado-vacio-icono {
+    margin-bottom: 15px;
+    color: var(--dulce-rosa);
+    font-size: 50px;
+}
+
+.producto-card {
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid #f0e9ec;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(62, 30, 42, 0.06);
+}
+
+.producto-imagen-contenedor {
+    position: relative;
+    height: 260px;
+    overflow: hidden;
+    background: #f7f5f5;
+}
+
+.producto-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.producto-contenido {
+    padding: 18px;
+}
+
+.producto-nombre {
+    margin: 5px 0 8px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.producto-descripcion {
+    min-height: 43px;
+    color: var(--dulce-gris);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.producto-precio {
+    color: var(--dulce-rosa);
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.producto-acciones {
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    gap: 9px;
+    margin-top: 16px;
+}
+
+.btn-ver-detalle {
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--dulce-borde);
+    border-radius: 8px;
+    background: var(--dulce-rosa-claro);
+    color: var(--dulce-texto);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.btn-agregar-carrito {
+    width: 50px;
+    height: 45px;
+    border: none;
+    border-radius: 8px;
+    background: var(--dulce-rosa);
+    color: #fff;
+    font-size: 18px;
+}
+
+.beneficios-dulceflor {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 20px !important;
+    padding: 24px 28px !important;
+    border: 1px solid var(--dulce-borde);
+    border-radius: 14px;
+    background: #fff;
+}
+
+.beneficio-item {
+    display: flex !important;
+    align-items: center;
+    gap: 12px;
+}
+
+.beneficio-item i {
+    flex: 0 0 auto;
+    color: var(--dulce-rosa);
+    font-size: 29px;
+}
+
+.beneficio-item strong {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--dulce-texto);
+    font-size: 13px;
+}
+
+.beneficio-item span {
+    display: block;
+    color: var(--dulce-gris);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+@media (max-width: 1200px) {
+    .beneficios-dulceflor {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .catalogo-dulceflor .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .categorias-rapidas {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .categoria-chip {
+        flex: 0 0 auto;
+    }
+
+    .beneficios-dulceflor {
+        grid-template-columns: 1fr !important;
+    }
+}

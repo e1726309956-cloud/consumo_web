@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="plantilla/plantillaui">
+
+<head>
+<meta charset="UTF-8">
+<title>Categorias</title>
+<link rel="stylesheet" href="../assets/css/categoria.css">
+</head>
+
+<body>
+
+	<div layout:fragment="contenidopaginas">
+
+		<section class="section">
+			<div class="container-fluid">
+
+				<div class="title-wrapper pt-30 mb-4">
+					<div class="row align-items-center">
+
+						<div class="col-md-6">
+							<h2>Nueva categoría</h2>
+
+							<p class="text-muted mb-0">Registra una nueva categoría para
+								organizar los productos.</p>
+						</div>
+
+						<div class="col-md-6 text-md-end mt-3 mt-md-0">
+
+							<a th:href="@{/categoria}" class="btn btn-outline-secondary">
+
+								Volver al listado </a>
+
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row justify-content-center">
+
+					<div class="col-lg-8">
+
+						<div class="card shadow-sm">
+
+							<div class="card-header bg-primary">
+
+								<h4 class="mb-0 text-white text-center">Datos de la
+									categoría</h4>
+
+							</div>
+
+							<div class="card-body p-4">
+
+								<form th:action="@{/categoria/guardar}" th:object="${categoria}"
+									method="post">
+
+									<div class="mb-3">
+
+										<label for="nombre" class="form-label"> Nombre de la
+											categoría </label> <input type="text" class="form-control"
+											id="nombre" th:field="*{nombre}"
+											placeholder="Ejemplo: Arreglos florales" required>
+
+									</div>
+
+									<div class="mb-3">
+
+										<label for="descripcion" class="form-label">
+
+											Descripción </label>
+
+										<textarea class="form-control" id="descripcion"
+											th:field="*{descripcion}" rows="4"
+											placeholder="Describe brevemente la categoría" required></textarea>
+
+									</div>
+
+									<div class="form-check form-switch mb-4">
+
+										<input class="form-check-input" type="checkbox" id="estado"
+											th:field="*{estado}"> <label class="form-check-label"
+											for="estado"> Categoría activa </label>
+
+									</div>
+
+									<div class="d-flex justify-content-end gap-2">
+
+										<a th:href="@{/categoria}" class="btn btn-secondary">
+
+											Cancelar </a>
+
+										<button type="reset" class="btn btn-warning">Limpiar
+										</button>
+
+										<button type="submit" class="btn btn-primary">
+
+											Guardar categoría</button>
+
+									</div>
+
+								</form>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+		</section>
+
+
+	</div>
+
+</body>
+</html>

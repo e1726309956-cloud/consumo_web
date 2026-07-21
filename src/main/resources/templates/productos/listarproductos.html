@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="plantilla/plantillaui">
+
+<head>
+<meta charset="UTF-8">
+<title>Productos</title>
+<link rel="stylesheet" href="../assets/css/producto.css">
+</head>
+
+<body>
+
+	<div layout:fragment="contenidopaginas">
+
+
+		<section class="section">
+			<div class="container-fluid">
+
+				<div class="title-wrapper pt-30 mb-4">
+					<div class="row align-items-center">
+
+						<div class="col-md-6">
+							<h2>Catálogo de productos</h2>
+							<p class="text-muted mb-0">Administra los productos
+								disponibles.</p>
+						</div>
+
+						<div class="col-md-6 text-md-end mt-3 mt-md-0">
+							<a th:href="@{/producto/nuevo}" class="btn btn-primary px-4">
+								<i class="lni lni-plus"></i> Nuevo producto
+							</a>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row g-4">
+
+					<div class="col-xl-4 col-lg-4 col-md-6"
+						th:each="producto : ${listarProductos}">
+
+						<article class="producto-card h-100">
+
+							<div class="producto-imagen-wrapper">
+
+								<img
+									th:src="${producto.imagenUrl != null
+                            and !#strings.isEmpty(producto.imagenUrl)
+                            ? producto.imagenUrl
+                            : '/assets/images/products/sin-imagen.png'}"
+									src="/assets/images/products/sin-imagen.png"
+									class="producto-imagen" alt="Producto"> <span
+									class="producto-badge disponible"
+									th:if="${producto.disponible}"> Disponible </span> <span
+									class="producto-badge no-disponible"
+									th:unless="${producto.disponible}"> No disponible </span>
+
+							</div>
+
+							<div class="producto-body">
+
+								<div class="producto-codigo">
+									Código: <span th:text="${producto.idProducto}"> </span>
+								</div>
+								
+								<div class="producto-categoria">
+									Categoria: <span th:text="${producto.idCategoria}"> </span>
+								</div>
+
+								<h4 class="producto-titulo" th:text="${producto.nombre}"></h4>
+
+								<p class="producto-descripcion"
+									th:text="${producto.descripcion}"></p>
+
+								<div class="producto-info">
+
+									<div>
+										<span class="producto-label">Precio</span>
+
+										<div class="producto-precio">
+											$ <span
+												th:text="${#numbers.formatDecimal(
+                                        producto.precio, 1, 2
+                                    )}"></span>
+										</div>
+									</div>
+
+									<div class="text-end">
+										<span class="producto-label">Stock</span>
+
+										<div class="producto-stock" th:text="${producto.stock}"></div>
+									</div>
+
+								</div>
+
+							</div>
+
+							<div class="producto-footer">
+
+								<a href="#" class="btn btn-outline-primary btn-sm"> <i
+									class="lni lni-pencil"></i> Editar
+								</a> <a href="#" class="btn btn-outline-danger btn-sm"> <i
+									class="lni lni-trash-can"></i> Eliminar
+								</a>
+
+							</div>
+
+						</article>
+
+					</div>
+
+				</div>
+
+			</div>
+		</section>
+
+	</div>
+
+</body>
+</html>
