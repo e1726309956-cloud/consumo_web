@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{plantilla/plantillaui}">
+
+<head>
+<meta charset="UTF-8" />
+<title>Nueva Entrega</title>
+</head>
+
+<body>
+	<div layout:fragment="contenidopaginas">
+		<h5 class="card-title fw-semibold mb-4">Registrar Nueva Entrega</h5>
+
+		<form th:action="@{/entregas/guardar}" th:object="${entrega}" method="post">
+
+			<!-- 1. Desplegable de Pedidos (Usa name="idPedido" para evitar el conflicto con tipos int) -->
+			<div class="mb-3">
+				<label for="selectPedido" class="form-label">Seleccionar Pedido</label>
+				<select id="selectPedido" name="idPedido" class="form-select" required>
+					<option value="" disabled selected>-- Seleccionar Pedido --</option>
+					<option th:each="pedido : ${listapedidos}"
+						th:value="${pedido.idPedido}"
+						th:text="'Pedido #' + ${pedido.idPedido}">
+					</option>
+				</select>
+			</div>
+
+			<!-- 2. Desplegable de Estados Generales (Usa name="idEstado") -->
+			<div class="mb-3">
+				<label for="idEstado" class="form-label">Estado de Entrega</label>
+				<select id="idEstado" name="idEstado" class="form-select" required>
+					<option value="" disabled selected>-- Seleccionar Estado --</option>
+					<option th:each="est : ${listaestados}" 
+						th:value="${est.idEstado}"
+						th:text="${est.nombreEstado}">
+					</option>
+				</select>
+			</div>
+
+			<!-- 3. Tipo de Entrega -->
+			<div class="mb-3">
+				<label for="tipoEntrega" class="form-label">Tipo de Entrega</label>
+				<select id="tipoEntrega" name="tipoEntrega" class="form-select" required>
+					<option value="" disabled selected>-- Seleccionar Tipo --</option>
+					<option value="A Domicilio">A Domicilio</option>
+					<option value="Retiro en Tienda">Retiro en Tienda</option>
+				</select>
+			</div>
+
+			<!-- 4. Recibido por -->
+			<div class="mb-3">
+				<label for="recibidoPor" class="form-label">Recibido Por</label>
+				<input type="text" class="form-control" th:field="*{recibidoPor}"
+					id="recibidoPor" placeholder="Nombre de quien recibe la entrega" required>
+			</div>
+
+			<!-- 5. Observación -->
+			<div class="mb-3">
+				<label for="observacion" class="form-label">Observación</label>
+				<textarea class="form-control" th:field="*{observacion}"
+					id="observacion" rows="2" placeholder="Notas o detalles adicionales"></textarea>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Guardar Entrega</button>
+			<a th:href="@{/entregas}" class="btn btn-secondary">Cancelar</a>
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,512 @@
+Listado de rutas de carpetas
+El número de serie del volumen es 0000006B C434:508B
+C:.
+¦   .classpath
+¦   .factorypath
+¦   .gitattributes
+¦   .gitignore
+¦   .project
+¦   front.txt
+¦   mvnw
+¦   mvnw.cmd
+¦   pom.xml
+¦   
++---.mvn
+¦   +---wrapper
+¦           maven-wrapper.properties
+¦           
++---.settings
+¦       org.eclipse.core.resources.prefs
+¦       org.eclipse.jdt.apt.core.prefs
+¦       org.eclipse.jdt.core.prefs
+¦       org.eclipse.m2e.core.prefs
+¦       org.springframework.ide.eclipse.prefs
+¦       
++---src
+¦   +---main
+¦   ¦   +---java
+¦   ¦   ¦   +---com
+¦   ¦   ¦       +---uisrael
+¦   ¦   ¦           +---pedidosweb
+¦   ¦   ¦               ¦   PedidoswebApplication.java
+¦   ¦   ¦               ¦   
+¦   ¦   ¦               +---configuration
+¦   ¦   ¦               ¦       WebClientConfig.java
+¦   ¦   ¦               ¦       
+¦   ¦   ¦               +---controller
+¦   ¦   ¦               ¦       DetallePedidoController.java
+¦   ¦   ¦               ¦       HistorialPedidoController.java
+¦   ¦   ¦               ¦       PedidoController.java
+¦   ¦   ¦               ¦       
+¦   ¦   ¦               +---modelo
+¦   ¦   ¦               ¦   +---dt
+¦   ¦   ¦               ¦       +---request
+¦   ¦   ¦               ¦       ¦       DetallePedidoRequestDto.java
+¦   ¦   ¦               ¦       ¦       HistorialPedidoRequestDto.java
+¦   ¦   ¦               ¦       ¦       PedidoRequestDto.java
+¦   ¦   ¦               ¦       ¦       
+¦   ¦   ¦               ¦       +---response
+¦   ¦   ¦               ¦               DetallePedidoResponseDto.java
+¦   ¦   ¦               ¦               HistorialPedidoResponseDto.java
+¦   ¦   ¦               ¦               PedidoResponseDto.java
+¦   ¦   ¦               ¦               
+¦   ¦   ¦               +---services
+¦   ¦   ¦                   ¦   IDetallePedidoService.java
+¦   ¦   ¦                   ¦   IHistorialPedidoService.java
+¦   ¦   ¦                   ¦   IPedidoService.java
+¦   ¦   ¦                   ¦   
+¦   ¦   ¦                   +---impl
+¦   ¦   ¦                           DetallePedidoServiceImpl.java
+¦   ¦   ¦                           HistorialPedidoServiceImpl.java
+¦   ¦   ¦                           PedidoServiceImpl.java
+¦   ¦   ¦                           
+¦   ¦   +---resources
+¦   ¦       ¦   application.properties
+¦   ¦       ¦   
+¦   ¦       +---static
+¦   ¦       ¦   +---assets
+¦   ¦       ¦       ¦   .DS_Store
+¦   ¦       ¦       ¦   
+¦   ¦       ¦       +---css
+¦   ¦       ¦       ¦       .DS_Store
+¦   ¦       ¦       ¦       bootstrap.min.css
+¦   ¦       ¦       ¦       fullcalendar.css
+¦   ¦       ¦       ¦       lineicons.css
+¦   ¦       ¦       ¦       loading-bar.min.css
+¦   ¦       ¦       ¦       main.css
+¦   ¦       ¦       ¦       materialdesignicons.min.css
+¦   ¦       ¦       ¦       morris.css
+¦   ¦       ¦       ¦       
+¦   ¦       ¦       +---fonts
+¦   ¦       ¦       ¦       lineicons.eot
+¦   ¦       ¦       ¦       lineicons.svg
+¦   ¦       ¦       ¦       lineicons.ttf
+¦   ¦       ¦       ¦       lineicons.woff
+¦   ¦       ¦       ¦       lineicons.woff2
+¦   ¦       ¦       ¦       materialdesignicons-webfont.eot
+¦   ¦       ¦       ¦       materialdesignicons-webfont.ttf
+¦   ¦       ¦       ¦       materialdesignicons-webfont.woff
+¦   ¦       ¦       ¦       materialdesignicons-webfont.woff2
+¦   ¦       ¦       ¦       
+¦   ¦       ¦       +---images
+¦   ¦       ¦       ¦   ¦   .DS_Store
+¦   ¦       ¦       ¦   ¦   favicon.svg
+¦   ¦       ¦       ¦   ¦   
+¦   ¦       ¦       ¦   +---auth
+¦   ¦       ¦       ¦   ¦       .DS_Store
+¦   ¦       ¦       ¦   ¦       reset-password.svg
+¦   ¦       ¦       ¦   ¦       shape.svg
+¦   ¦       ¦       ¦   ¦       signin-image.svg
+¦   ¦       ¦       ¦   ¦       signup-image.svg
+¦   ¦       ¦       ¦   ¦       
+¦   ¦       ¦       ¦   +---cards
+¦   ¦       ¦       ¦   ¦   ¦   .DS_Store
+¦   ¦       ¦       ¦   ¦   ¦   
+¦   ¦       ¦       ¦   ¦   +---card-style-1
+¦   ¦       ¦       ¦   ¦   ¦       .DS_Store
+¦   ¦       ¦       ¦   ¦   ¦       admin-1.png
+¦   ¦       ¦       ¦   ¦   ¦       admin-2.png
+¦   ¦       ¦       ¦   ¦   ¦       admin-3.png
+¦   ¦       ¦       ¦   ¦   ¦       card-1.jpg
+¦   ¦       ¦       ¦   ¦   ¦       card-2.jpg
+¦   ¦       ¦       ¦   ¦   ¦       card-3.jpg
+¦   ¦       ¦       ¦   ¦   ¦       
+¦   ¦       ¦       ¦   ¦   +---card-style-2
+¦   ¦       ¦       ¦   ¦   ¦       .DS_Store
+¦   ¦       ¦       ¦   ¦   ¦       card-1.jpg
+¦   ¦       ¦       ¦   ¦   ¦       card-2.jpg
+¦   ¦       ¦       ¦   ¦   ¦       card-3.jpg
+¦   ¦       ¦       ¦   ¦   ¦       
+¦   ¦       ¦       ¦   ¦   +---card-style-4
+¦   ¦       ¦       ¦   ¦   ¦       .DS_Store
+¦   ¦       ¦       ¦   ¦   ¦       card-1.png
+¦   ¦       ¦       ¦   ¦   ¦       card-2.png
+¦   ¦       ¦       ¦   ¦   ¦       card-3.png
+¦   ¦       ¦       ¦   ¦   ¦       
+¦   ¦       ¦       ¦   ¦   +---card-style-5
+¦   ¦       ¦       ¦   ¦   ¦       .DS_Store
+¦   ¦       ¦       ¦   ¦   ¦       card-1.jpg
+¦   ¦       ¦       ¦   ¦   ¦       card-2.jpg
+¦   ¦       ¦       ¦   ¦   ¦       
+¦   ¦       ¦       ¦   ¦   +---card-style-6
+¦   ¦       ¦       ¦   ¦           .DS_Store
+¦   ¦       ¦       ¦   ¦           card-1.jpg
+¦   ¦       ¦       ¦   ¦           card-2.jpg
+¦   ¦       ¦       ¦   ¦           card-3.jpg
+¦   ¦       ¦       ¦   ¦           card-4.jpg
+¦   ¦       ¦       ¦   ¦           
+¦   ¦       ¦       ¦   +---clients
+¦   ¦       ¦       ¦   ¦       .DS_Store
+¦   ¦       ¦       ¦   ¦       client-profile.png
+¦   ¦       ¦       ¦   ¦       clients-cover.jpg
+¦   ¦       ¦       ¦   ¦       
+¦   ¦       ¦       ¦   +---invoice
+¦   ¦       ¦       ¦   ¦       .DS_Store
+¦   ¦       ¦       ¦   ¦       uideck-logo.svg
+¦   ¦       ¦       ¦   ¦       
+¦   ¦       ¦       ¦   +---lead
+¦   ¦       ¦       ¦   ¦       .DS_Store
+¦   ¦       ¦       ¦   ¦       lead-1.png
+¦   ¦       ¦       ¦   ¦       lead-2.png
+¦   ¦       ¦       ¦   ¦       lead-3.png
+¦   ¦       ¦       ¦   ¦       lead-4.png
+¦   ¦       ¦       ¦   ¦       lead-5.png
+¦   ¦       ¦       ¦   ¦       lead-6.png
+¦   ¦       ¦       ¦   ¦       
+¦   ¦       ¦       ¦   +---logo
+¦   ¦       ¦       ¦   ¦       .DS_Store
+¦   ¦       ¦       ¦   ¦       logo-2.svg
+¦   ¦       ¦       ¦   ¦       logo-icon-big.svg
+¦   ¦       ¦       ¦   ¦       logo-white.svg
+¦   ¦       ¦       ¦   ¦       logo.svg
+¦   ¦       ¦       ¦   ¦       
+¦   ¦       ¦       ¦   +---modals
+¦   ¦       ¦       ¦   ¦       .DS_Store
+¦   ¦       ¦       ¦   ¦       image-1.svg
+¦   ¦       ¦       ¦   ¦       
+¦   ¦       ¦       ¦   +---products
+¦   ¦       ¦       ¦   ¦       product-mini-1.jpg
+¦   ¦       ¦       ¦   ¦       product-mini-2.jpg
+¦   ¦       ¦       ¦   ¦       product-mini-3.jpg
+¦   ¦       ¦       ¦   ¦       product-mini-4.jpg
+¦   ¦       ¦       ¦   ¦       product-mini-5.jpg
+¦   ¦       ¦       ¦   ¦       
+¦   ¦       ¦       ¦   +---profile
+¦   ¦       ¦       ¦   ¦       .DS_Store
+¦   ¦       ¦       ¦   ¦       profile-1.png
+¦   ¦       ¦       ¦   ¦       profile-cover.jpg
+¦   ¦       ¦       ¦   ¦       profile-image.png
+¦   ¦       ¦       ¦   ¦       profile.png
+¦   ¦       ¦       ¦   ¦       
+¦   ¦       ¦       ¦   +---projects
+¦   ¦       ¦       ¦           .DS_Store
+¦   ¦       ¦       ¦           image-1.png
+¦   ¦       ¦       ¦           image-2.png
+¦   ¦       ¦       ¦           image-3.png
+¦   ¦       ¦       ¦           
+¦   ¦       ¦       +---js
+¦   ¦       ¦       ¦       .DS_Store
+¦   ¦       ¦       ¦       bootstrap.bundle.min.js
+¦   ¦       ¦       ¦       Chart.min.js
+¦   ¦       ¦       ¦       dynamic-pie-chart.js
+¦   ¦       ¦       ¦       fullcalendar.js
+¦   ¦       ¦       ¦       jvectormap.min.js
+¦   ¦       ¦       ¦       loading-bar.min.js
+¦   ¦       ¦       ¦       main.js
+¦   ¦       ¦       ¦       moment.min.js
+¦   ¦       ¦       ¦       polyfill.js
+¦   ¦       ¦       ¦       world-merc.js
+¦   ¦       ¦       ¦       
+¦   ¦       ¦       +---scss
+¦   ¦       ¦           ¦   .DS_Store
+¦   ¦       ¦           ¦   main.scss
+¦   ¦       ¦           ¦   _common.scss
+¦   ¦       ¦           ¦   _default.scss
+¦   ¦       ¦           ¦   _mixin.scss
+¦   ¦       ¦           ¦   _preloader.scss
+¦   ¦       ¦           ¦   _sidebar.scss
+¦   ¦       ¦           ¦   _variables.scss
+¦   ¦       ¦           ¦   
+¦   ¦       ¦           +---alerts
+¦   ¦       ¦           ¦       _alerts.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---auth
+¦   ¦       ¦           ¦       _signin.scss
+¦   ¦       ¦           ¦       _signup.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---buttons
+¦   ¦       ¦           ¦       _buttons.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---calendar
+¦   ¦       ¦           ¦       _calendar.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---cards
+¦   ¦       ¦           ¦       _cards.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---dashboards
+¦   ¦       ¦           ¦       _dashboards.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---forms
+¦   ¦       ¦           ¦       _form-elements.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---header
+¦   ¦       ¦           ¦       _header.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---icons
+¦   ¦       ¦           ¦       _icons.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---invoice
+¦   ¦       ¦           ¦       _invoice.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---notification
+¦   ¦       ¦           ¦       _notification.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---settings
+¦   ¦       ¦           ¦       _settings.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---tables
+¦   ¦       ¦           ¦       _tables.scss
+¦   ¦       ¦           ¦       
+¦   ¦       ¦           +---typography
+¦   ¦       ¦                   .DS_Store
+¦   ¦       ¦                   _typography.scss
+¦   ¦       ¦                   
+¦   ¦       +---templates
+¦   ¦           +---detallePedidos
+¦   ¦           ¦       listardetallepedidos.html
+¦   ¦           ¦       
+¦   ¦           +---historialPedidos
+¦   ¦           ¦       listarhistorialpedidos.html
+¦   ¦           ¦       
+¦   ¦           +---pedidos
+¦   ¦           ¦       crearpedido.html
+¦   ¦           ¦       listarpedidos.html
+¦   ¦           ¦       
+¦   ¦           +---plantilla
+¦   ¦                   plantillaui.html
+¦   ¦                   
+¦   +---test
+¦       +---java
+¦           +---com
+¦               +---uisrael
+¦                   +---pedidosweb
+¦                           PedidoswebApplicationTests.java
+¦                           
++---target
+    +---classes
+    ¦   ¦   application.properties
+    ¦   ¦   
+    ¦   +---com
+    ¦   ¦   +---uisrael
+    ¦   ¦       +---pedidosweb
+    ¦   ¦           ¦   PedidoswebApplication.class
+    ¦   ¦           ¦   
+    ¦   ¦           +---configuration
+    ¦   ¦           ¦       WebClientConfig.class
+    ¦   ¦           ¦       
+    ¦   ¦           +---controller
+    ¦   ¦           ¦       DetallePedidoController.class
+    ¦   ¦           ¦       HistorialPedidoController.class
+    ¦   ¦           ¦       PedidoController.class
+    ¦   ¦           ¦       
+    ¦   ¦           +---modelo
+    ¦   ¦           ¦   +---dt
+    ¦   ¦           ¦       +---request
+    ¦   ¦           ¦       ¦       DetallePedidoRequestDto.class
+    ¦   ¦           ¦       ¦       HistorialPedidoRequestDto.class
+    ¦   ¦           ¦       ¦       PedidoRequestDto.class
+    ¦   ¦           ¦       ¦       
+    ¦   ¦           ¦       +---response
+    ¦   ¦           ¦               DetallePedidoResponseDto.class
+    ¦   ¦           ¦               HistorialPedidoResponseDto.class
+    ¦   ¦           ¦               PedidoResponseDto.class
+    ¦   ¦           ¦               
+    ¦   ¦           +---services
+    ¦   ¦               ¦   IDetallePedidoService.class
+    ¦   ¦               ¦   IHistorialPedidoService.class
+    ¦   ¦               ¦   IPedidoService.class
+    ¦   ¦               ¦   
+    ¦   ¦               +---impl
+    ¦   ¦                       DetallePedidoServiceImpl.class
+    ¦   ¦                       HistorialPedidoServiceImpl.class
+    ¦   ¦                       PedidoServiceImpl.class
+    ¦   ¦                       
+    ¦   +---META-INF
+    ¦   ¦   ¦   MANIFEST.MF
+    ¦   ¦   ¦   
+    ¦   ¦   +---maven
+    ¦   ¦       +---com.uisrael
+    ¦   ¦           +---pedidosweb
+    ¦   ¦                   pom.properties
+    ¦   ¦                   pom.xml
+    ¦   ¦                   
+    ¦   +---static
+    ¦   ¦   +---assets
+    ¦   ¦       +---css
+    ¦   ¦       ¦       bootstrap.min.css
+    ¦   ¦       ¦       fullcalendar.css
+    ¦   ¦       ¦       lineicons.css
+    ¦   ¦       ¦       loading-bar.min.css
+    ¦   ¦       ¦       main.css
+    ¦   ¦       ¦       materialdesignicons.min.css
+    ¦   ¦       ¦       morris.css
+    ¦   ¦       ¦       
+    ¦   ¦       +---fonts
+    ¦   ¦       ¦       lineicons.eot
+    ¦   ¦       ¦       lineicons.svg
+    ¦   ¦       ¦       lineicons.ttf
+    ¦   ¦       ¦       lineicons.woff
+    ¦   ¦       ¦       lineicons.woff2
+    ¦   ¦       ¦       materialdesignicons-webfont.eot
+    ¦   ¦       ¦       materialdesignicons-webfont.ttf
+    ¦   ¦       ¦       materialdesignicons-webfont.woff
+    ¦   ¦       ¦       materialdesignicons-webfont.woff2
+    ¦   ¦       ¦       
+    ¦   ¦       +---images
+    ¦   ¦       ¦   ¦   favicon.svg
+    ¦   ¦       ¦   ¦   
+    ¦   ¦       ¦   +---auth
+    ¦   ¦       ¦   ¦       reset-password.svg
+    ¦   ¦       ¦   ¦       shape.svg
+    ¦   ¦       ¦   ¦       signin-image.svg
+    ¦   ¦       ¦   ¦       signup-image.svg
+    ¦   ¦       ¦   ¦       
+    ¦   ¦       ¦   +---cards
+    ¦   ¦       ¦   ¦   +---card-style-1
+    ¦   ¦       ¦   ¦   ¦       admin-1.png
+    ¦   ¦       ¦   ¦   ¦       admin-2.png
+    ¦   ¦       ¦   ¦   ¦       admin-3.png
+    ¦   ¦       ¦   ¦   ¦       card-1.jpg
+    ¦   ¦       ¦   ¦   ¦       card-2.jpg
+    ¦   ¦       ¦   ¦   ¦       card-3.jpg
+    ¦   ¦       ¦   ¦   ¦       
+    ¦   ¦       ¦   ¦   +---card-style-2
+    ¦   ¦       ¦   ¦   ¦       card-1.jpg
+    ¦   ¦       ¦   ¦   ¦       card-2.jpg
+    ¦   ¦       ¦   ¦   ¦       card-3.jpg
+    ¦   ¦       ¦   ¦   ¦       
+    ¦   ¦       ¦   ¦   +---card-style-4
+    ¦   ¦       ¦   ¦   ¦       card-1.png
+    ¦   ¦       ¦   ¦   ¦       card-2.png
+    ¦   ¦       ¦   ¦   ¦       card-3.png
+    ¦   ¦       ¦   ¦   ¦       
+    ¦   ¦       ¦   ¦   +---card-style-5
+    ¦   ¦       ¦   ¦   ¦       card-1.jpg
+    ¦   ¦       ¦   ¦   ¦       card-2.jpg
+    ¦   ¦       ¦   ¦   ¦       
+    ¦   ¦       ¦   ¦   +---card-style-6
+    ¦   ¦       ¦   ¦           card-1.jpg
+    ¦   ¦       ¦   ¦           card-2.jpg
+    ¦   ¦       ¦   ¦           card-3.jpg
+    ¦   ¦       ¦   ¦           card-4.jpg
+    ¦   ¦       ¦   ¦           
+    ¦   ¦       ¦   +---clients
+    ¦   ¦       ¦   ¦       client-profile.png
+    ¦   ¦       ¦   ¦       clients-cover.jpg
+    ¦   ¦       ¦   ¦       
+    ¦   ¦       ¦   +---invoice
+    ¦   ¦       ¦   ¦       uideck-logo.svg
+    ¦   ¦       ¦   ¦       
+    ¦   ¦       ¦   +---lead
+    ¦   ¦       ¦   ¦       lead-1.png
+    ¦   ¦       ¦   ¦       lead-2.png
+    ¦   ¦       ¦   ¦       lead-3.png
+    ¦   ¦       ¦   ¦       lead-4.png
+    ¦   ¦       ¦   ¦       lead-5.png
+    ¦   ¦       ¦   ¦       lead-6.png
+    ¦   ¦       ¦   ¦       
+    ¦   ¦       ¦   +---logo
+    ¦   ¦       ¦   ¦       logo-2.svg
+    ¦   ¦       ¦   ¦       logo-icon-big.svg
+    ¦   ¦       ¦   ¦       logo-white.svg
+    ¦   ¦       ¦   ¦       logo.svg
+    ¦   ¦       ¦   ¦       
+    ¦   ¦       ¦   +---modals
+    ¦   ¦       ¦   ¦       image-1.svg
+    ¦   ¦       ¦   ¦       
+    ¦   ¦       ¦   +---products
+    ¦   ¦       ¦   ¦       product-mini-1.jpg
+    ¦   ¦       ¦   ¦       product-mini-2.jpg
+    ¦   ¦       ¦   ¦       product-mini-3.jpg
+    ¦   ¦       ¦   ¦       product-mini-4.jpg
+    ¦   ¦       ¦   ¦       product-mini-5.jpg
+    ¦   ¦       ¦   ¦       
+    ¦   ¦       ¦   +---profile
+    ¦   ¦       ¦   ¦       profile-1.png
+    ¦   ¦       ¦   ¦       profile-cover.jpg
+    ¦   ¦       ¦   ¦       profile-image.png
+    ¦   ¦       ¦   ¦       profile.png
+    ¦   ¦       ¦   ¦       
+    ¦   ¦       ¦   +---projects
+    ¦   ¦       ¦           image-1.png
+    ¦   ¦       ¦           image-2.png
+    ¦   ¦       ¦           image-3.png
+    ¦   ¦       ¦           
+    ¦   ¦       +---js
+    ¦   ¦       ¦       bootstrap.bundle.min.js
+    ¦   ¦       ¦       Chart.min.js
+    ¦   ¦       ¦       dynamic-pie-chart.js
+    ¦   ¦       ¦       fullcalendar.js
+    ¦   ¦       ¦       jvectormap.min.js
+    ¦   ¦       ¦       loading-bar.min.js
+    ¦   ¦       ¦       main.js
+    ¦   ¦       ¦       moment.min.js
+    ¦   ¦       ¦       polyfill.js
+    ¦   ¦       ¦       world-merc.js
+    ¦   ¦       ¦       
+    ¦   ¦       +---scss
+    ¦   ¦           ¦   main.scss
+    ¦   ¦           ¦   _common.scss
+    ¦   ¦           ¦   _default.scss
+    ¦   ¦           ¦   _mixin.scss
+    ¦   ¦           ¦   _preloader.scss
+    ¦   ¦           ¦   _sidebar.scss
+    ¦   ¦           ¦   _variables.scss
+    ¦   ¦           ¦   
+    ¦   ¦           +---alerts
+    ¦   ¦           ¦       _alerts.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---auth
+    ¦   ¦           ¦       _signin.scss
+    ¦   ¦           ¦       _signup.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---buttons
+    ¦   ¦           ¦       _buttons.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---calendar
+    ¦   ¦           ¦       _calendar.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---cards
+    ¦   ¦           ¦       _cards.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---dashboards
+    ¦   ¦           ¦       _dashboards.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---forms
+    ¦   ¦           ¦       _form-elements.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---header
+    ¦   ¦           ¦       _header.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---icons
+    ¦   ¦           ¦       _icons.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---invoice
+    ¦   ¦           ¦       _invoice.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---notification
+    ¦   ¦           ¦       _notification.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---settings
+    ¦   ¦           ¦       _settings.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---tables
+    ¦   ¦           ¦       _tables.scss
+    ¦   ¦           ¦       
+    ¦   ¦           +---typography
+    ¦   ¦                   _typography.scss
+    ¦   ¦                   
+    ¦   +---templates
+    ¦       +---detallePedidos
+    ¦       ¦       listardetallepedidos.html
+    ¦       ¦       
+    ¦       +---historialPedidos
+    ¦       ¦       listarhistorialpedidos.html
+    ¦       ¦       
+    ¦       +---pedidos
+    ¦       ¦       crearpedido.html
+    ¦       ¦       listarpedidos.html
+    ¦       ¦       
+    ¦       +---plantilla
+    ¦               plantillaui.html
+    ¦               
+    +---generated-sources
+    ¦   +---annotations
+    +---generated-test-sources
+    ¦   +---test-annotations
+    +---test-classes
+        +---com
+            +---uisrael
+                +---pedidosweb
+                        PedidoswebApplicationTests.class
+                        

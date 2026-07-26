@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{plantilla/plantillaui}">
+
+<head>
+<meta charset="UTF-8" />
+<title>Listado de Entregas</title>
+</head>
+
+<body>
+	<div layout:fragment="contenidopaginas">
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<h5 class="card-title fw-semibold">Gestión de Entregas</h5>
+			<a th:href="@{/entregas/crear}" class="btn btn-primary">Nueva Entrega</a>
+		</div>
+
+		<div class="table-responsive">
+			<!-- Tabla clara con bordes y encabezado claro -->
+			<table class="table table-hover align-middle border">
+				<thead class="table-light">
+					<tr>
+						<th># ID</th>
+						<th>Pedido</th>
+						<th>Tipo</th>
+						<th>Recibido Por</th>
+						<th>Observación</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="ent : ${listaentregas}">
+						<td th:text="${ent.idEntrega}"></td>
+						<td th:text="${ent.idPedido}"></td>
+						<td th:text="${ent.tipoEntrega}"></td>
+						<td th:text="${ent.recibidoPor}"></td>
+						<td th:text="${ent.observacion}"></td>
+					</tr>
+					<tr th:if="${#lists.isEmpty(listaentregas)}">
+						<td colspan="5" class="text-center text-muted">No hay entregas registradas.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

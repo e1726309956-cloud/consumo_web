@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Lista de Estados Generales</title>
+</head>
+
+<body>
+<div layout:fragment="contenidopaginas">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="card-title fw-semibold mb-0">Listar Estados Generales</h5>
+        <a th:href="@{/estadosGenerales/nuevo}" class="btn btn-success">+ Nuevo Estado</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nombre Estado</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="indice : ${listaEstados}">
+                <td th:text="${indice.idEstado}"></td>
+                <td th:text="${indice.nombreEstado}"></td>
+                <td th:text="${indice.descripcion}"></td>
+                <td>
+                    <a th:href="@{/estadosGenerales/editar/{id}(id=${indice.idEstado})}" class="btn btn-primary" title="Editar"><i class="lni lni-pencil"></i></a>
+                    <a th:href="@{/estadosGenerales/eliminar/{id}(id=${indice.idEstado})}" class="btn btn-danger" title="Eliminar"><i class="lni lni-trash-can"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{plantilla/plantillaui}">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>Crear Comprobante de Pago</title>
+</head>
+
+<body>
+<div layout:fragment="contenidopaginas">
+    <h5 class="card-title fw-semibold mb-4">Registrar Comprobante de Pago</h5>
+
+    <form th:action="@{/comprobantespago/guardar}" th:object="${comprobantepago}" method="post">
+
+        <div class="mb-3">
+            <label for="idPedido" class="form-label">ID Pedido</label>
+            <input type="number" class="form-control" th:field="*{idPedido}" id="idPedido" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="metodoPago" class="form-label">Método de Pago</label>
+            <input type="text" class="form-control" th:field="*{metodoPago}" id="metodoPago" placeholder="Ej: Tarjeta, Transferencia, Efectivo" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="monto" class="form-label">Monto</label>
+            <input type="number" step="0.01" class="form-control" th:field="*{monto}" id="monto" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="fechaPago" class="form-label">Fecha de Pago</label>
+            <input type="date" class="form-control" th:field="*{fechaPago}" id="fechaPago">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Comprobante</button>
+        <a th:href="@{/comprobantespago}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+</body>
+</html>
