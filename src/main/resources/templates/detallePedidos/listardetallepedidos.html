@@ -8,27 +8,23 @@ layout:decorate="/plantilla/plantillaui">
   </head>
   <body>
   					<div layout:fragment="contenidopaginas">
-						<h5 class="card-title fw-semibold mb-4">Listar Pedidos</h5>
+						<h5 class="card-title fw-semibold mb-4">Listar Detalle Pedidos</h5>
 						<table class="table">
 							<thead>
 								<tr>
-									<th scope="col">idPedido</th>
-									<th scope="col">fechaPedido</th>
-									<th scope="col">fechaEntrega</th>
-									<th scope="col">direccionEntrega</th>
-									<th scope="col">observacion</th>
-									<th scope="col">total</th>
+									<th scope="col">idDetallePedido</th>
+									<th scope="col">cantidad</th>
+									<th scope="col">precioUnitario</th>
+									<th scope="col">subtotal</th>
 									<th scope="col"></th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="indice : ${listapedido}">
-								<td th:text="${indice.idPedido}"></td>
-								<td th:text="${indice.fechaPedido}"></td>
-								<td th:text="${indice.fechaEntrega}"></td>
-								<td th:text="${indice.direccionEntrega}"></td>
-								<td th:text="${indice.observacion}"></td>
-								<td th:text="${indice.total}"></td>
+								<tr th:each="indice : ${listadetallepedido}">
+								<td th:text="${indice.idDetallePedido}"></td>
+								<td th:text="${indice.cantidad}"></td>
+								<td th:text="${indice.precioUnitario}"></td>
+								<td th:text="${indice.subtotal}"></td>
 								<td>
 								<a  href="" class="btn btn-primary" title="Editar"><i class="ti-pencil-alt"></i></a>
 								<a  href="" class="btn btn-danger" title="Eliminar"><i class="ti-trash"></i></a>

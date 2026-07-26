@@ -56,6 +56,8 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
 		<!-- Source:
 		https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect -->
 		<dependency>
@@ -63,11 +65,13 @@
 			<artifactId>thymeleaf-layout-dialect</artifactId>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 		<!-- Source:
 		https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-webclient -->
 		<dependency>
@@ -75,6 +79,7 @@
 			<artifactId>spring-boot-starter-webclient</artifactId>
 			<scope>compile</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>
