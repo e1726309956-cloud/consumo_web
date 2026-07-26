@@ -13,95 +13,170 @@
 
 	<div layout:fragment="contenidopaginas">
 
-
 		<section class="section">
 			<div class="container-fluid">
 
+				<!-- Encabezado -->
 				<div class="title-wrapper pt-30 mb-4">
 					<div class="row align-items-center">
 
 						<div class="col-md-6">
 							<h2>Catálogo de productos</h2>
+
 							<p class="text-muted mb-0">Administra los productos
-								disponibles.</p>
+								registrados y su disponibilidad.</p>
 						</div>
 
 						<div class="col-md-6 text-md-end mt-3 mt-md-0">
+
 							<a th:href="@{/producto/nuevo}" class="btn btn-primary px-4">
-								<i class="lni lni-plus"></i> Nuevo producto
+
+								<i class="lni lni-plus me-1"></i> Nuevo producto
 							</a>
+
 						</div>
 
 					</div>
 				</div>
 
-				<div class="row g-4">
+				<!-- Mensaje cuando no existen productos -->
+				<div class="alert alert-light border text-center py-5"
+					th:if="${listarProductos == null or #lists.isEmpty(listarProductos)}">
+
+					<i class="lni lni-package" style="font-size: 50px;"></i>
+
+					<h5 class="mt-3">No existen productos registrados</h5>
+
+					<p class="text-muted">Agrega un producto para comenzar a
+						construir el catálogo.</p>
+
+					<a th:href="@{/producto/nuevo}" class="btn btn-primary"> Crear
+						producto </a>
+
+				</div>
+
+				<!-- Tarjetas -->
+				<div class="row g-4"
+					th:if="${listarProductos != null and !#lists.isEmpty(listarProductos)}">
 
 					<div class="col-xl-4 col-lg-4 col-md-6"
 						th:each="producto : ${listarProductos}">
 
-						<article class="producto-card h-100">
+						<article class="producto-card h-100"
+							th:classappend="${!producto.disponible}
+                            ? ' producto-inactivo'
+                            : ''">
 
+							<!-- Imagen -->
 							<div class="producto-imagen-wrapper">
 
 								<img
 									th:src="${producto.imagenUrl != null
-                            and !#strings.isEmpty(producto.imagenUrl)
-                            ? producto.imagenUrl
-                            : '/assets/images/products/sin-imagen.png'}"
-									src="/assets/images/products/sin-imagen.png"
-									class="producto-imagen" alt="Producto"> <span
-									class="producto-badge disponible"
-									th:if="${producto.disponible}"> Disponible </span> <span
-									class="producto-badge no-disponible"
-									th:unless="${producto.disponible}"> No disponible </span>
+                                and !#strings.isEmpty(producto.imagenUrl)
+                                ? producto.imagenUrl
+                                : '/assets/images/productos/sin-imagen.png'}"
+									src="/assets/images/productos/sin-imagen.png"
+									class="producto-imagen" th:alt="${producto.nombre}"
+									alt="Producto">
+
+								<!-- Estado -->
+								<span class="producto-badge disponible"
+									th:if="${producto.disponible}"> <i
+									class="lni lni-checkmark-circle me-1"></i> Disponible
+								</span> <span class="producto-badge no-disponible"
+									th:unless="${producto.disponible}"> <i
+									class="lni lni-close me-1"></i> No disponible
+								</span>
 
 							</div>
 
+							<!-- Información -->
 							<div class="producto-body">
 
-								<div class="producto-codigo">
-									Código: <span th:text="${producto.idProducto}"> </span>
-								</div>
-								
-								<div class="producto-categoria">
-									Categoria: <span th:text="${producto.idCategoria}"> </span>
+								<div
+									class="d-flex justify-content-between align-items-start mb-2">
+
+									<div class="producto-codigo">
+										Código: <strong th:text="${producto.idProducto}"> 0 </strong>
+									</div>
+
+									<div class="producto-stock-resumen">
+										Stock: <strong th:text="${producto.stock}"> 0 </strong>
+									</div>
+
 								</div>
 
-								<h4 class="producto-titulo" th:text="${producto.nombre}"></h4>
+								<div class="producto-categoria">
+
+									<i class="lni lni-tag"></i> <span
+										th:text="${producto.categoria != null
+                                    ? producto.categoria.nombre
+                                    : 'Sin categoría'}">
+										Sin categoría </span>
+
+								</div>
+
+								<h4 class="producto-titulo" th:text="${producto.nombre}">
+									Nombre del producto</h4>
 
 								<p class="producto-descripcion"
-									th:text="${producto.descripcion}"></p>
+									th:text="${producto.descripcion}">Descripción del producto.
+								</p>
 
 								<div class="producto-info">
 
 									<div>
-										<span class="producto-label">Precio</span>
+										<span class="producto-label"> Precio </span>
 
 										<div class="producto-precio">
+
 											$ <span
 												th:text="${#numbers.formatDecimal(
-                                        producto.precio, 1, 2
-                                    )}"></span>
+                                            producto.precio,
+                                            1,
+                                            2
+                                        )}">
+												0.00 </span>
+
 										</div>
-									</div>
-
-									<div class="text-end">
-										<span class="producto-label">Stock</span>
-
-										<div class="producto-stock" th:text="${producto.stock}"></div>
 									</div>
 
 								</div>
 
 							</div>
 
+							<!-- Acciones -->
 							<div class="producto-footer">
 
-								<a href="#" class="btn btn-outline-primary btn-sm"> <i
-									class="lni lni-pencil"></i> Editar
-								</a> <a href="#" class="btn btn-outline-danger btn-sm"> <i
-									class="lni lni-trash-can"></i> Eliminar
+								<!-- Editar -->
+								<a
+									th:href="@{/producto/editar/{idProducto}(
+            							idProducto=${producto.idProducto}
+        								)}"
+									class="btn btn-outline-primary btn-sm"> <i
+									class="lni lni-pencil me-1"></i> Editar
+								</a>
+
+								<!-- Inactivar: solo aparece si está disponible -->
+								<a th:if="${producto.disponible}"
+									th:href="@{/producto/inactivar/{idProducto}(
+            							idProducto=${producto.idProducto}
+        								)}"
+									class="btn btn-outline-danger btn-sm"
+									onclick="return confirm('¿Está segura de inactivar este producto?')">
+
+									<i class="lni lni-ban me-1"></i> Inactivar
+								</a>
+
+								<!-- Activar: solo aparece si está inactivo -->
+								<a th:unless="${producto.disponible}"
+									th:href="@{/producto/activar/{idProducto}(
+           										 idProducto=${producto.idProducto}
+        											)}"
+									class="btn btn-outline-success btn-sm"
+									onclick="return confirm('¿Está segura de activar este producto?')">
+
+									<i class="lni lni-checkmark-circle me-1"></i> Activar
 								</a>
 
 							</div>
@@ -114,7 +189,6 @@
 
 			</div>
 		</section>
-
 	</div>
 
 </body>

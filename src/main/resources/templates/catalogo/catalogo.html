@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="plantilla/plantillaui">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Catálogo de productos</title>
+
+<link rel="stylesheet" th:href="@{/assets/css/producto.css}"
+	href="/assets/css/producto.css">
+
+</head>
+
+<body>
+
+	<div layout:fragment="contenidopaginas">
+
+		<section class="section">
+
+			<div class="container-fluid">
+
+				<!-- Encabezado -->
+				<div class="title-wrapper pt-30 mb-4">
+
+					<div class="row align-items-center">
+
+						<div class="col-md-6">
+
+							<h2>Catálogo de productos</h2>
+
+							<p class="text-muted mb-0">Encuentra arreglos florales y de
+								dulces para cada ocasión.</p>
+
+						</div>
+
+						<div class="col-md-6 text-md-end mt-3 mt-md-0">
+
+							<a th:if="${session.rolUsuario == 'CLIENTE'}"
+								th:href="@{/carrito}" class="btn btn-success px-4"> <i
+								class="lni lni-cart me-1"></i> Ver carrito <span
+								class="badge bg-light text-dark ms-1"
+								th:text="${session.cantidadCarrito != null
+                                      ? session.cantidadCarrito
+                                      : 0}">
+									0 </span>
+
+							</a>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<!-- Buscador y filtro -->
+				<div class="card shadow-sm border-0 mb-4 catalogo-filtros">
+
+					<div class="card-body p-4">
+
+						<div class="mb-4">
+
+							<h5 class="fw-bold mb-1">
+
+								<i class="lni lni-search-alt text-primary me-2"></i> Buscar
+								productos
+
+							</h5>
+
+							<p class="text-muted mb-0">Busca por nombre, descripción o
+								selecciona una categoría.</p>
+
+						</div>
+
+						<form th:action="@{/catalogo}" method="get">
+
+							<div class="row g-3 align-items-end">
+
+								<!-- Texto de búsqueda -->
+								<div class="col-lg-5 col-md-6">
+
+									<label for="buscar" class="form-label fw-semibold">
+
+										Producto </label>
+
+									<div class="input-group">
+
+										<span class="input-group-text bg-white"> <i
+											class="lni lni-search-alt"></i>
+
+										</span> <input type="text" id="buscar" name="buscar"
+											class="form-control" th:value="${textoBusqueda}"
+											placeholder="Ejemplo: rosas, chocolates...">
+
+									</div>
+
+								</div>
+
+								<!-- Categoría -->
+								<div class="col-lg-3 col-md-6">
+
+									<label for="categoria" class="form-label fw-semibold">
+
+										Categoría </label> <select id="categoria" name="categoria"
+										class="form-select">
+
+										<option value="">Todas las categorías</option>
+
+										<option th:each="categoriaItem : ${categorias}"
+											th:value="${categoriaItem.idCategoria}"
+											th:text="${categoriaItem.nombre}"
+											th:selected="${categoriaSeleccionada != null
+                                                and categoriaItem.idCategoria
+                                                == categoriaSeleccionada}">
+
+											Categoría</option>
+
+									</select>
+
+								</div>
+
+								<!-- Botón buscar -->
+								<div class="col-lg-2 col-md-6 d-grid">
+
+									<button type="submit" class="btn btn-primary">
+
+										<i class="lni lni-search-alt me-1"></i> Buscar
+
+									</button>
+
+								</div>
+
+								<!-- Botón limpiar -->
+								<div class="col-lg-2 col-md-6 d-grid">
+
+									<a th:href="@{/catalogo}" class="btn btn-outline-secondary">
+
+										<i class="lni lni-reload me-1"></i> Limpiar
+
+									</a>
+
+								</div>
+
+							</div>
+
+						</form>
+
+					</div>
+
+				</div>
+
+				<!-- Resultado de búsqueda -->
+				<div
+					class="d-flex justify-content-between
+                        align-items-center mb-3"
+					th:if="${listarProductos != null
+                    and !#lists.isEmpty(listarProductos)}">
+
+					<p class="text-muted mb-0">
+
+						Se encontraron <strong th:text="${#lists.size(listarProductos)}">
+							0 </strong> producto(s).
+
+					</p>
+
+					<span
+						th:if="${textoBusqueda != null
+                        and !#strings.isEmpty(textoBusqueda)}"
+						class="badge bg-light text-dark border"> Búsqueda: <span
+						th:text="${textoBusqueda}"> Producto </span>
+
+					</span>
+
+				</div>
+
+				<!-- Mensaje cuando no hay resultados -->
+				<div class="alert alert-light border text-center py-5"
+					th:if="${listarProductos == null
+                    or #lists.isEmpty(listarProductos)}">
+
+					<i class="lni lni-search-alt" style="font-size: 50px;"></i>
+
+					<h5 class="mt-3">No se encontraron productos</h5>
+
+					<p class="text-muted mb-3">Intenta utilizar otro nombre o
+						seleccionar una categoría diferente.</p>
+
+					<a th:href="@{/catalogo}" class="btn btn-primary"> <i
+						class="lni lni-reload me-1"></i> Mostrar todos los productos
+
+					</a>
+
+				</div>
+
+				<!-- Tarjetas de productos -->
+				<div class="row g-4"
+					th:if="${listarProductos != null
+                    and !#lists.isEmpty(listarProductos)}">
+
+					<div class="col-xl-4 col-lg-4 col-md-6"
+						th:each="producto : ${listarProductos}">
+
+						<article class="producto-card h-100">
+
+							<!-- Imagen -->
+							<div class="producto-imagen-wrapper">
+
+								<img
+									th:src="${producto.imagenUrl != null
+                                    and !#strings.isEmpty(producto.imagenUrl)
+                                    ? producto.imagenUrl
+                                    : '/assets/images/productos/sin-imagen.png'}"
+									src="/assets/images/productos/sin-imagen.png"
+									class="producto-imagen" th:alt="${producto.nombre}"
+									alt="Producto"> <span class="producto-badge disponible">
+
+									<i class="lni lni-checkmark-circle me-1"></i> Disponible
+
+								</span>
+
+							</div>
+
+							<!-- Información -->
+							<div class="producto-body">
+
+								<div
+									class="d-flex justify-content-between
+                                        align-items-start mb-2">
+
+									<div class="producto-codigo">
+
+										Código: <strong th:text="${producto.idProducto}"> 0 </strong>
+
+									</div>
+
+									<div class="producto-stock-resumen">
+
+										Stock: <strong th:text="${producto.stock}"> 0 </strong>
+
+									</div>
+
+								</div>
+
+								<div class="producto-categoria">
+
+									<i class="lni lni-tag me-1"></i> <span
+										th:text="${producto.categoria != null
+                                    ? producto.categoria.nombre
+                                    : 'Sin categoría'}">
+
+										Sin categoría </span>
+
+								</div>
+
+								<h4 class="producto-titulo" th:text="${producto.nombre}">
+
+									Nombre del producto</h4>
+
+								<p class="producto-descripcion"
+									th:text="${producto.descripcion}">Descripción del producto.
+
+								</p>
+
+								<div class="producto-info">
+
+									<div>
+
+										<span class="producto-label"> Precio </span>
+
+										<div class="producto-precio">
+
+											$ <span
+												th:text="${#numbers.formatDecimal(
+                                                producto.precio,
+                                                1,
+                                                2
+                                            )}">
+
+												0.00 </span>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+							<!-- Acciones -->
+							<div class="producto-footer">
+
+								<form
+									th:action="@{/carrito/agregar/{idProducto}(
+                                        idProducto=${producto.idProducto}
+                                    )}"
+									method="post" class="w-100">
+
+									<div class="mb-3">
+
+										<label class="form-label fw-semibold"> Cantidad </label> <input
+											type="number" name="cantidad" value="1" min="1"
+											th:max="${producto.stock}" class="form-control">
+
+									</div>
+
+									<div class="d-flex gap-2">
+
+										<button type="submit" class="btn btn-success flex-fill">
+
+											<i class="lni lni-cart me-1"></i> Agregar
+
+										</button>
+
+										<a
+											th:href="@{/catalogo/detalle/{idProducto}(
+                                                idProducto=${producto.idProducto}
+                                            )}"
+											class="btn btn-outline-primary flex-fill"> <i
+											class="lni lni-eye me-1"></i> Detalle
+
+										</a>
+
+									</div>
+
+								</form>
+
+							</div>
+
+						</article>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section>
+
+	</div>
+
+</body>
+</html>

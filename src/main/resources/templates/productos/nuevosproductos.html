@@ -20,13 +20,27 @@
 					<div class="card shadow">
 
 						<div class="card-header bg-primary text-white">
-							<h3 class="mb-0 text-center text-white">Nuevo Producto</h3>
+
+							<h3 class="mb-0 text-center text-white"
+								th:text="${producto.idProducto > 0
+                            ? 'Editar producto'
+                            : 'Nuevo producto'}">
+
+								Nuevo producto</h3>
+
 						</div>
 
 						<div class="card-body">
 
 							<form th:action="@{/producto/guardar}" th:object="${producto}"
 								method="post" enctype="multipart/form-data">
+
+								<!-- ID oculto: permite distinguir nuevo y edición -->
+								<input type="hidden" th:field="*{idProducto}">
+
+								<!-- Conserva la imagen anterior -->
+								<input type="hidden" th:field="*{imagenUrl}">
+
 
 								<div class="row">
 
@@ -43,8 +57,10 @@
 									<!-- Categoría -->
 									<div class="col-md-6 mb-3">
 
-										<label for="idCategoria" class="form-label"> Categoría
-										</label> <select class="form-select" th:field="*{categoria}" required>
+										<label for="categoria" class="form-label"> Categoría </label>
+
+										<select id="categoria" class="form-select"
+											th:field="*{categoria}" required>
 
 											<option value="">Seleccione una categoría</option>
 
@@ -93,14 +109,38 @@
 
 								</div>
 
-								<!-- Imagen -->
+								<!-- Imagen actual: solo aparece al editar -->
+								<div class="mb-3"
+									th:if="${producto.idProducto > 0
+                                and producto.imagenUrl != null
+                                and !#strings.isEmpty(producto.imagenUrl)}">
+
+									<label class="form-label"> Imagen actual </label>
+
+									<div>
+										<img th:src="${producto.imagenUrl}"
+											alt="Imagen actual del producto"
+											style="width: 180px; height: 160px; object-fit: cover; border-radius: 10px; border: 1px solid #ddd;">
+									</div>
+
+								</div>
+
+								<!-- Nueva imagen -->
 								<div class="mb-3">
 
-									<label class="form-label"> Imagen del producto </label> <input
-										type="file" class="form-control" name="imagen"
-										accept="image/png,image/jpeg,image/jpg" required> <small
-										class="text-muted"> Formatos permitidos: JPG, JPEG y
-										PNG. </small>
+									<label for="imagen" class="form-label"
+										th:text="${producto.idProducto > 0
+                                       ? 'Cambiar imagen'
+                                       : 'Imagen del producto'}">
+
+										Imagen del producto </label> <input type="file" id="imagen"
+										name="imagen" class="form-control"
+										accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+										th:required="${producto.idProducto == 0}"> <small
+										class="text-muted" th:if="${producto.idProducto == 0}">
+										Formatos permitidos: JPG, JPEG, PNG y WEBP. </small> <small
+										class="text-muted" th:if="${producto.idProducto > 0}">
+										Deja este campo vacío para conservar la imagen actual. </small>
 
 								</div>
 
@@ -111,10 +151,12 @@
 									<a th:href="@{/producto}" class="btn btn-secondary">
 										Cancelar </a>
 
-									<button type="reset" class="btn btn-warning">Limpiar</button>
+									<button type="submit" class="btn btn-primary"
+										th:text="${producto.idProducto > 0
+                                        ? 'Actualizar producto'
+                                        : 'Guardar producto'}">
 
-									<button type="submit" class="btn btn-primary">Guardar
-										producto</button>
+										Guardar producto</button>
 
 								</div>
 

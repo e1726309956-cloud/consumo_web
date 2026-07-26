@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="plantilla/plantillaui">
+
+<head>
+<meta charset="UTF-8">
+<title>Productos</title>
+<link rel="stylesheet" href="../assets/css/producto.css">
+</head>
+
+<body>
+
+	<div layout:fragment="contenidopaginas">
+
+		<section class="section">
+
+			<div class="container">
+
+				<div class="row">
+
+					<!-- Imagen -->
+
+					<div class="col-lg-6">
+
+						<div class="card shadow">
+
+							<img th:src="${producto.imagenUrl}" class="img-fluid rounded"
+								style="height: 500px; object-fit: cover;">
+
+						</div>
+
+					</div>
+
+					<!-- Información -->
+
+					<div class="col-lg-6">
+
+						<h2 class="fw-bold" th:text="${producto.nombre}"></h2>
+
+						<h3 class="text-success mb-4">
+
+							$ <span th:text="${producto.precio}"></span>
+
+						</h3>
+
+						<p class="text-muted">
+
+							<strong>Categoría:</strong> <span
+								th:text="${producto.categoria.nombre}"> </span>
+
+						</p>
+
+						<p>
+
+							<strong>Descripción</strong>
+
+						</p>
+
+						<p th:text="${producto.descripcion}"></p>
+
+						<p>
+
+							<strong>Stock disponible:</strong> <span class="badge bg-success"
+								th:text="${producto.stock}"> </span>
+
+						</p>
+
+						<hr>
+
+						<form
+							th:action="@{/carrito/agregar/{idProducto}
+                (idProducto=${producto.idProducto})}"
+							method="post">
+
+							<div class="row">
+
+								<div class="col-md-4">
+
+									<label>Cantidad</label> <input class="form-control"
+										type="number" name="cantidad" value="1" min="1"
+										th:max="${producto.stock}">
+
+								</div>
+
+							</div>
+
+							<div class="mt-4">
+
+								<button class="btn btn-success btn-lg">
+
+									<i class="lni lni-cart me-2"></i> Agregar
+
+								</button>
+
+								<a th:href="@{/catalogo}"
+									class="btn btn-outline-secondary btn-lg"> Volver </a>
+
+							</div>
+
+						</form>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section>
+	</div>
+
+</body>
+</html>

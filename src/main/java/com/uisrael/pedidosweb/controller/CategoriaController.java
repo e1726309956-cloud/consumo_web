@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -49,8 +50,70 @@ public class CategoriaController {
     public String guardarCategoria(
             @ModelAttribute("categoria") CategoriaRequestDto categoria) {
 
-        servicioCategoria.guardarCategoria(categoria);
+
+        if (categoria.getIdCategoria() > 0) {
+
+            servicioCategoria.actualizarCategoria(categoria);
+
+        } else {
+
+            servicioCategoria.guardarCategoria(categoria);
+        }
 
         return "redirect:/categoria";
     }
+    
+    @GetMapping("/inactivar/{idCategoria}")
+    public String inactivarCategoria(
+            @PathVariable int idCategoria) {
+
+        servicioCategoria.inactivarCategoria(idCategoria);
+
+        return "redirect:/categoria";
+    }
+
+    @GetMapping("/activar/{idCategoria}")
+    public String activarCategoria(
+            @PathVariable int idCategoria) {
+
+        servicioCategoria.activarCategoria(idCategoria);
+
+        return "redirect:/categoria";
+    }
+    
+    @GetMapping("/editar/{idCategoria}")
+    public String editarCategoria(
+            @PathVariable int idCategoria,
+            Model model) {
+
+        CategoriaResponseDto categoriaApi =
+                servicioCategoria.buscarPorId(idCategoria);
+
+        CategoriaRequestDto categoria =
+                new CategoriaRequestDto();
+
+        categoria.setIdCategoria(
+                categoriaApi.getIdCategoria()
+        );
+
+        categoria.setNombre(
+                categoriaApi.getNombre()
+        );
+
+        categoria.setDescripcion(
+                categoriaApi.getDescripcion()
+        );
+
+        categoria.setEstado(
+                categoriaApi.isEstado()
+        );
+
+        model.addAttribute(
+                "categoria",
+                categoria
+        );
+
+        return "categorias/crearcategorias";
+    }
+
 }

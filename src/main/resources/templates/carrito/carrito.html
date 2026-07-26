@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="plantilla/plantillaui">
+
+<head>
+<meta charset="UTF-8">
+<title>Categorias</title>
+<link rel="stylesheet" href="../assets/css/categoria.css">
+</head>
+
+<body>
+
+	<div layout:fragment="contenidopaginas">
+
+		<section class="section">
+
+			<div class="container-fluid">
+
+				<!-- Encabezado -->
+				<div class="title-wrapper pt-30 mb-4">
+
+					<div class="row align-items-center">
+
+						<div class="col-md-6">
+
+							<h2>Mi carrito</h2>
+
+							<p class="text-muted mb-0">Revisa los productos seleccionados
+								antes de generar el pedido.</p>
+
+						</div>
+
+						<div class="col-md-6 text-md-end mt-3 mt-md-0">
+
+							<a th:href="@{/producto}" class="btn btn-outline-primary"> <i
+								class="lni lni-arrow-left me-1"></i> Seguir comprando
+
+							</a>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<!-- Carrito vacío -->
+				<div class="card-style text-center py-5"
+					th:if="${carrito == null or #lists.isEmpty(carrito)}">
+
+					<i class="lni lni-cart" style="font-size: 60px; color: #9ca3af;"></i>
+
+					<h4 class="mt-3">Tu carrito está vacío</h4>
+
+					<p class="text-muted">Agrega arreglos florales o dulces desde
+						el catálogo.</p>
+
+					<a th:href="@{/producto}" class="btn btn-primary mt-2"> <i
+						class="lni lni-shopping-basket me-1"></i> Ver productos
+
+					</a>
+
+				</div>
+
+				<!-- Carrito con productos -->
+				<div th:if="${carrito != null and !#lists.isEmpty(carrito)}">
+
+					<div class="row">
+
+						<!-- Productos -->
+						<div class="col-lg-8">
+
+							<div class="card-style mb-30">
+
+								<div
+									class="d-flex justify-content-between
+                                        align-items-center mb-4">
+
+									<h4 class="mb-0">Productos seleccionados</h4>
+
+									<span class="badge bg-primary"
+										th:text="${cantidadTotal + ' producto(s)'}"> 0
+										productos </span>
+
+								</div>
+
+								<div class="table-responsive">
+
+									<table class="table align-middle mb-0">
+
+										<thead class="table-light">
+
+											<tr>
+												<th>Producto</th>
+												<th>Precio</th>
+												<th>Cantidad</th>
+												<th>Subtotal</th>
+												<th class="text-center">Acción</th>
+											</tr>
+
+										</thead>
+
+										<tbody>
+
+											<tr th:each="item : ${carrito}">
+
+												<!-- Producto -->
+												<td>
+
+													<div
+														class="d-flex
+                                                            align-items-center
+                                                            gap-3">
+
+														<img
+															th:src="${item.imagenUrl != null
+                                                            and !#strings.isEmpty(item.imagenUrl)
+                                                            ? item.imagenUrl
+                                                            : '/assets/images/productos/sin-imagen.png'}"
+															src="/assets/images/productos/sin-imagen.png"
+															th:alt="${item.nombre}" alt="Producto"
+															style="width: 85px; height: 85px; object-fit: cover; border-radius: 12px; border: 1px solid #e5e7eb;">
+
+														<div>
+
+															<h6 class="mb-1" th:text="${item.nombre}">Ramo de
+																rosas</h6>
+
+															<small class="text-muted"> Código: <span
+																th:text="${item.idProducto}"> 1 </span>
+
+															</small>
+
+														</div>
+
+													</div>
+
+												</td>
+
+												<!-- Precio -->
+												<td><span class="fw-semibold"> $ <span
+														th:text="${#numbers.formatDecimal(
+                                                            item.precio,
+                                                            1,
+                                                            2
+                                                        )}">
+															0.00 </span>
+
+												</span></td>
+
+												<!-- Cantidad -->
+												<td>
+
+													<form
+														th:action="@{/carrito/actualizar/{idProducto}(
+                                                        idProducto=${item.idProducto}
+                                                    )}"
+														method="post"
+														class="d-flex
+                                                             align-items-center
+                                                             gap-2">
+
+														<input type="number" name="cantidad" min="0"
+															th:value="${item.cantidad}" class="form-control"
+															style="width: 85px;">
+
+														<button type="submit"
+															class="btn
+                                                                   btn-outline-primary
+                                                                   btn-sm"
+															title="Actualizar cantidad">
+
+															<i class="lni lni-reload"></i>
+
+														</button>
+
+													</form>
+
+												</td>
+
+												<!-- Subtotal -->
+												<td><strong class="text-primary"> $ <span
+														th:text="${#numbers.formatDecimal(
+                                                            item.subtotal,
+                                                            1,
+                                                            2
+                                                        )}">
+															0.00 </span>
+
+												</strong></td>
+
+												<!-- Eliminar -->
+												<td class="text-center"><a
+													th:href="@{/carrito/eliminar/{idProducto}(
+                                                        idProducto=${item.idProducto}
+                                                    )}"
+													class="btn
+                                                          btn-outline-danger
+                                                          btn-sm"
+													title="Eliminar del carrito"
+													onclick="return confirm(
+                                                       '¿Deseas eliminar este producto del carrito?'
+                                                   )">
+
+														<i class="lni lni-trash-can"></i>
+
+												</a></td>
+
+											</tr>
+
+										</tbody>
+
+									</table>
+
+								</div>
+
+							</div>
+
+						</div>
+
+						<!-- Resumen -->
+						<div class="col-lg-4">
+
+							<div class="card-style mb-30">
+
+								<h4 class="mb-4">Resumen del pedido</h4>
+
+								<div
+									class="d-flex
+                                        justify-content-between
+                                        mb-3">
+
+									<span class="text-muted"> Cantidad de productos </span> <strong
+										th:text="${cantidadTotal}"> 0 </strong>
+
+								</div>
+
+								<div
+									class="d-flex
+                                        justify-content-between
+                                        mb-3">
+
+									<span class="text-muted"> Subtotal </span> <strong> $
+
+										<span
+										th:text="${#numbers.formatDecimal(
+                                            total,
+                                            1,
+                                            2
+                                        )}">
+											0.00 </span>
+
+									</strong>
+
+								</div>
+
+								<div
+									class="d-flex
+                                        justify-content-between
+                                        mb-3">
+
+									<span class="text-muted"> Envío </span> <span
+										class="text-success fw-semibold"> Por definir </span>
+
+								</div>
+
+								<hr>
+
+								<div
+									class="d-flex
+                                        justify-content-between
+                                        align-items-center
+                                        mb-4">
+
+									<h5 class="mb-0">Total estimado</h5>
+
+									<h4 class="mb-0 text-primary">
+
+										$ <span
+											th:text="${#numbers.formatDecimal(
+                                            total,
+                                            1,
+                                            2
+                                        )}">
+											0.00 </span>
+
+									</h4>
+
+								</div>
+
+								<a th:href="@{/pedido/confirmar}" class="btn btn-primary w-100">
+
+									<i class="lni lni-checkmark-circle me-1"></i> Generar pedido
+
+								</a> <a th:href="@{/carrito/vaciar}"
+									class="btn btn-outline-danger w-100 mt-3"
+									onclick="return confirm(
+                                   '¿Deseas eliminar todos los productos del carrito?'
+                               )">
+
+									<i class="lni lni-trash-can me-1"></i> Vaciar carrito
+
+								</a>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section>
+
+	</div>
+
+</body>
+</html>

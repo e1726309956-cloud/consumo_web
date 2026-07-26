@@ -22,10 +22,12 @@
 
 						<div class="col-md-6">
 							<div class="title">
+
 								<h2>Categorías</h2>
 
 								<p class="text-muted mb-0">Administra las categorías
 									disponibles para los productos.</p>
+
 							</div>
 						</div>
 
@@ -34,6 +36,7 @@
 							<a th:href="@{/categoria/nuevo}" href="/categoria/nuevo"
 								class="btn btn-primary px-4"> <i class="lni lni-plus me-1"></i>
 								Nueva categoría
+
 							</a>
 
 						</div>
@@ -44,18 +47,20 @@
 				<!-- Tarjeta principal -->
 				<div class="card-style mb-30">
 
-					<!-- Buscador -->
+					<!-- Buscador y filtro -->
 					<div class="row align-items-end mb-4">
 
 						<div class="col-lg-5 col-md-7">
 
 							<label for="buscarCategoria" class="form-label fw-semibold">
+
 								Buscar categoría </label>
 
 							<div class="input-group">
 
 								<span class="input-group-text bg-white"> <i
 									class="lni lni-search-alt"></i>
+
 								</span> <input type="text" id="buscarCategoria" class="form-control"
 									placeholder="Buscar por nombre o descripción">
 
@@ -66,6 +71,7 @@
 						<div class="col-lg-3 col-md-5 mt-3 mt-md-0">
 
 							<label for="filtroEstado" class="form-label fw-semibold">
+
 								Estado </label> <select id="filtroEstado" class="form-select">
 
 								<option value="">Todos</option>
@@ -84,7 +90,7 @@
 					<div class="alert alert-light border text-center py-5"
 						th:if="${listarCategorias == null or #lists.isEmpty(listarCategorias)}">
 
-						<i class="lni lni-grid-alt" style="font-size: 48px;"></i>
+						<i class="lni lni-tag" style="font-size: 48px;"></i>
 
 						<h5 class="mt-3">No existen categorías registradas</h5>
 
@@ -100,7 +106,8 @@
 					<div class="table-responsive"
 						th:if="${listarCategorias != null and !#lists.isEmpty(listarCategorias)}">
 
-						<table class="table table-hover align-middle mb-0">
+						<table class="table table-hover align-middle mb-0"
+							id="tablaCategorias">
 
 							<thead class="table-light">
 
@@ -116,51 +123,86 @@
 
 							<tbody>
 
-								<tr th:each="categoria : ${listarCategorias}">
+								<tr th:each="categoria : ${listarCategorias}"
+									th:attr="data-estado=${categoria.estado ? 'activa' : 'inactiva'}">
 
+									<!-- ID -->
 									<td><span class="fw-semibold"
 										th:text="${categoria.idCategoria}"> 1 </span></td>
 
+									<!-- Nombre -->
 									<td>
+
 										<div class="d-flex align-items-center gap-3">
 
 											<div class="categoria-icono">
-												<i class="lni lni-grid-alt"></i>
+
+												<i class="lni lni-tag"></i>
+
 											</div>
 
 											<div>
-												<h6 class="mb-0" th:text="${categoria.nombre}">
-													Arreglos florales</h6>
+
+												<h6 class="mb-0 categoria-nombre"
+													th:text="${categoria.nombre}">Arreglos florales</h6>
+
 											</div>
 
 										</div>
+
 									</td>
 
-									<td><span class="text-muted"
+									<!-- Descripción -->
+									<td><span class="text-muted categoria-descripcion"
 										th:text="${categoria.descripcion}"> Categoría para
 											flores y arreglos. </span></td>
 
+									<!-- Estado -->
 									<td><span class="badge bg-success"
-										th:if="${categoria.estado}"> Activa </span> <span
-										class="badge bg-danger" th:unless="${categoria.estado}">
-											Inactiva </span></td>
+										th:if="${categoria.estado}"> <i
+											class="lni lni-checkmark-circle me-1"></i> Activa
 
-									<td class="text-center"><a
-										th:href="@{/categoria/editar/{id}(
-                                       id=${categoria.idCategoria}
-                                   )}"
-										href="#" class="btn btn-outline-primary btn-sm me-1"
-										title="Editar"> <i class="lni lni-pencil-alt"></i>
-									</a> <a
-										th:href="@{/categoria/eliminar/{id}(
-                                       id=${categoria.idCategoria}
-                                   )}"
-										href="#" class="btn btn-outline-danger btn-sm"
-										title="Eliminar"
-										onclick="return confirm('¿Está segura de eliminar esta categoría?')">
+									</span> <span class="badge bg-danger" th:unless="${categoria.estado}">
 
-											<i class="lni lni-trash-can"></i>
-									</a></td>
+											<i class="lni lni-close me-1"></i> Inactiva
+
+									</span></td>
+
+									<!-- Acciones -->
+									<td class="text-center">
+										<!-- Editar --> <a
+										th:href="@{/categoria/editar/{idCategoria}(
+                                        idCategoria=${categoria.idCategoria}
+                                    )}"
+										class="btn btn-outline-primary btn-sm me-1"
+										title="Editar categoría"> <i
+											class="lni lni-pencil-alt me-1"></i> Editar
+
+									</a> <!-- Inactivar: solo aparece cuando está activa --> <a
+										th:if="${categoria.estado}"
+										th:href="@{/categoria/inactivar/{idCategoria}(
+                                        idCategoria=${categoria.idCategoria}
+                                    )}"
+										class="btn btn-outline-danger btn-sm"
+										title="Inactivar categoría"
+										onclick="return confirm('¿Está segura de inactivar esta categoría? Los productos asociados podrían dejar de estar disponibles para nuevas asignaciones.')">
+
+											<i class="lni lni-ban me-1"></i> Inactivar
+
+									</a> <!-- Activar: solo aparece cuando está inactiva --> <a
+										th:unless="${categoria.estado}"
+										th:href="@{/categoria/activar/{idCategoria}(
+                                        idCategoria=${categoria.idCategoria}
+                                    )}"
+										class="btn btn-outline-success btn-sm"
+										title="Activar categoría"
+										onclick="return confirm('¿Está segura de activar esta categoría?')">
+
+											<i class="lni lni-checkmark-circle me-1"></i> Activar
+
+									</a>
+
+									</td>
 
 								</tr>
 
@@ -177,6 +219,8 @@
 
 
 	</div>
+
+
 
 </body>
 </html>

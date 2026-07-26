@@ -11,4 +11,5 @@ public class CategoriaRequestDto {
 	private boolean estado;
 	
 
+
 }

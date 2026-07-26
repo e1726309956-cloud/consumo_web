@@ -9,4 +9,8 @@ public interface ICategoriaService {
 	
 	List<CategoriaResponseDto> listarCategorias();
 	void guardarCategoria(CategoriaRequestDto categoria);
+	void inactivarCategoria(int idCategoria);
+    void activarCategoria(int idCategoria);
+    CategoriaResponseDto buscarPorId(int idCategoria);
+    void actualizarCategoria(CategoriaRequestDto categoria);
 }

@@ -32,5 +32,52 @@ public class CategoriaServiceImpl implements ICategoriaService{
          .block();
 		
 	}
+	@Override
+    public void inactivarCategoria(int idCategoria) {
+
+        webClient.delete()
+                .uri("/categoria/{idCategoria}", idCategoria)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+    }
+
+    @Override
+    public void activarCategoria(int idCategoria) {
+
+        webClient.put()
+                .uri("/categoria/activar/{idCategoria}", idCategoria)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+    }
+    
+    @Override
+    public CategoriaResponseDto buscarPorId(int idCategoria) {
+
+        return webClient.get()
+                .uri(
+                        "/categoria/id/{idCategoria}",
+                        idCategoria
+                )
+                .retrieve()
+                .bodyToMono(CategoriaResponseDto.class)
+                .block();
+    }
+    
+    @Override
+    public void actualizarCategoria(
+            CategoriaRequestDto categoria) {
+
+        webClient.put()
+                .uri(
+                        "/categoria/id/{idCategoria}",
+                        categoria.getIdCategoria()
+                )
+                .bodyValue(categoria)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+    }
 	
 }
