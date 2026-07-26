@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -39,6 +40,20 @@ public class PedidoController {
 		serviciopedido.guardarpedido(pedido);
 		return "redirect:/pedidos";
 	}
+	
+	@GetMapping("/editar/{id}")
+	public String editarPedido(@PathVariable int id, Model model) {
+	    PedidoResponseDto pedido = serviciopedido.buscarPorId(id);
+	    model.addAttribute("pedidos", pedido);
+	    return "/pedidos/crearpedido"; // reutiliza el mismo formulario
+	}
+
+	@GetMapping("/eliminar/{id}")
+	public String eliminarPedido(@PathVariable int id) {
+	    serviciopedido.eliminarPedido(id);
+	    return "redirect:/pedidos";
+	}
+
 	
 	
 }

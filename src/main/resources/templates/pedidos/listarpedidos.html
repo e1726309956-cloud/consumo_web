@@ -9,6 +9,13 @@ layout:decorate="/plantilla/plantillaui">
   <body>
   					<div layout:fragment="contenidopaginas">
 						<h5 class="card-title fw-semibold mb-4">Listar Pedidos</h5>
+						
+						    <div class="mb-3">
+        <a th:href="@{/pedidos/nuevo}" class="btn btn-success">
+            <i class="lni lni-plus"></i> Nuevo Pedido
+        </a>
+    </div>
+    
 						<table class="table">
 							<thead>
 								<tr>
@@ -29,10 +36,27 @@ layout:decorate="/plantilla/plantillaui">
 								<td th:text="${indice.direccionEntrega}"></td>
 								<td th:text="${indice.observacion}"></td>
 								<td th:text="${indice.total}"></td>
-								<td>
-								<a  href="" class="btn btn-primary" title="Editar"><i class="ti-pencil-alt"></i></a>
-								<a  href="" class="btn btn-danger" title="Eliminar"><i class="ti-trash"></i></a>
-								</td>
+<td>
+  <!-- Botón Editar -->
+  <a th:href="@{/pedidos/editar/{id}(id=${indice.idPedido})}" 
+     class="btn btn-sm btn-primary" title="Editar">
+     <i class="lni lni-pencil"></i> Editar
+  </a>
+
+  <!-- Botón Eliminar -->
+  <a th:href="@{/pedidos/eliminar/{id}(id=${indice.idPedido})}" 
+     class="btn btn-sm btn-danger" title="Eliminar"
+     onclick="return confirm('¿Seguro que deseas eliminar este pedido?');">
+     <i class="lni lni-trash-can"></i> Eliminar
+  </a>
+</td>
+
+								
+
+
+								
+								
+								
 
 								</tr>
 							

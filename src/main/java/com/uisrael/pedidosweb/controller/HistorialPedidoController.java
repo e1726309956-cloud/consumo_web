@@ -1,45 +1,52 @@
 package com.uisrael.pedidosweb.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import com.uisrael.pedidosweb.modelo.dt.request.HistorialPedidoRequestDto;
 import com.uisrael.pedidosweb.modelo.dt.response.HistorialPedidoResponseDto;
 import com.uisrael.pedidosweb.services.IHistorialPedidoService;
 
-import org.springframework.ui.Model;
-
 @Controller
-@RequestMapping("/historialpedidos") //url
+@RequestMapping("/historialpedidos")
 public class HistorialPedidoController {
-	
-	@Autowired
-	private IHistorialPedidoService servicioHistorialPedido;
 
-	@GetMapping
-	public String leerpagina(Model model) {
-		List<HistorialPedidoResponseDto> resultadosBD=servicioHistorialPedido.listarhistorialpedido();
-		model.addAttribute("listahistorialpedido",resultadosBD);
-		return "/historialPedidos/listarhistorialpedidos";//ruta fisica de la paguina 
-	}
-	
-	@GetMapping("/nuevo")
-	public String crearHistorialPedido(Model model) {
-		model.addAttribute("historialpedido", new HistorialPedidoRequestDto());
-	return "/grupos/crearhistorialpedido";
-	}
-	
-	
-	@PostMapping("/guardar")
-	public String  guardarGrupo(@ModelAttribute HistorialPedidoRequestDto historialpedido ) {
-		servicioHistorialPedido.guardarhistorialpedido(historialpedido);
-		return "redirect:/historialpedidos";
-	}
-	
+    @Autowired
+    private IHistorialPedidoService servicioHistorial;
+
+    @GetMapping
+    public String listar(Model model) {
+        List<HistorialPedidoResponseDto> lista = servicioHistorial.listarHistorial();
+        model.addAttribute("listahistorialpedido", lista);
+        return "/historialPedidos/listarhistorialpedidos";
+    }
+
+    @GetMapping("/nuevo")
+    public String crear(Model model) {
+        model.addAttribute("historialpedido", new HistorialPedidoRequestDto());
+        return "/historialPedidos/crearhistorialpedido";
+    }
+
+    @PostMapping("/guardar")
+    public String guardar(@ModelAttribute HistorialPedidoRequestDto dto) {
+        servicioHistorial.guardarHistorial(dto);
+        return "redirect:/historialpedidos";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editarHistorial(@PathVariable int id, Model model) {
+        HistorialPedidoResponseDto historial = servicioHistorial.buscarPorId(id);
+        model.addAttribute("historialpedido", historial);
+        return "/historialPedidos/crearhistorialpedido";
+    }
+    
+
+    @GetMapping("/eliminar/{id}")
+    public String eliminarHistorial(@PathVariable int id) {
+        servicioHistorial.eliminarHistorial(id);
+        return "redirect:/historialpedidos";
+    }
 }

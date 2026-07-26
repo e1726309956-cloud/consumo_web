@@ -5,14 +5,18 @@
 
 <head>
     <meta charset="UTF-8"/>
-    <title>Crear Pedido</title>
+    <title>Crear/Editar Pedido</title>
 </head>
 
 <body>
 <div layout:fragment="contenidopaginas">
-    <h5 class="card-title fw-semibold mb-4">Crear Pedido</h5>
+    <h5 class="card-title fw-semibold mb-4">Crear / Editar Pedido</h5>
 
+    <!-- Formulario -->
     <form th:action="@{/pedidos/guardar}" th:object="${pedidos}" method="post">
+
+        <!-- Campo oculto para ID -->
+        <input type="hidden" th:field="*{idPedido}" />
 
         <div class="mb-3">
             <label for="fechaPedido" class="form-label">Fecha Pedido</label>

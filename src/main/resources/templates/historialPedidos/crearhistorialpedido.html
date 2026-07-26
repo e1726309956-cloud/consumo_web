@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>Crear Historial Pedido</title>
+</head>
+
+<body>
+<div layout:fragment="contenidopaginas">
+    <h5 class="card-title fw-semibold mb-4">Crear Historial Pedido</h5>
+<form th:action="@{/historialpedidos/guardar}" th:object="${historialpedido}" method="post">
+
+    <!-- Campo oculto para enviar el ID -->
+    <input type="hidden" th:field="*{idHistorial}" />
+
+    <div class="mb-3">
+        <label for="idEstadoAnterior" class="form-label">Estado Anterior</label>
+        <input type="number" class="form-control" th:field="*{idEstadoAnterior}" id="idEstadoAnterior">
+    </div>
+
+    <div class="mb-3">
+        <label for="idEstadoNuevo" class="form-label">Estado Nuevo</label>
+        <input type="number" class="form-control" th:field="*{idEstadoNuevo}" id="idEstadoNuevo">
+    </div>
+
+    <div class="mb-3">
+        <label for="observacion" class="form-label">Observación</label>
+        <textarea class="form-control" th:field="*{observacion}" id="observacion"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="fecha" class="form-label">Fecha</label>
+        <input type="date" class="form-control" th:field="*{fecha}" id="fecha">
+    </div>
+
+    <div class="mb-3">
+        <label for="usuarioModifica" class="form-label">Usuario Modifica</label>
+        <input type="text" class="form-control" th:field="*{usuarioModifica}" id="usuarioModifica">
+    </div>
+
+    <div class="mb-3">
+        <label for="idPedido" class="form-label">Pedido</label>
+        <input type="number" class="form-control" th:field="*{idPedido}" id="idPedido">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+    
+</div>
+</body>
+</html>

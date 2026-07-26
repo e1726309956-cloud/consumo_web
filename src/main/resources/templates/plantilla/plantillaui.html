@@ -6,15 +6,19 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon" />
+<link rel="shortcut icon" th:href="@{/assets/images/favicon.svg}" type="image/x-icon" />
+
     <title>LISTA DE PEDIDOS</title>
 
     <!-- ========== All CSS files linkup ========= -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="assets/css/lineicons.css" />
-    <link rel="stylesheet" href="assets/css/materialdesignicons.min.css" />
-    <link rel="stylesheet" href="assets/css/fullcalendar.css" />
-    <link rel="stylesheet" href="assets/css/main.css" />
+<link rel="shortcut icon" th:href="@{/assets/images/favicon.svg}" type="image/x-icon">
+
+<link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/assets/css/lineicons.css}">
+<link rel="stylesheet" th:href="@{/assets/css/materialdesignicons.min.css}">
+<link rel="stylesheet" th:href="@{/assets/css/fullcalendar.css}">
+<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+
   </head>
   <body>
     <!-- ======== Preloader =========== -->
@@ -26,9 +30,10 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <!-- ======== sidebar-nav start =========== -->
     <aside class="sidebar-nav-wrapper">
       <div class="navbar-logo">
-        <a href="index.html">
-          <img src="assets/images/logo/logo.svg" alt="logo" />
-        </a>
+<a th:href="@{/index}">
+  <img th:src="@{/assets/images/logo/logo.svg}" alt="logo" />
+</a>
+
       </div>
       <nav class="sidebar-nav">
         <ul>
@@ -545,14 +550,15 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <!-- ======== main-wrapper end =========== -->
 
     <!-- ========= All Javascript files linkup ======== -->
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/Chart.min.js"></script>
-    <script src="assets/js/dynamic-pie-chart.js"></script>
-    <script src="assets/js/moment.min.js"></script>
-    <script src="assets/js/fullcalendar.js"></script>
-    <script src="assets/js/jvectormap.min.js"></script>
-    <script src="assets/js/world-merc.js"></script>
-    <script src="assets/js/polyfill.js"></script>
-    <script src="assets/js/main.js"></script>
+<script th:src="@{/assets/js/bootstrap.bundle.min.js}"></script>
+	<script th:src="@{/assets/js/Chart.min.js}"></script>
+<script th:src="@{/assets/js/dynamic-pie-chart.js}"></script>
+<script th:src="@{/assets/js/moment.min.js}"></script>
+<script th:src="@{/assets/js/fullcalendar.js}"></script>
+<script th:src="@{/assets/js/jvectormap.min.js}"></script>
+<script th:src="@{/assets/js/world-merc.js}"></script>
+<script th:src="@{/assets/js/polyfill.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+	
   </body>
 </html>

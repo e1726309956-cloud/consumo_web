@@ -1,43 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="/plantilla/plantillaui">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui">
 
-  <head>
+<head>
     <meta charset="UTF-8" />
-  </head>
-  <body>
-  					<div layout:fragment="contenidopaginas">
-						<h5 class="card-title fw-semibold mb-4">Listar Historial Pedidos</h5>
-						<table class="table">
-							<thead>
-								<tr>
-									<th scope="col">idHistorial</th>
-									<th scope="col">idEstadoAnterior</th>
-									<th scope="col">idEstadoNuevo</th>
-									<th scope="col">observacion</th>
-									<th scope="col">fecha</th>
-									<th scope="col">usuarioModifica</th>
-									<th scope="col"></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="indice : ${listahistorialpedido}">
-								<td th:text="${indice.idHistorial}"></td>
-								<td th:text="${indice.idEstadoAnterior}"></td>
-								<td th:text="${indice.idEstadoNuevo}"></td>
-								<td th:text="${indice.observacion}"></td>
-								<td th:text="${indice.fecha}"></td>
-								<td th:text="${indice.usuarioModifica}"></td>
-								<td>
-								<a  href="" class="btn btn-primary" title="Editar"><i class="ti-pencil-alt"></i></a>
-								<a  href="" class="btn btn-danger" title="Eliminar"><i class="ti-trash"></i></a>
-								</td>
-
-								</tr>
-							
-							</tbody>
-						</table>
-					</div>
-  </body>
+</head>
+<body>
+<div layout:fragment="contenidopaginas">
+    <h5 class="card-title fw-semibold mb-4">Listar Historial Pedidos</h5>
+    
+        <div class="mb-3">
+        <a th:href="@{/historialpedidos/nuevo}" class="btn btn-success">
+            <i class="lni lni-plus"></i> Nuevo Historial Pedido
+        </a>
+    </div>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">idHistorial</th>
+                <th scope="col">idEstadoAnterior</th>
+                <th scope="col">idEstadoNuevo</th>
+                <th scope="col">observacion</th>
+                <th scope="col">fecha</th>
+                <th scope="col">usuarioModifica</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="indice : ${listahistorialpedido}">
+                <td th:text="${indice.idHistorial}"></td>
+                <td th:text="${indice.idEstadoAnterior}"></td>
+                <td th:text="${indice.idEstadoNuevo}"></td>
+                <td th:text="${indice.observacion}"></td>
+                <td th:text="${indice.fecha}"></td>
+                <td th:text="${indice.usuarioModifica}"></td>
+                <td>
+                    <!-- Botón Editar -->
+                    <a th:href="@{/historialpedidos/editar/{id}(id=${indice.idHistorial})}" 
+                       class="btn btn-sm btn-primary" title="Editar">
+                       <i class="lni lni-pencil"></i>Editar
+                    </a>
+                    <!-- Botón Eliminar -->
+                    <a th:href="@{/historialpedidos/eliminar/{id}(id=${indice.idHistorial})}" 
+                       class="btn btn-sm btn-danger" title="Eliminar"
+                       onclick="return confirm('¿Seguro que deseas eliminar este historial?');">
+                       <i class="lni lni-trash-can"></i>Eliminar
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
 </html>

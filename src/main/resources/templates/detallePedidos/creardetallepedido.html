@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>Editar Detalle Pedido</title>
+</head>
+
+<body>
+<div layout:fragment="contenidopaginas">
+    <h5 class="card-title fw-semibold mb-4">Editar Detalle Pedido</h5>
+
+    <form th:action="@{/detallepedidos/guardar}" th:object="${detallepedido}" method="post">
+
+        <!-- Campo oculto para enviar el ID -->
+        <input type="hidden" th:field="*{idDetallePedido}" />
+
+        <div class="mb-3">
+            <label for="cantidad" class="form-label">Cantidad</label>
+            <input type="number" class="form-control" th:field="*{cantidad}" id="cantidad">
+        </div>
+
+        <div class="mb-3">
+            <label for="precioUnitario" class="form-label">Precio Unitario</label>
+            <input type="number" step="0.01" class="form-control" th:field="*{precioUnitario}" id="precioUnitario">
+        </div>
+
+        <div class="mb-3">
+            <label for="subtotal" class="form-label">Subtotal</label>
+            <input type="number" step="0.01" class="form-control" th:field="*{subtotal}" id="subtotal">
+        </div>
+
+        <div class="mb-3">
+            <label for="idPedido" class="form-label">Pedido</label>
+            <input type="number" class="form-control" th:field="*{idPedido}" id="idPedido">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+</div>
+</body>
+</html>

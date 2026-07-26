@@ -1,45 +1,51 @@
 package com.uisrael.pedidosweb.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import com.uisrael.pedidosweb.modelo.dt.request.DetallePedidoRequestDto;
 import com.uisrael.pedidosweb.modelo.dt.response.DetallePedidoResponseDto;
 import com.uisrael.pedidosweb.services.IDetallePedidoService;
 
-import org.springframework.ui.Model;
-
 @Controller
-@RequestMapping("/detallepedidos") //url
+@RequestMapping("/detallepedidos")
 public class DetallePedidoController {
-	
-	@Autowired
-	private IDetallePedidoService servicioDetallePedido;
 
-	@GetMapping
-	public String leerpagina(Model model) {
-		List<DetallePedidoResponseDto> resultadosBD=servicioDetallePedido.listardetallepedido();
-		model.addAttribute("listadetallepedido",resultadosBD);
-		return "/detallePedidos/listardetallepedidos";//ruta fisica de la paguina 
-	}
-	
-	@GetMapping("/nuevo")
-	public String crearDetallePedido(Model model) {
-		model.addAttribute("detallepedido", new DetallePedidoRequestDto());
-	return "/detallepedido/creardetallepedido";
-	}
-	
-	
-	@PostMapping("/guardar")
-	public String  guardarDetallePedido(@ModelAttribute DetallePedidoRequestDto detallepedido ) {
-		servicioDetallePedido.guardarDetallePedido(detallepedido);
-		return "redirect:/detallepedidos";
-	}
-	
+    @Autowired
+    private IDetallePedidoService servicioDetalle;
+
+    @GetMapping
+    public String listar(Model model) {
+        List<DetallePedidoResponseDto> lista = servicioDetalle.listarDetallePedido();
+        model.addAttribute("listadetallepedido", lista);
+        return "/detallePedidos/listardetallepedidos";
+    }
+
+    @GetMapping("/nuevo")
+    public String crear(Model model) {
+        model.addAttribute("detallepedido", new DetallePedidoRequestDto());
+        return "/detallePedidos/creardetallepedido";
+    }
+
+    @PostMapping("/guardar")
+    public String guardar(@ModelAttribute DetallePedidoRequestDto dto) {
+        servicioDetalle.guardarDetallePedido(dto);
+        return "redirect:/detallepedidos";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editarDetalle(@PathVariable int id, Model model) {
+        DetallePedidoResponseDto detalle = servicioDetalle.buscarPorId(id);
+        model.addAttribute("detallepedido", detalle);
+        return "/detallePedidos/creardetallepedido";
+    }
+
+    @GetMapping("/eliminar/{id}")
+    public String eliminarDetalle(@PathVariable int id) {
+        servicioDetalle.eliminarDetallePedido(id);
+        return "redirect:/detallepedidos";
+    }
 }

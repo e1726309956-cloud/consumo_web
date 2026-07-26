@@ -9,5 +9,8 @@ public interface IPedidoService {
 	
 	List<PedidoResponseDto> listarpedido();
 	Void guardarpedido(PedidoRequestDto nuevo);
+	PedidoResponseDto buscarPorId(int id);
+	void eliminarPedido(int id);
+
 
 }

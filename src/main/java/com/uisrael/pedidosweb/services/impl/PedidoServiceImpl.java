@@ -30,6 +30,23 @@ public class PedidoServiceImpl implements IPedidoService {
 		webclient.post().uri("/pedidos").bodyValue(nuevo).retrieve().toBodilessEntity().block();
 		return null;
 	}
+	
+	@Override
+	public PedidoResponseDto buscarPorId(int id) {
+	    return webclient.get().uri("/pedidos/" + id)
+	            .retrieve()
+	            .bodyToMono(PedidoResponseDto.class)
+	            .block();
+	}
+
+	@Override
+	public void eliminarPedido(int id) {
+	    webclient.delete().uri("/pedidos/" + id)
+	            .retrieve()
+	            .toBodilessEntity()
+	            .block();
+	}
+
 
 
 }
