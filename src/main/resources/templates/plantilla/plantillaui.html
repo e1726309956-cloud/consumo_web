@@ -141,7 +141,7 @@
 				</span>
 
 				<!-- Pedidos -->
-				<li class="nav-item"><a th:href="@{/pedido}" href="/pedido">
+				<li class="nav-item"><a th:href="@{/pedidos}" href="/pedido">
 
 						<span class="icon"> <i class="lni lni-cart"></i>
 					</span> <span class="text"> Pedidos </span>
@@ -177,7 +177,7 @@
 
 				<li class="nav-item" th:if="${session.rolUsuario == 'CLIENTE'}">
 
-					<a th:href="@{/mis-pedidos}"> <span class="icon"> <i
+					<a th:href="@{/pedidos}"> <span class="icon"> <i
 							class="lni lni-agenda"></i>
 					</span> <span class="text"> Mis pedidos </span>
 

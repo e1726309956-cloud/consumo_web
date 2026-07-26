@@ -1,39 +1,125 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-layout:decorate="/plantilla/plantillaui">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="plantilla/plantillaui">
 
-  <head>
-    <meta charset="UTF-8" />
-  </head>
-  <body>
-  					<div layout:fragment="contenidopaginas">
-						<h5 class="card-title fw-semibold mb-4">Listar Detalle Pedidos</h5>
-						<table class="table">
-							<thead>
-								<tr>
-									<th scope="col">idDetallePedido</th>
-									<th scope="col">cantidad</th>
-									<th scope="col">precioUnitario</th>
-									<th scope="col">subtotal</th>
-									<th scope="col"></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="indice : ${listadetallepedido}">
-								<td th:text="${indice.idDetallePedido}"></td>
-								<td th:text="${indice.cantidad}"></td>
-								<td th:text="${indice.precioUnitario}"></td>
-								<td th:text="${indice.subtotal}"></td>
-								<td>
-								<a  href="" class="btn btn-primary" title="Editar"><i class="ti-pencil-alt"></i></a>
-								<a  href="" class="btn btn-danger" title="Eliminar"><i class="ti-trash"></i></a>
-								</td>
+<head>
 
-								</tr>
-							
-							</tbody>
-						</table>
+<meta charset="UTF-8">
+
+<title>Detalle de pedidos</title>
+
+</head>
+
+<body>
+
+	<div layout:fragment="contenidopaginas">
+
+		<section class="section">
+
+			<div class="container-fluid">
+
+				<!-- Encabezado -->
+				<div class="title-wrapper pt-30 mb-4">
+
+					<div class="row align-items-center">
+
+						<div class="col-md-6">
+
+							<h2>Detalle de pedidos</h2>
+
+							<p class="text-muted mb-0">Consulta el detalle de los
+								productos incluidos en cada pedido.</p>
+
+						</div>
+
 					</div>
-  </body>
+
+				</div>
+
+				<!-- Tabla -->
+				<div class="card-style mb-30">
+
+					<div class="table-wrapper table-responsive">
+
+						<table class="table">
+
+							<thead>
+
+								<tr>
+
+									<th>ID</th>
+
+									<th>Cantidad</th>
+
+									<th>Precio Unitario</th>
+
+									<th>Subtotal</th>
+
+									<th class="text-center">Acciones</th>
+
+								</tr>
+
+							</thead>
+
+							<tbody>
+
+								<tr th:if="${#lists.isEmpty(listadetallepedido)}">
+
+									<td colspan="5" class="text-center py-4"><i
+										class="lni lni-package" style="font-size: 40px;"></i>
+
+										<p class="mt-2 mb-0">No existen detalles registrados.</p></td>
+
+								</tr>
+
+								<tr th:each="detalle : ${listadetallepedido}">
+
+									<td th:text="${detalle.idDetallePedido}"></td>
+
+									<td><span class="badge bg-primary"
+										th:text="${detalle.cantidad}"> </span></td>
+
+									<td>$ <span
+										th:text="${#numbers.formatDecimal(detalle.precioUnitario,1,2)}">
+
+									</span>
+
+									</td>
+
+									<td><strong> $ <span
+											th:text="${#numbers.formatDecimal(detalle.subtotal,1,2)}">
+
+										</span>
+
+									</strong></td>
+
+									<td class="text-center"><a href="#"
+										class="btn btn-sm btn-outline-primary me-1" title="Editar">
+
+											<i class="lni lni-pencil"></i>
+
+									</a> <a href="#" class="btn btn-sm btn-outline-danger"
+										title="Eliminar"> <i class="lni lni-trash-can"></i>
+
+									</a></td>
+
+								</tr>
+
+							</tbody>
+
+						</table>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section>
+
+	</div>
+
+</body>
+
 </html>
