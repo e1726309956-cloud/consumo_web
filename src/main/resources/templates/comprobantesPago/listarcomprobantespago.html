@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/plantilla/plantillaui">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Lista de Comprobantes de Pago</title>
+</head>
+
+<body>
+<div layout:fragment="contenidopaginas">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="card-title fw-semibold mb-0">Comprobantes de Pago</h5>
+        <a th:href="@{/comprobantespago/nuevo}" class="btn btn-success">+ Nuevo Comprobante</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table align-middle text-nowrap mb-0">
+            <thead>
+                <tr>
+                    <th scope="col">ID Pago</th>
+                    <th scope="col">ID Pedido</th>
+                    <th scope="col">Método Pago</th>
+                    <th scope="col">Monto</th>
+                    <th scope="col">Fecha Pago</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="indice : ${listacomprobantespago}">
+                    <td th:text="${indice.idPago}"></td>
+                    <td th:text="${indice.idPedido}"></td>
+                    <td th:text="${indice.metodoPago}"></td>
+                    <td th:text="${indice.monto}"></td>
+                    <td th:text="${indice.fechaPago}"></td>
+                    <td>
+                        <a th:href="@{/comprobantespago/editar/{id}(id=${indice.idPago})}" class="btn btn-primary btn-sm" title="Editar"><i class="lni lni-pencil"></i></a>
+                        <a th:href="@{/comprobantespago/eliminar/{id}(id=${indice.idPago})}" class="btn btn-danger btn-sm" title="Eliminar"><i class="lni lni-trash-can"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
