@@ -6,10 +6,10 @@ import lombok.Data;
 @Data
 public class EstadosGeneralesResponseDto {
     private int idEstado;
-    
-    @JsonProperty("nombre")  // <--- Esto lee "nombre" de la API Backend
+
+    @JsonProperty("nombre")
     private String nombreEstado;
-    
+
     private String descripcion;
     private boolean estado;
 }

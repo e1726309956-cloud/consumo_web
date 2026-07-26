@@ -1,41 +1,57 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/plantilla/plantillaui">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{plantilla/plantillaui}">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>Lista de Estados Generales</title>
+<meta charset="UTF-8" />
+<title>Estados Generales</title>
 </head>
 
 <body>
-<div layout:fragment="contenidopaginas">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h5 class="card-title fw-semibold mb-0">Listar Estados Generales</h5>
-        <a th:href="@{/estadosGenerales/nuevo}" class="btn btn-success">+ Nuevo Estado</a>
-    </div>
+	<div layout:fragment="contenidopaginas">
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<h5 class="card-title fw-semibold">Gestión de Estados Generales</h5>
+			<a th:href="@{/estadosGenerales/nuevo}" class="btn btn-primary">Nuevo Estado</a>
+		</div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Nombre Estado</th>
-                <th scope="col">Descripción</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="indice : ${listaEstados}">
-                <td th:text="${indice.idEstado}"></td>
-                <td th:text="${indice.nombreEstado}"></td>
-                <td th:text="${indice.descripcion}"></td>
-                <td>
-                    <a th:href="@{/estadosGenerales/editar/{id}(id=${indice.idEstado})}" class="btn btn-primary" title="Editar"><i class="lni lni-pencil"></i></a>
-                    <a th:href="@{/estadosGenerales/eliminar/{id}(id=${indice.idEstado})}" class="btn btn-danger" title="Eliminar"><i class="lni lni-trash-can"></i></a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+		<!-- Alertas -->
+		<div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show" role="alert">
+			<span th:text="${mensajeExito}"></span>
+		</div>
+		<div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+			<span th:text="${mensajeError}"></span>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table table-hover align-middle border">
+				<thead class="table-light">
+					<tr>
+						<th># ID</th>
+						<th>Nombre Estado</th>
+						<th>Descripción</th>
+						<th class="text-center">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="est : ${listaestados}">
+						<td th:text="${est.idEstado}"></td>
+						<td th:text="${est.nombreEstado}"></td>
+						<td th:text="${est.descripcion}"></td>
+						<td class="text-center">
+							<a th:href="@{/estadosGenerales/editar/{id}(id=${est.idEstado})}" 
+							   class="btn btn-warning btn-sm me-1">Editar</a>
+							<a th:href="@{/estadosGenerales/eliminar/{id}(id=${est.idEstado})}" 
+							   class="btn btn-danger btn-sm"
+							   onclick="return confirm('¿Deseas eliminar este estado?');">Eliminar</a>
+						</td>
+					</tr>
+					<tr th:if="${#lists.isEmpty(listaestados)}">
+						<td colspan="4" class="text-center text-muted">No se encontraron estados registrados.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </body>
 </html>

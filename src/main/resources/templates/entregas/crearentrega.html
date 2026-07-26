@@ -14,57 +14,91 @@
 
 		<form th:action="@{/entregas/guardar}" th:object="${entrega}" method="post">
 
-			<!-- 1. Desplegable de Pedidos (Usa name="idPedido" para evitar el conflicto con tipos int) -->
+			<!-- Select Pedido (sin el atributo name manual) -->
+<div class="mb-3">
+    <label class="form-label fw-semibold">Seleccionar Pedido</label> 
+    <select id="selectPedido" class="form-select" th:field="*{idPedido}" onchange="actualizarUsuario()" required>
+        <option value="" disabled selected>-- Seleccione un Pedido --</option>
+        <option th:each="p : ${listapedidos}" 
+                th:value="${p.idPedido}" 
+                th:data-usuario="${p.nombreUsuario != null ? p.nombreUsuario : 'Cliente Registrado'}"
+                th:text="'Pedido #' + ${p.idPedido}">
+        </option>
+    </select>
+</div>
+
+<!-- Select Estado (sin el atributo name manual) -->
+<div class="mb-3">
+    <label for="idEstado" class="form-label fw-semibold">Estado de Entrega</label> 
+    <select id="idEstado" class="form-select" th:field="*{idEstado}" required>
+        <option value="" disabled selected>-- Seleccionar Estado --</option>
+        <option th:each="est : ${listaestados}" 
+                th:value="${est.idEstado}"
+                th:text="${est.nombreEstado}">
+        </option>
+    </select>
+</div>
+
+			<!-- 2. CAMPO AUTOCOMPLETADO: Muestra el nombre o etiqueta del Usuario -->
 			<div class="mb-3">
-				<label for="selectPedido" class="form-label">Seleccionar Pedido</label>
-				<select id="selectPedido" name="idPedido" class="form-select" required>
-					<option value="" disabled selected>-- Seleccionar Pedido --</option>
-					<option th:each="pedido : ${listapedidos}"
-						th:value="${pedido.idPedido}"
-						th:text="'Pedido #' + ${pedido.idPedido}">
-					</option>
-				</select>
+				<label for="inputUsuario" class="form-label fw-semibold text-primary">Usuario / Cliente Asignado</label> 
+				<input type="text" id="inputUsuario" class="form-control bg-light" readonly
+					placeholder="Seleccione un pedido para ver el usuario..." />
 			</div>
 
-			<!-- 2. Desplegable de Estados Generales (Usa name="idEstado") -->
+			<!-- 3. Desplegable de Estados -->
 			<div class="mb-3">
-				<label for="idEstado" class="form-label">Estado de Entrega</label>
-				<select id="idEstado" name="idEstado" class="form-select" required>
+				<label for="idEstado" class="form-label fw-semibold">Estado de Entrega</label> 
+				<select id="idEstado" class="form-select" th:field="*{idEstado}" required>
 					<option value="" disabled selected>-- Seleccionar Estado --</option>
 					<option th:each="est : ${listaestados}" 
-						th:value="${est.idEstado}"
-						th:text="${est.nombreEstado}">
+							th:value="${est.idEstado}"
+							th:text="${est.nombreEstado}">
 					</option>
 				</select>
 			</div>
 
-			<!-- 3. Tipo de Entrega -->
+			<!-- 4. Tipo de Entrega -->
 			<div class="mb-3">
-				<label for="tipoEntrega" class="form-label">Tipo de Entrega</label>
-				<select id="tipoEntrega" name="tipoEntrega" class="form-select" required>
+				<label for="tipoEntrega" class="form-label fw-semibold">Tipo de Entrega</label> 
+				<select id="tipoEntrega" class="form-select" th:field="*{tipoEntrega}" required>
 					<option value="" disabled selected>-- Seleccionar Tipo --</option>
 					<option value="A Domicilio">A Domicilio</option>
 					<option value="Retiro en Tienda">Retiro en Tienda</option>
 				</select>
 			</div>
 
-			<!-- 4. Recibido por -->
+			<!-- 5. Recibido por -->
 			<div class="mb-3">
-				<label for="recibidoPor" class="form-label">Recibido Por</label>
-				<input type="text" class="form-control" th:field="*{recibidoPor}"
-					id="recibidoPor" placeholder="Nombre de quien recibe la entrega" required>
+				<label for="recibidoPor" class="form-label fw-semibold">Recibido Por</label> 
+				<input type="text" class="form-control" th:field="*{recibidoPor}" id="recibidoPor"
+					placeholder="Nombre de quien recibe la entrega" required>
 			</div>
 
-			<!-- 5. Observación -->
+			<!-- 6. Observación -->
 			<div class="mb-3">
-				<label for="observacion" class="form-label">Observación</label>
-				<textarea class="form-control" th:field="*{observacion}"
-					id="observacion" rows="2" placeholder="Notas o detalles adicionales"></textarea>
+				<label for="observacion" class="form-label fw-semibold">Observación</label>
+				<textarea class="form-control" th:field="*{observacion}" id="observacion" rows="2"
+					placeholder="Notas o detalles adicionales"></textarea>
 			</div>
 
-			<button type="submit" class="btn btn-primary">Guardar Entrega</button>
-			<a th:href="@{/entregas}" class="btn btn-secondary">Cancelar</a>
+			<div class="d-flex gap-2 mt-4">
+				<button type="submit" class="btn btn-primary">Guardar Entrega</button>
+				<a th:href="@{/entregas}" class="btn btn-secondary">Cancelar</a>
+			</div>
 		</form>
+
+		<!-- JavaScript para actualizar el campo del usuario -->
+		<script>
+			function actualizarUsuario() {
+				var select = document.getElementById("selectPedido");
+				if (!select || select.selectedIndex === -1) return;
+				
+				var selectedOption = select.options[select.selectedIndex];
+				var usuario = selectedOption.getAttribute("data-usuario");
+				document.getElementById("inputUsuario").value = usuario ? usuario : "";
+			}
+		</script>
 	</div>
 </body>
 </html>

@@ -11,6 +11,7 @@ public class PedidoResponseDto {
 	private String direccionEntrega;
 	private String observacion;
 	private Double total;
+	private String nombreUsuario;
 	private int idEstado;
 	private int idUsuario;
 }
