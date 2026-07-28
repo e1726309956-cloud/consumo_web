@@ -80,9 +80,13 @@ public class CarritoController {
 
 		int cantidadTotal = carrito.stream().mapToInt(CarritoItemDto::getCantidad).sum();
 
+		double abonoSugerido = total * 0.50;
+
 		model.addAttribute("carrito", carrito);
 
 		model.addAttribute("total", total);
+
+		model.addAttribute("abonoSugerido", abonoSugerido);
 
 		model.addAttribute("cantidadTotal", cantidadTotal);
 
@@ -264,13 +268,17 @@ public class CarritoController {
 	}
 
 	@PostMapping("/generar")
-	public String generarPedido(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date fechaEntrega,
+	public String generarPedido(
+
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date fechaEntrega,
 
 			@RequestParam String direccionEntrega,
 
 			@RequestParam(value = "observacion", required = false) String observacion,
 
 			@RequestParam(value = "comprobante", required = false) MultipartFile comprobante,
+
+			@RequestParam(value = "montoComprobante", required = false) Double montoComprobante,
 
 			HttpSession session, RedirectAttributes redirectAttributes) {
 
@@ -309,6 +317,46 @@ public class CarritoController {
 				return "redirect:/carrito";
 			}
 
+			/*
+			 * Total estimado desde el carrito. Sirve para validar el monto antes de crear
+			 * el pedido.
+			 */
+			double totalCarrito = carrito.stream().mapToDouble(CarritoItemDto::getSubtotal).sum();
+
+			boolean tieneComprobante = comprobante != null && !comprobante.isEmpty();
+
+			/*
+			 * Validar archivo y monto antes de guardar el pedido.
+			 */
+			if (tieneComprobante) {
+
+				validarComprobante(comprobante);
+
+				if (montoComprobante == null || montoComprobante <= 0) {
+
+					throw new RuntimeException("Ingrese el valor del comprobante");
+				}
+
+				if (montoComprobante > totalCarrito + 0.001) {
+
+					throw new RuntimeException("El valor del comprobante no puede superar " + "el total del pedido de $"
+							+ String.format("%.2f", totalCarrito));
+				}
+
+			} else {
+
+				/*
+				 * No puede enviarse un monto sin una imagen.
+				 */
+				if (montoComprobante != null && montoComprobante > 0) {
+
+					throw new RuntimeException("Debe seleccionar una imagen del comprobante");
+				}
+			}
+
+			/*
+			 * Construir pedido.
+			 */
 			PedidoRequestDto pedido = new PedidoRequestDto();
 
 			pedido.setIdUsuario(idUsuario);
@@ -331,8 +379,10 @@ public class CarritoController {
 			}).toList();
 
 			pedido.setDetalles(detalles);
-			
-			
+
+			/*
+			 * Guardar pedido.
+			 */
 			PedidoResponseDto pedidoGenerado = pedidoService.guardarpedido(pedido);
 
 			if (pedidoGenerado == null || pedidoGenerado.getIdPedido() <= 0) {
@@ -340,30 +390,40 @@ public class CarritoController {
 				throw new RuntimeException("No se obtuvo el número del pedido generado");
 			}
 
-			if (comprobante != null && !comprobante.isEmpty()) {
+			/*
+			 * Guardar el comprobante con el monto ingresado.
+			 */
+			if (tieneComprobante) {
 
-				validarComprobante(comprobante);
+				double totalRealPedido = pedidoGenerado.getTotal() != null ? pedidoGenerado.getTotal() : totalCarrito;
 
-				pedidoService.subirComprobante(pedidoGenerado.getIdPedido(), comprobante, pedidoGenerado.getTotal());
+				/*
+				 * Validación adicional usando el total calculado por la API.
+				 */
+				if (montoComprobante > totalRealPedido + 0.001) {
+
+					throw new RuntimeException("El valor del comprobante no puede superar "
+							+ "el total real del pedido de $" + String.format("%.2f", totalRealPedido));
+				}
+
+				pedidoService.subirComprobante(pedidoGenerado.getIdPedido(), comprobante, montoComprobante);
 			}
 
 			session.removeAttribute("carrito");
 
 			session.removeAttribute("cantidadCarrito");
 
-			redirectAttributes.addFlashAttribute(
-			        "pedidoConfirmado",
-			        pedidoGenerado
-			);
+			redirectAttributes.addFlashAttribute("pedidoConfirmado", pedidoGenerado);
 
-			redirectAttributes.addFlashAttribute(
-			        "mensaje",
-			        "Tu pedido fue generado correctamente"
-			);
+			redirectAttributes.addFlashAttribute("mensaje",
+					tieneComprobante ? "Tu pedido y comprobante fueron registrados correctamente"
+							: "Tu pedido fue generado correctamente");
 
 			return "redirect:/pedidos";
 
 		} catch (Exception e) {
+
+			e.printStackTrace();
 
 			redirectAttributes.addFlashAttribute("error",
 					e.getMessage() != null && !e.getMessage().isBlank() ? e.getMessage()

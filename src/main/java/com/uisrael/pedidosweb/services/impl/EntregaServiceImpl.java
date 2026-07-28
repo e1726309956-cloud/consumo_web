@@ -26,7 +26,7 @@ public class EntregaServiceImpl implements IEntregaService {
 	@Override
 	public List<EntregaResponseDto> listarActivas() {
 
-		return webClient.get().uri("/entregas").retrieve().bodyToFlux(EntregaResponseDto.class).collectList().block();
+		return webClient.get().uri("/entregas/activas").retrieve().bodyToFlux(EntregaResponseDto.class).collectList().block();
 	}
 
 	@Override
@@ -67,5 +67,11 @@ public class EntregaServiceImpl implements IEntregaService {
 		return webClient.post().uri("/entregas/{idEntrega}/finalizar", idEntrega)
 				.contentType(MediaType.MULTIPART_FORM_DATA).body(BodyInserters.fromMultipartData(builder.build()))
 				.retrieve().bodyToMono(EntregaResponseDto.class).block();
+	}
+
+	@Override
+	public List<EntregaResponseDto> listarTodos() {
+
+		return webClient.get().uri("/entregas").retrieve().bodyToFlux(EntregaResponseDto.class).collectList().block();
 	}
 }

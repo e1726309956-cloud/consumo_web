@@ -349,20 +349,57 @@
 
 									</div>
 
-									<!-- Comprobante -->
+									<!-- Comprobante de pago -->
 									<div class="mb-4">
 
 										<label for="comprobante" class="form-label fw-semibold">
 
-											Comprobante de pago <span class="text-muted fw-normal">
-												(opcional) </span>
+											Comprobante de pago <span class="text-muted fw-normal">(opcional)</span>
 
 										</label> <input type="file" id="comprobante" name="comprobante"
 											class="form-control"
 											accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
 
-										<small class="text-muted"> Formatos permitidos: JPG,
-											PNG o WEBP. Máximo 5 MB. </small>
+										<small class="text-muted d-block mt-1"> Formatos
+											permitidos: JPG, PNG o WEBP. Máximo 5 MB. </small>
+
+										<div class="alert alert-info mt-3 mb-3 py-2">
+
+											Abono sugerido del 50 %: <strong> $ <span
+												th:text="${#numbers.formatDecimal(
+													abonoSugerido,
+													1,
+													2
+												)}">0.00</span>
+											</strong>
+
+										</div>
+
+										<div>
+
+											<label for="montoComprobante" class="form-label fw-semibold">
+												Valor del comprobante </label>
+
+											<div class="input-group">
+
+												<span class="input-group-text">$</span> <input type="number"
+													id="montoComprobante" name="montoComprobante"
+													class="form-control" min="0.01" step="0.01"
+													th:max="${total}"
+													th:value="${#numbers.formatDecimal(
+														abonoSugerido,
+														1,
+														2
+													)}"
+													disabled>
+
+											</div>
+
+											<small class="text-muted"> El monto se habilita al
+												seleccionar un comprobante y no puede superar el total del
+												pedido. </small>
+
+										</div>
 
 									</div>
 
@@ -405,6 +442,9 @@
 
 				const comprobante = document.getElementById("comprobante");
 
+				const montoComprobante = document
+						.getElementById("montoComprobante");
+
 				/*
 				 * Impide seleccionar una fecha
 				 * anterior a la fecha actual.
@@ -423,13 +463,26 @@
 				 * Validación básica del comprobante
 				 * antes de enviar el formulario.
 				 */
-				if (comprobante) {
+				if (comprobante && montoComprobante) {
+
+					function controlarMontoComprobante() {
+
+						const tieneArchivo = comprobante.files.length > 0;
+
+						montoComprobante.disabled = !tieneArchivo;
+
+						montoComprobante.required = tieneArchivo;
+
+					}
 
 					comprobante.addEventListener("change", function() {
 
 						const archivo = comprobante.files[0];
 
 						if (!archivo) {
+
+							controlarMontoComprobante();
+
 							return;
 						}
 
@@ -444,6 +497,8 @@
 
 							comprobante.value = "";
 
+							controlarMontoComprobante();
+
 							return;
 						}
 
@@ -452,8 +507,16 @@
 							alert("El comprobante no puede superar los 5 MB.");
 
 							comprobante.value = "";
+
+							controlarMontoComprobante();
+
+							return;
 						}
+
+						controlarMontoComprobante();
 					});
+
+					controlarMontoComprobante();
 				}
 			});
 		</script>

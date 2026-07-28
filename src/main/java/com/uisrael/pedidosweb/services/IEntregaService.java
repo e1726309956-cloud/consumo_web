@@ -14,4 +14,6 @@ public interface IEntregaService {
 	EntregaResponseDto cambiarEstado(int idEntrega, int idEstado, String observacion);
 
 	EntregaResponseDto finalizarEntrega(int idEntrega, MultipartFile evidencia, String recibidoPor, String observacion);
+	
+	List<EntregaResponseDto> listarTodos();
 }

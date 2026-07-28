@@ -6,35 +6,67 @@
 <head>
 
 <meta charset="UTF-8">
+
 <title>Entregas</title>
 
 <style>
 .entrega-estado {
 	display: inline-flex;
+	align-items: center;
+	gap: 5px;
 	padding: 7px 12px;
 	border-radius: 999px;
 	font-size: 12px;
 	font-weight: 700;
+	white-space: nowrap;
 }
 
 .estado-pendiente {
 	background: #fff7d6;
 	color: #9a6700;
+	border: 1px solid #fde68a;
 }
 
 .estado-programada {
 	background: #dbeafe;
 	color: #1d4ed8;
+	border: 1px solid #bfdbfe;
 }
 
 .estado-ruta {
+	background: #cffafe;
+	color: #0e7490;
+	border: 1px solid #a5f3fc;
+}
+
+.estado-entregada {
 	background: #dcfce7;
 	color: #15803d;
+	border: 1px solid #bbf7d0;
+}
+
+.estado-no-entregada {
+	background: #fee2e2;
+	color: #b91c1c;
+	border: 1px solid #fecaca;
 }
 
 .estado-reprogramada {
 	background: #f3e8ff;
 	color: #7e22ce;
+	border: 1px solid #e9d5ff;
+}
+
+.estado-cancelada {
+	background: #f1f5f9;
+	color: #475569;
+	border: 1px solid #cbd5e1;
+}
+
+.estado-desconocido {
+	background: #f8fafc;
+	color: #475569;
+	border: 1px solid #e2e8f0;
 }
 
 .boton-accion {
@@ -43,6 +75,20 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.acciones-entrega {
+	display: flex;
+	justify-content: center;
+	gap: 6px;
+}
+
+.tabla-entregas th {
+	white-space: nowrap;
+}
+
+.sin-resultados {
+	display: none;
 }
 </style>
 
@@ -56,58 +102,134 @@
 
 			<div class="container-fluid">
 
+				<!-- Encabezado -->
 				<div class="title-wrapper pt-30 mb-4">
 
 					<h2 class="mb-1">Entregas</h2>
 
-					<p class="text-muted">Consulta y organiza las entregas
-						pendientes.</p>
+					<p class="text-muted mb-0">Consulta, filtra y gestiona todas
+						las entregas registradas.</p>
 
 				</div>
 
+				<!-- Mensaje de éxito -->
+				<div class="alert alert-success" th:if="${mensaje != null}"
+					th:text="${mensaje}">Operación realizada correctamente.</div>
+
+				<!-- Mensaje de error -->
 				<div class="alert alert-danger" th:if="${error != null}"
-					th:text="${error}"></div>
+					th:text="${error}">No fue posible consultar las entregas.</div>
 
 				<div class="card-style mb-30">
 
 					<!-- Filtros -->
 					<div class="row g-3 mb-4">
 
-						<div class="col-md-5">
+						<!-- Buscar -->
+						<div class="col-lg-4 col-md-6">
 
-							<label class="form-label"> Buscar </label> <input type="text"
-								id="buscarEntrega" class="form-control"
-								placeholder="Buscar cliente, pedido o dirección">
+							<label for="buscarEntrega" class="form-label"> Buscar </label>
+
+							<div class="input-group">
+
+								<span class="input-group-text"> <i
+									class="lni lni-search-alt"></i>
+
+								</span> <input type="text" id="buscarEntrega" class="form-control"
+									placeholder="Cliente, pedido o dirección">
+
+							</div>
 
 						</div>
 
-						<div class="col-md-3">
+						<!-- Estado -->
+						<div class="col-lg-2 col-md-6">
 
-							<label class="form-label"> Fecha desde </label> <input
-								type="date" id="fechaDesde" class="form-control">
+							<label for="filtroEstado" class="form-label"> Estado </label> <select
+								id="filtroEstado" class="form-select">
+
+								<option value="">Todos</option>
+
+								<option value="PENDIENTE">Pendiente</option>
+
+								<option value="PROGRAMADA">Programada</option>
+
+								<option value="EN RUTA">En ruta</option>
+
+								<option value="ENTREGADA">Entregada</option>
+
+								<option value="NO ENTREGADA">No entregada</option>
+
+								<option value="REPROGRAMADA">Reprogramada</option>
+
+								<option value="CANCELADA">Cancelada</option>
+
+							</select>
 
 						</div>
 
-						<div class="col-md-3">
+						<!-- Fecha desde -->
+						<div class="col-lg-2 col-md-6">
 
-							<label class="form-label"> Fecha hasta </label> <input
-								type="date" id="fechaHasta" class="form-control">
+							<label for="fechaDesde" class="form-label"> Fecha desde </label>
+
+							<input type="date" id="fechaDesde" class="form-control">
+
+						</div>
+
+						<!-- Fecha hasta -->
+						<div class="col-lg-2 col-md-6">
+
+							<label for="fechaHasta" class="form-label"> Fecha hasta </label>
+
+							<input type="date" id="fechaHasta" class="form-control">
+
+						</div>
+
+						<!-- Limpiar filtros -->
+						<div class="col-lg-2 col-md-6 d-flex align-items-end">
+
+							<button type="button" id="limpiarFiltros"
+								class="btn btn-outline-secondary w-100">
+
+								<i class="lni lni-reload me-1"></i> Limpiar
+
+							</button>
 
 						</div>
 
 					</div>
 
-					<div class="alert alert-light border text-center"
+					<!-- Sin entregas -->
+					<div class="alert alert-light border text-center py-4"
 						th:if="${listaEntregas == null
-                or #lists.isEmpty(listaEntregas)}">
+                        or #lists.isEmpty(listaEntregas)}">
 
-						No existen entregas activas.</div>
+						<i class="lni lni-delivery" style="font-size: 45px;"></i>
 
+						<h5 class="mt-3">No existen entregas registradas</h5>
+
+						<p class="text-muted mb-0">Las entregas aparecerán cuando los
+							pedidos sean confirmados.</p>
+
+					</div>
+
+					<!-- Sin coincidencias -->
+					<div id="sinResultados"
+						class="alert alert-warning text-center sin-resultados">
+
+						<i class="lni lni-warning me-1"></i> No existen entregas que
+						coincidan con los filtros seleccionados.
+
+					</div>
+
+					<!-- Tabla -->
 					<div class="table-responsive"
 						th:if="${listaEntregas != null
-                and !#lists.isEmpty(listaEntregas)}">
+                        and !#lists.isEmpty(listaEntregas)}">
 
-						<table class="table table-hover align-middle" id="tablaEntregas">
+						<table class="table table-hover align-middle tabla-entregas"
+							id="tablaEntregas">
 
 							<thead class="table-light">
 
@@ -129,107 +251,214 @@
 							<tbody>
 
 								<tr th:each="entrega : ${listaEntregas}"
-									th:attr="data-fecha=${entrega.fechaEntregaSolicitada != null
-                        ? #dates.format(
-                            entrega.fechaEntregaSolicitada,
-                            'yyyy-MM-dd'
-                        )
-                        : ''}">
+									th:attr="
+                                data-fecha=${entrega.fechaEntregaSolicitada != null
+                                    ? #dates.format(
+                                        entrega.fechaEntregaSolicitada,
+                                        'yyyy-MM-dd'
+                                    )
+                                    : ''},
+                                data-estado=${entrega.nombreEstado != null
+                                    ? entrega.nombreEstado
+                                    : ''}">
 
+									<!-- Entrega -->
 									<td><strong class="text-primary"> # <span
 											th:text="${entrega.idEntrega}"> 0 </span>
 
 									</strong></td>
 
+									<!-- Pedido -->
 									<td># <span th:text="${entrega.idPedido}"> 0 </span>
 
 									</td>
 
+									<!-- Cliente -->
 									<td><strong
 										th:text="${(
-                            entrega.nombreCliente != null
-                            ? entrega.nombreCliente
-                            : ''
-                        ) + ' ' + (
-                            entrega.apellidoCliente != null
-                            ? entrega.apellidoCliente
-                            : ''
-                        )}">
+                                    entrega.nombreCliente != null
+                                        ? entrega.nombreCliente
+                                        : ''
+                                ) + ' ' + (
+                                    entrega.apellidoCliente != null
+                                        ? entrega.apellidoCliente
+                                        : ''
+                                )}">
 
 											Cliente </strong> <small class="text-muted d-block"
-										th:text="${entrega.celularCliente}"> </small></td>
+										th:text="${entrega.celularCliente != null
+                                           ? entrega.celularCliente
+                                           : 'Sin teléfono'}">
 
+											Sin teléfono </small></td>
+
+									<!-- Fecha -->
 									<td
 										th:text="${entrega.fechaEntregaSolicitada != null
-                        ? #dates.format(
-                            entrega.fechaEntregaSolicitada,
-                            'dd/MM/yyyy HH:mm'
-                        )
-                        : 'Por definir'}">
+                                ? #dates.format(
+                                    entrega.fechaEntregaSolicitada,
+                                    'dd/MM/yyyy HH:mm'
+                                )
+                                : 'Por definir'}">
 
 										Por definir</td>
 
-									<td th:text="${entrega.direccionEntrega}">Dirección</td>
+									<!-- Dirección -->
+									<td
+										th:text="${entrega.direccionEntrega != null
+                                and !#strings.isEmpty(
+                                    entrega.direccionEntrega
+                                )
+                                ? entrega.direccionEntrega
+                                : 'Sin dirección'}">
 
+										Dirección</td>
+
+									<!-- Total -->
 									<td><strong class="text-success"> $ <span
 											th:text="${entrega.totalPedido != null
-                                ? #numbers.formatDecimal(
-                                    entrega.totalPedido,
-                                    1,
-                                    2
-                                )
-                                : '0.00'}">
+                                        ? #numbers.formatDecimal(
+                                            entrega.totalPedido,
+                                            1,
+                                            2
+                                        )
+                                        : '0.00'}">
 
 												0.00 </span>
 
 									</strong></td>
 
-									<td><span th:if="${entrega.idEstado == 13}"
-										class="entrega-estado estado-pendiente"> Pendiente </span> <span
-										th:if="${entrega.idEstado == 14}"
-										class="entrega-estado estado-programada"> Programada </span> <span
-										th:if="${entrega.idEstado == 15}"
-										class="entrega-estado estado-ruta"> En ruta </span> <span
-										th:if="${entrega.idEstado == 18}"
-										class="entrega-estado estado-reprogramada">
+									<!-- Estado -->
+									<td>
 
-											Reprogramada </span></td>
+										<div th:switch="${entrega.idEstado}">
 
-									<td class="text-center"><a
-										th:href="@{/entregas/detalle/{idEntrega}(
-                                idEntrega=${entrega.idEntrega}
-                            )}"
-										class="btn btn-outline-primary boton-accion"
-										title="Ver detalle"> <i class="lni lni-eye"></i>
+											<!-- Pendiente -->
+											<span th:case="13" class="entrega-estado estado-pendiente">
 
-									</a> <a
-										th:if="${entrega.celularCliente != null
-                                and !#strings.isEmpty(
-                                    entrega.celularCliente
-                                )}"
-										th:href="${'https://wa.me/'
-                                + (entrega.celularCliente.startsWith('0')
-                                    ? '593'
-                                      + #strings.substring(
-                                            entrega.celularCliente,
-                                            1
-                                        )
-                                    : entrega.celularCliente)
-                                + '?text=Hola%20'
-                                + (entrega.nombreCliente != null
-                                    ? entrega.nombreCliente
-                                    : '')
-                                + '%20'
-                                + (entrega.apellidoCliente != null
-                                    ? entrega.apellidoCliente
-                                    : '')
-                                + ',%20nos%20comunicamos%20del%20área%20de%20entregas.%20Por%20favor,%20compártanos%20su%20ubicación%20de%20Google%20Maps%20para%20coordinar%20la%20entrega%20del%20pedido%20%23'
-                                + entrega.idPedido}"
-										target="_blank" class="btn btn-success boton-accion"
-										title="Contactar por WhatsApp"> <i
-											class="lni lni-whatsapp"></i>
+												<i class="lni lni-timer"></i> Pendiente
 
-									</a></td>
+											</span>
+
+											<!-- Programada -->
+											<span th:case="14" class="entrega-estado estado-programada">
+
+												<i class="lni lni-calendar"></i> Programada
+
+											</span>
+
+											<!-- En ruta -->
+											<span th:case="15" class="entrega-estado estado-ruta">
+
+												<i class="lni lni-car"></i> En ruta
+
+											</span>
+
+											<!-- Entregada -->
+											<span th:case="16" class="entrega-estado estado-entregada">
+
+												<i class="lni lni-checkmark-circle"></i> Entregada
+
+											</span>
+
+											<!-- No entregada -->
+											<span th:case="17" class="entrega-estado estado-no-entregada">
+
+												<i class="lni lni-close"></i> No entregada
+
+											</span>
+
+											<!-- Reprogramada -->
+											<span th:case="18" class="entrega-estado estado-reprogramada">
+
+												<i class="lni lni-reload"></i> Reprogramada
+
+											</span>
+
+											<!-- Cancelada -->
+											<span th:case="19" class="entrega-estado estado-cancelada">
+
+												<i class="lni lni-ban"></i> Cancelada
+
+											</span>
+
+											<!-- Otro estado -->
+											<span th:case="*" class="entrega-estado estado-desconocido">
+
+												<span
+												th:text="${entrega.nombreEstado != null
+                                            and !#strings.isEmpty(
+                                                entrega.nombreEstado
+                                            )
+                                            ? entrega.nombreEstado
+                                            : 'Estado ID: '
+                                                + entrega.idEstado}">
+
+													Sin estado </span>
+
+											</span>
+
+										</div>
+
+									</td>
+
+									<!-- Acciones -->
+									<td class="text-center">
+
+										<div class="acciones-entrega">
+
+											<!-- Ver detalle -->
+											<a
+												th:href="@{/entregas/detalle/{idEntrega}(
+                                            idEntrega=${entrega.idEntrega}
+                                        )}"
+												class="btn btn-outline-primary boton-accion"
+												title="Ver detalle"> <i class="lni lni-eye"></i>
+
+											</a>
+
+											<!-- WhatsApp -->
+											<a
+												th:if="${entrega.celularCliente != null
+                                            and !#strings.isEmpty(
+                                                entrega.celularCliente
+                                            )
+                                            and entrega.idEstado != 16
+                                            and entrega.idEstado != 17
+                                            and entrega.idEstado != 19}"
+												th:href="${'https://wa.me/'
+                                            + (
+                                                entrega.celularCliente.startsWith('0')
+                                                    ? '593'
+                                                        + #strings.substring(
+                                                            entrega.celularCliente,
+                                                            1
+                                                        )
+                                                    : entrega.celularCliente
+                                            )
+                                            + '?text=Hola%20'
+                                            + (
+                                                entrega.nombreCliente != null
+                                                    ? entrega.nombreCliente
+                                                    : ''
+                                            )
+                                            + '%20'
+                                            + (
+                                                entrega.apellidoCliente != null
+                                                    ? entrega.apellidoCliente
+                                                    : ''
+                                            )
+                                            + ',%20nos%20comunicamos%20del%20área%20de%20entregas.%20Por%20favor,%20compártanos%20su%20ubicación%20de%20Google%20Maps%20para%20coordinar%20la%20entrega%20del%20pedido%20%23'
+                                            + entrega.idPedido}"
+												target="_blank" class="btn btn-success boton-accion"
+												title="Contactar por WhatsApp"> <i
+												class="lni lni-whatsapp"></i>
+
+											</a>
+
+										</div>
+
+									</td>
 
 								</tr>
 
@@ -246,46 +475,119 @@
 		</section>
 
 		<script>
-			document.addEventListener("DOMContentLoaded", function() {
+			document
+					.addEventListener(
+							"DOMContentLoaded",
+							function() {
 
-				const buscar = document.getElementById("buscarEntrega");
+								const buscar = document
+										.getElementById("buscarEntrega");
 
-				const fechaDesde = document.getElementById("fechaDesde");
+								const filtroEstado = document
+										.getElementById("filtroEstado");
 
-				const fechaHasta = document.getElementById("fechaHasta");
+								const fechaDesde = document
+										.getElementById("fechaDesde");
 
-				const filas = document
-						.querySelectorAll("#tablaEntregas tbody tr");
+								const fechaHasta = document
+										.getElementById("fechaHasta");
 
-				function filtrar() {
+								const limpiarFiltros = document
+										.getElementById("limpiarFiltros");
 
-					const texto = buscar.value.toLowerCase().trim();
+								const tabla = document
+										.getElementById("tablaEntregas");
 
-					const desde = fechaDesde.value;
+								const sinResultados = document
+										.getElementById("sinResultados");
 
-					const hasta = fechaHasta.value;
+								if (!tabla) {
+									return;
+								}
 
-					filas.forEach(function(fila) {
+								const filas = tabla
+										.querySelectorAll("tbody tr");
 
-						const contenido = fila.textContent.toLowerCase();
+								function filtrar() {
 
-						const fecha = fila.dataset.fecha;
+									const texto = buscar.value.toLowerCase()
+											.trim();
 
-						const coincideTexto = contenido.includes(texto);
+									const estado = filtroEstado.value
+											.toUpperCase().trim();
 
-						const coincideDesde = !desde || fecha >= desde;
+									const desde = fechaDesde.value;
 
-						const coincideHasta = !hasta || fecha <= hasta;
+									const hasta = fechaHasta.value;
 
-						fila.style.display = coincideTexto && coincideDesde
-								&& coincideHasta ? "" : "none";
-					});
-				}
+									let visibles = 0;
 
-				buscar.addEventListener("input", filtrar);
-				fechaDesde.addEventListener("change", filtrar);
-				fechaHasta.addEventListener("change", filtrar);
-			});
+									filas
+											.forEach(function(fila) {
+
+												const contenido = fila.textContent
+														.toLowerCase();
+
+												const fecha = fila.dataset.fecha
+														|| "";
+
+												const estadoFila = (fila.dataset.estado || "")
+														.toUpperCase().trim();
+
+												const coincideTexto = contenido
+														.includes(texto);
+
+												const coincideEstado = !estado
+														|| estadoFila === estado;
+
+												const coincideDesde = !desde
+														|| (fecha && fecha >= desde);
+
+												const coincideHasta = !hasta
+														|| (fecha && fecha <= hasta);
+
+												const mostrar = coincideTexto
+														&& coincideEstado
+														&& coincideDesde
+														&& coincideHasta;
+
+												fila.style.display = mostrar ? ""
+														: "none";
+
+												if (mostrar) {
+													visibles++;
+												}
+											});
+
+									if (sinResultados) {
+
+										sinResultados.style.display = visibles === 0 ? "block"
+												: "none";
+									}
+								}
+
+								function limpiar() {
+
+									buscar.value = "";
+									filtroEstado.value = "";
+									fechaDesde.value = "";
+									fechaHasta.value = "";
+
+									filtrar();
+								}
+
+								buscar.addEventListener("input", filtrar);
+
+								filtroEstado
+										.addEventListener("change", filtrar);
+
+								fechaDesde.addEventListener("change", filtrar);
+
+								fechaHasta.addEventListener("change", filtrar);
+
+								limpiarFiltros.addEventListener("click",
+										limpiar);
+							});
 		</script>
 
 	</div>

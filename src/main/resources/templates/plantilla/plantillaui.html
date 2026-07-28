@@ -68,9 +68,7 @@
 			<ul>
 
 				<!-- Dashboard -->
-				<li class="nav-item"
-					th:if="${session.rolUsuario == 'ADMINISTRADOR'}"><a
-					th:href="@{/}"> ... </a></li>
+				
 
 				<li class="nav-item" th:if="${session.rolUsuario == 'CLIENTE'}">
 
@@ -161,14 +159,14 @@
 
 				</a></li>
 
-				<!-- Usuarios -->
+				<!-- Usuarios 
 				<li class="nav-item"
 					th:if="${session.rolUsuario == 'ADMINISTRADOR'}"><a
 					th:href="@{/usuario}"> <span class="icon"> <i
 							class="lni lni-users"></i>
 					</span> <span class="text"> Usuarios </span>
 
-				</a></li>
+				</a></li>-->
 				<li class="nav-item" th:if="${session.rolUsuario == 'CLIENTE'}">
 
 					<a th:href="@{/catalogo}"> <span class="icon"> <i

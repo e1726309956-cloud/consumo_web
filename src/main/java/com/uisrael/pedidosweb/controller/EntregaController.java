@@ -63,7 +63,7 @@ public class EntregaController {
 
 		try {
 
-			List<EntregaResponseDto> entregas = entregaService.listarActivas();
+			List<EntregaResponseDto> entregas = entregaService.listarTodos();
 
 			model.addAttribute("listaEntregas", entregas);
 
