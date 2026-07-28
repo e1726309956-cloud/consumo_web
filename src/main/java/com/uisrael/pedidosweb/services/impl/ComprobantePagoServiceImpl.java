@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException; // <-- Importante
 
+import com.uisrael.pedidosweb.model.dto.request.CambiarEstadoComprobanteRequestDto;
 import com.uisrael.pedidosweb.model.dto.request.ComprobantePagoRequestDto;
 import com.uisrael.pedidosweb.model.dto.response.ComprobantePagoResponseDto;
 import com.uisrael.pedidosweb.services.IComprobantePagoService;
@@ -88,6 +89,20 @@ public class ComprobantePagoServiceImpl implements IComprobantePagoService {
 
 		return webClient.post().uri("/pedidos/{idPedido}/comprobante", idPedido)
 				.contentType(MediaType.MULTIPART_FORM_DATA).body(BodyInserters.fromMultipartData(multipart.build()))
+				.retrieve().bodyToMono(ComprobantePagoResponseDto.class).block();
+	}
+
+	@Override
+	public List<ComprobantePagoResponseDto> listarPorPedido(int idPedido) {
+
+		return webClient.get().uri("/comprobantes-pago/pedido/{idPedido}/lista", idPedido).retrieve()
+				.bodyToFlux(ComprobantePagoResponseDto.class).collectList().block();
+	}
+
+	@Override
+	public ComprobantePagoResponseDto cambiarEstado(int idComprobante, CambiarEstadoComprobanteRequestDto request) {
+
+		return webClient.put().uri("/comprobantes-pago/{idComprobante}/estado", idComprobante).bodyValue(request)
 				.retrieve().bodyToMono(ComprobantePagoResponseDto.class).block();
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.uisrael.pedidosweb.model.dto.request.CambiarEstadoPedidoRequestDto;
 import com.uisrael.pedidosweb.model.dto.request.PedidoRequestDto;
 import com.uisrael.pedidosweb.model.dto.response.PedidoResponseDto;
 
@@ -18,4 +19,6 @@ public interface IPedidoService {
 	List<PedidoResponseDto> listarPorUsuario(int idUsuario);
 
 	PedidoResponseDto buscarPorId(int idPedido);
+
+	PedidoResponseDto cambiarEstado(int idPedido, CambiarEstadoPedidoRequestDto request);
 }

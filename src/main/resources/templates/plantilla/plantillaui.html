@@ -100,9 +100,9 @@
 
 						</a></li>
 
-						<li><a th:if="${session.rolUsuario == 'ADMINISTRADOR'}" th:href="@{/producto/nuevo}" href="/producto/nuevo">
-
-								<i class="lni lni-plus me-2"></i> Crear producto
+						<li><a th:if="${session.rolUsuario == 'ADMINISTRADOR'}"
+							th:href="@{/producto/nuevo}" href="/producto/nuevo"> <i
+								class="lni lni-plus me-2"></i> Crear producto
 
 						</a></li>
 
@@ -140,17 +140,32 @@
 				</span>
 
 				<!-- Pedidos -->
-				<li class="nav-item"><a th:href="@{/pedidos}" href="/pedido">
+				<li class="nav-item"
+					th:if="${session.rolUsuario == 'ADMINISTRADOR'
+        or session.rolUsuario == 'VENDEDOR'}">
 
-						<span class="icon"> <i class="lni lni-cart"></i>
+					<a th:href="@{/pedidos}"> <span class="icon"> <i
+							class="lni lni-cart"></i>
 					</span> <span class="text"> Pedidos </span>
+
+				</a>
+
+				</li>
+
+				<!-- Entregas: solo administrador o vendedor -->
+				<li class="nav-item"
+					th:if="${session.rolUsuario == 'ADMINISTRADOR'}"><a
+					th:href="@{/entregas}" href="/entregas"> <span class="icon">
+							<i class="lni lni-delivery"></i>
+					</span> <span class="text"> Entregas </span>
 
 				</a></li>
 
 				<!-- Usuarios -->
-				<li class="nav-item"><a th:href="@{/usuario}" href="/usuario">
-
-						<span class="icon"> <i class="lni lni-users"></i>
+				<li class="nav-item"
+					th:if="${session.rolUsuario == 'ADMINISTRADOR'}"><a
+					th:href="@{/usuario}"> <span class="icon"> <i
+							class="lni lni-users"></i>
 					</span> <span class="text"> Usuarios </span>
 
 				</a></li>

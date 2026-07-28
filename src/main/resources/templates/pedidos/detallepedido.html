@@ -6,8 +6,136 @@
 <head>
 
 <meta charset="UTF-8">
-
 <title>Detalle del pedido</title>
+
+<style>
+.detalle-card {
+	background: #ffffff;
+	border: 1px solid #edf0f5;
+	border-radius: 14px;
+	padding: 24px;
+	box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.dato-cliente {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 10px 0;
+}
+
+.dato-cliente i {
+	font-size: 20px;
+	color: #64748b;
+	margin-top: 2px;
+}
+
+.pedido-estado {
+	display: inline-flex;
+	align-items: center;
+	border-radius: 20px;
+	padding: 7px 12px;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.resumen-pago {
+	background: #f0fdf4;
+	border: 1px solid #dcfce7;
+	border-radius: 12px;
+	padding: 18px;
+}
+
+.resumen-linea {
+	display: flex;
+	justify-content: space-between;
+	gap: 15px;
+	margin-bottom: 12px;
+}
+
+.resumen-linea:last-child {
+	margin-bottom: 0;
+}
+
+.comprobante-vacio {
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	padding: 34px 20px;
+	text-align: center;
+	background: #f8fafc;
+}
+
+.comprobante-vacio i {
+	font-size: 48px;
+	color: #64748b;
+}
+
+.comprobante-imagen {
+	width: 100%;
+	max-height: 300px;
+	object-fit: contain;
+	border-radius: 12px;
+	border: 1px solid #e5e7eb;
+	background: #f8fafc;
+}
+
+.tabla-productos th {
+	white-space: nowrap;
+}
+
+.total-pedido {
+	background: #fff1f2;
+	border-radius: 10px;
+	padding: 12px 16px;
+}
+
+.accion-pedido {
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.estado-resumen {
+	border-radius: 12px;
+	padding: 14px;
+}
+
+.pago-detalle {
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	padding: 15px;
+	margin-bottom: 14px;
+}
+
+.acciones-comprobante {
+	border-top: 1px solid #e5e7eb;
+	margin-top: 14px;
+	padding-top: 14px;
+}
+
+.form-rechazo {
+	background: #fff7f7;
+	border: 1px solid #fecaca;
+	border-radius: 10px;
+	padding: 12px;
+	margin-top: 10px;
+}
+
+@media ( max-width : 991px) {
+	.detalle-card {
+		padding: 18px;
+	}
+}
+
+@media print {
+	.no-imprimir, .btn, form, .modal {
+		display: none !important;
+	}
+	.detalle-card {
+		box-shadow: none;
+		break-inside: avoid;
+	}
+}
+</style>
 
 </head>
 
@@ -19,227 +147,222 @@
 
 			<div class="container-fluid">
 
-				<!-- Encabezado -->
-				<div class="title-wrapper pt-30 mb-4">
+				<!-- Regresar -->
+				<div class="pt-30 mb-3 no-imprimir">
 
-					<div
-						class="d-flex justify-content-between
-                            align-items-center
-                            flex-wrap
-                            gap-3">
+					<a th:href="@{/pedidos}" class="text-decoration-none"> <i
+						class="lni lni-arrow-left me-1"></i> Volver a pedidos
 
-						<div>
-
-							<h2 class="mb-1">
-
-								Detalle del pedido <span class="text-primary"> # <span
-									th:text="${pedido.idPedido}"> 0 </span>
-
-								</span>
-
-							</h2>
-
-							<p class="text-muted mb-0">Consulta la información general,
-								los productos y el comprobante de pago del pedido.</p>
-
-						</div>
-
-						<a th:href="@{/pedidos}" class="btn btn-outline-secondary"> <i
-							class="lni lni-arrow-left me-1"></i> Volver a pedidos
-
-						</a>
-
-					</div>
+					</a>
 
 				</div>
 
-				<!-- Mensaje de éxito -->
+				<!-- Estado del pedido -->
+				<div>
+
+					<!-- Pendiente -->
+					<span
+						th:if="${pedido.nombreEstado != null
+            and (
+                #strings.equalsIgnoreCase(
+                    pedido.nombreEstado,
+                    'PENDIENTE DE CONFIRMACION'
+                )
+                or #strings.equalsIgnoreCase(
+                    pedido.nombreEstado,
+                    'PENDIENTE'
+                )
+            )}"
+						class="pedido-estado
+                 bg-warning-subtle
+                 text-warning-emphasis">
+
+						Pendiente </span>
+
+					<!-- Confirmado -->
+					<span
+						th:if="${pedido.nombreEstado != null
+            and #strings.equalsIgnoreCase(
+                pedido.nombreEstado,
+                'CONFIRMADO'
+            )}"
+						class="pedido-estado
+                 bg-success-subtle
+                 text-success">
+
+						Confirmado </span>
+
+					<!-- Cancelado -->
+					<span
+						th:if="${pedido.nombreEstado != null
+            and #strings.equalsIgnoreCase(
+                pedido.nombreEstado,
+                'CANCELADO'
+            )}"
+						class="pedido-estado
+                 bg-danger-subtle
+                 text-danger">
+
+						Cancelado </span>
+
+					<!-- Finalizado -->
+					<span
+						th:if="${pedido.nombreEstado != null
+            and #strings.equalsIgnoreCase(
+                pedido.nombreEstado,
+                'FINALIZADO'
+            )}"
+						class="pedido-estado
+                 bg-secondary-subtle
+                 text-secondary">
+
+						<i class="lni lni-lock me-1"></i> Finalizado
+					</span>
+
+					<!-- Estado desconocido -->
+					<span
+						th:if="${pedido.nombreEstado == null
+            or (
+                !#strings.equalsIgnoreCase(
+                    pedido.nombreEstado,
+                    'PENDIENTE DE CONFIRMACION'
+                )
+                and !#strings.equalsIgnoreCase(
+                    pedido.nombreEstado,
+                    'PENDIENTE'
+                )
+                and !#strings.equalsIgnoreCase(
+                    pedido.nombreEstado,
+                    'CONFIRMADO'
+                )
+                and !#strings.equalsIgnoreCase(
+                    pedido.nombreEstado,
+                    'CANCELADO'
+                )
+                and !#strings.equalsIgnoreCase(
+                    pedido.nombreEstado,
+                    'FINALIZADO'
+                )
+            )}"
+						class="pedido-estado
+                 bg-secondary-subtle
+                 text-secondary"
+						th:text="${pedido.nombreEstado != null
+              ? pedido.nombreEstado
+              : 'Sin estado'}">
+
+						Sin estado </span>
+
+				</div>
+
+				<!-- Mensajes -->
 				<div class="alert alert-success" th:if="${mensaje != null}"
 					th:text="${mensaje}">Operación realizada correctamente.</div>
 
-				<!-- Mensaje de error -->
 				<div class="alert alert-danger" th:if="${error != null}"
 					th:text="${error}">No fue posible realizar la operación.</div>
 
+				<!-- Aviso de solo lectura -->
+				<div class="alert alert-secondary mt-3" th:if="${pedidoCerrado}">
+
+					<i class="lni lni-lock me-2"></i> <strong>Pedido cerrado.</strong>
+					Este pedido se encuentra en estado <strong
+						th:text="${pedido.nombreEstado}">FINALIZADO</strong> y está
+					disponible únicamente para consulta e impresión.
+
+				</div>
+
 				<div class="row g-4">
 
-					<!-- Columna izquierda -->
+					<!-- COLUMNA PRINCIPAL -->
 					<div class="col-xl-8 col-lg-7">
 
-						<!-- Información general -->
-						<div class="card-style mb-30">
+						<!-- Información del cliente -->
+						<div class="detalle-card mb-4">
 
-							<div
-								class="d-flex justify-content-between
-                                    align-items-center
-                                    flex-wrap
-                                    gap-2
-                                    mb-4">
+							<h4 class="mb-4">Información del cliente</h4>
 
-								<div>
+							<div class="row">
 
-									<h4 class="mb-1">Información del pedido</h4>
-
-									<p class="text-muted mb-0">Datos generales registrados al
-										momento de generar el pedido.</p>
-
-								</div>
-
-								<!-- Estado -->
-								<div th:switch="${pedido.idEstado}">
-
-									<span th:case="1" class="badge bg-warning text-dark">
-
-										Pendiente de confirmación </span> <span th:case="2"
-										class="badge bg-info text-dark"> En preparación </span> <span
-										th:case="3" class="badge bg-primary"> Listo para
-										entrega </span> <span th:case="4" class="badge bg-success">
-
-										Entregado </span> <span th:case="5" class="badge bg-danger">
-
-										Cancelado </span> <span th:case="*" class="badge bg-secondary">
-
-										Estado ID: <span th:text="${pedido.idEstado}"> 0 </span>
-
-									</span>
-
-								</div>
-
-							</div>
-
-							<div class="row g-4">
-
-								<!-- Número -->
 								<div class="col-md-6">
 
-									<div class="border rounded p-3 h-100">
+									<div class="dato-cliente">
 
-										<span class="text-muted d-block mb-1"> Número de pedido
+										<i class="lni lni-user"></i>
 
-										</span> <strong class="text-primary fs-5"> # <span
-											th:text="${pedido.idPedido}"> 0 </span>
+										<div>
 
-										</strong>
+											<small class="text-muted d-block"> Cliente </small> <strong
+												th:text="${(pedido.nombreCliente != null ? pedido.nombreCliente : '')
+                    + ' '
+                    + (pedido.apellidoCliente != null ? pedido.apellidoCliente : '')}">
+
+												Nombre Completo </strong>
+
+										</div>
+
+									</div>
+
+									<div class="dato-cliente"
+										th:if="${session.rolUsuario == 'ADMINISTRADOR'
+                                        or session.rolUsuario == 'VENDEDOR'}">
+
+										<i class="lni lni-phone"></i>
+
+										<div>
+
+											<small class="text-muted d-block"> Celular </small> <strong
+												th:text="${pedido.celularCliente != null
+                                            ? pedido.celularCliente
+                                            : 'Sin teléfono'}">
+
+												Sin teléfono </strong>
+
+										</div>
 
 									</div>
 
 								</div>
 
-								<!-- Fecha pedido -->
 								<div class="col-md-6">
 
-									<div class="border rounded p-3 h-100">
+									<div class="dato-cliente">
 
-										<span class="text-muted d-block mb-1"> Fecha del pedido
+										<i class="lni lni-map-marker"></i>
 
-										</span> <strong> <i
-											class="lni lni-calendar me-1 text-primary"></i> <span
-											th:text="${pedido.fechaPedido != null
-                                            ? #dates.format(
-                                                pedido.fechaPedido,
-                                                'dd/MM/yyyy HH:mm'
-                                            )
-                                            : 'Sin fecha'}">
+										<div>
 
-												Sin fecha </span>
+											<small class="text-muted d-block"> Dirección de
+												entrega </small> <strong
+												th:text="${pedido.direccionEntrega != null
+                                            and !#strings.isEmpty(pedido.direccionEntrega)
+                                            ? pedido.direccionEntrega
+                                            : 'Sin dirección registrada'}">
 
-										</strong>
+												Dirección </strong>
+
+										</div>
 
 									</div>
 
-								</div>
+									<div class="dato-cliente">
 
-								<!-- Fecha entrega -->
-								<div class="col-md-6">
+										<i class="lni lni-calendar"></i>
 
-									<div class="border rounded p-3 h-100">
+										<div>
 
-										<span class="text-muted d-block mb-1"> Fecha de entrega
-
-										</span> <strong> <i
-											class="lni lni-calendar me-1 text-success"></i> <span
-											th:text="${pedido.fechaEntrega != null
+											<small class="text-muted d-block"> Entrega solicitada
+											</small> <strong
+												th:text="${pedido.fechaEntrega != null
                                             ? #dates.format(
                                                 pedido.fechaEntrega,
                                                 'dd/MM/yyyy HH:mm'
                                             )
                                             : 'Por definir'}">
 
-												Por definir </span>
+												Por definir </strong>
 
-										</strong>
-
-									</div>
-
-								</div>
-
-								<!-- Total -->
-								<div class="col-md-6">
-
-									<div class="border rounded p-3 h-100">
-
-										<span class="text-muted d-block mb-1"> Total del pedido
-
-										</span> <strong class="text-success fs-5"> $ <span
-											th:text="${pedido.total != null
-                                            ? #numbers.formatDecimal(
-                                                pedido.total,
-                                                1,
-                                                2
-                                            )
-                                            : '0.00'}">
-
-												0.00 </span>
-
-										</strong>
-
-									</div>
-
-								</div>
-
-								<!-- Dirección -->
-								<div class="col-12">
-
-									<div class="border rounded p-3">
-
-										<span class="text-muted d-block mb-1"> Dirección de
-											entrega </span>
-
-										<p class="mb-0 fw-semibold">
-
-											<i class="lni lni-map-marker me-1 text-danger"></i> <span
-												th:text="${pedido.direccionEntrega != null
-                                            and !#strings.isEmpty(
-                                                pedido.direccionEntrega
-                                            )
-                                            ? pedido.direccionEntrega
-                                            : 'Sin dirección registrada'}">
-
-												Sin dirección registrada </span>
-
-										</p>
-
-									</div>
-
-								</div>
-
-								<!-- Observación -->
-								<div class="col-12">
-
-									<div class="border rounded p-3">
-
-										<span class="text-muted d-block mb-1"> Observación del
-											pedido </span>
-
-										<p class="mb-0"
-											th:text="${pedido.observacion != null
-                                           and !#strings.isEmpty(
-                                               pedido.observacion
-                                           )
-                                           ? pedido.observacion
-                                           : 'Sin observaciones'}">
-
-											Sin observaciones</p>
+										</div>
 
 									</div>
 
@@ -249,8 +372,8 @@
 
 						</div>
 
-						<!-- Productos del pedido -->
-						<div class="card-style mb-30">
+						<!-- Productos -->
+						<div class="detalle-card mb-4">
 
 							<div
 								class="d-flex justify-content-between
@@ -263,30 +386,31 @@
 
 									<h4 class="mb-1">Productos del pedido</h4>
 
-									<p class="text-muted mb-0">Detalle de cantidades, precios
-										unitarios y subtotales.</p>
+									<p class="text-muted mb-0">Cantidades, precios unitarios y
+										subtotales.</p>
 
 								</div>
 
 								<span class="badge bg-primary"
-									th:if="${pedido.detalles != null}"
-									th:text="${#lists.size(pedido.detalles)
-                                      + ' producto(s)'}">
+									th:text="${pedido.detalles != null
+                                      ? #lists.size(pedido.detalles)
+                                        + ' producto(s)'
+                                      : '0 producto(s)'}">
 
 									0 producto(s) </span>
 
 							</div>
 
-							<!-- Sin detalles -->
+							<!-- Sin productos -->
 							<div class="alert alert-light border text-center py-5"
 								th:if="${pedido.detalles == null
                                 or #lists.isEmpty(pedido.detalles)}">
 
-								<i class="lni lni-package" style="font-size: 48px;"></i>
+								<i class="lni lni-package" style="font-size: 52px;"></i>
 
-								<h5 class="mt-3 mb-1">No existen productos registrados</h5>
+								<h5 class="mt-3">No existen productos registrados</h5>
 
-								<p class="text-muted mb-0">El pedido no contiene detalles
+								<p class="text-muted mb-0">Este pedido no contiene detalles
 									disponibles.</p>
 
 							</div>
@@ -296,18 +420,15 @@
 								th:if="${pedido.detalles != null
                                 and !#lists.isEmpty(pedido.detalles)}">
 
-								<table class="table table-hover align-middle mb-0">
+								<table class="table align-middle tabla-productos mb-0">
 
-									<thead class="table-light">
+									<thead>
 
 										<tr>
 
 											<th>Producto</th>
-
 											<th class="text-center">Cantidad</th>
-
 											<th class="text-end">Precio unitario</th>
-
 											<th class="text-end">Subtotal</th>
 
 										</tr>
@@ -318,29 +439,26 @@
 
 										<tr th:each="detalle : ${pedido.detalles}">
 
-											<!-- Producto -->
 											<td>
 
 												<div class="d-flex align-items-center gap-3">
 
 													<div
-														class="rounded-circle
-                                                        bg-light
-                                                        d-flex
-                                                        align-items-center
+														class="rounded bg-light
+                                                        d-flex align-items-center
                                                         justify-content-center"
-														style="width: 42px; height: 42px; flex-shrink: 0;">
+														style="width: 58px; height: 58px;">
 
-														<i class="lni lni-package"></i>
+														<i class="lni lni-package" style="font-size: 26px;"></i>
 
 													</div>
 
 													<div>
 
-														<span class="fw-semibold"> Producto # <span
+														<strong> Producto # <span
 															th:text="${detalle.idProducto}"> 0 </span>
 
-														</span> <small class="text-muted d-block"> Detalle ID: <span
+														</strong> <small class="text-muted d-block"> Detalle # <span
 															th:text="${detalle.idDetallePedido}"> 0 </span>
 
 														</small>
@@ -351,32 +469,25 @@
 
 											</td>
 
-											<!-- Cantidad -->
-											<td class="text-center"><span class="badge bg-primary"
-												th:text="${detalle.cantidad}"> 0 </span></td>
+											<td class="text-center"><strong
+												th:text="${detalle.cantidad}"> 0 </strong></td>
 
-											<!-- Precio -->
 											<td class="text-end">$ <span
 												th:text="${#numbers.formatDecimal(
                                             detalle.precioUnitario,
                                             1,
                                             2
                                         )}">
-
 													0.00 </span>
 
 											</td>
 
-											<!-- Subtotal -->
-											<td class="text-end"><strong class="text-success">
-
-													$ <span
+											<td class="text-end"><strong> $ <span
 													th:text="${#numbers.formatDecimal(
                                                 detalle.subtotal,
                                                 1,
                                                 2
                                             )}">
-
 														0.00 </span>
 
 											</strong></td>
@@ -385,116 +496,25 @@
 
 									</tbody>
 
-									<tfoot>
-
-										<tr>
-
-											<td colspan="3" class="text-end fw-semibold">Total</td>
-
-											<td class="text-end"><strong class="text-primary fs-5">
-
-													$ <span
-													th:text="${pedido.total != null
-                                                ? #numbers.formatDecimal(
-                                                    pedido.total,
-                                                    1,
-                                                    2
-                                                )
-                                                : '0.00'}">
-
-														0.00 </span>
-
-											</strong></td>
-
-										</tr>
-
-									</tfoot>
-
 								</table>
 
 							</div>
 
-						</div>
+							<!-- Total -->
+							<div class="d-flex justify-content-end mt-4">
 
-					</div>
+								<div style="min-width: 310px;">
 
-					<!-- Columna derecha: comprobante -->
-					<div class="col-xl-4 col-lg-5">
+									<div class="d-flex justify-content-between mb-2">
 
-						<div class="card-style mb-30">
-
-							<div
-								class="d-flex justify-content-between
-                                    align-items-center
-                                    flex-wrap
-                                    gap-2
-                                    mb-4">
-
-								<div>
-
-									<h4 class="mb-1">Comprobante de pago</h4>
-
-									<p class="text-muted mb-0">Imagen y valor registrado para
-										el pedido.</p>
-
-								</div>
-
-								<span th:if="${comprobante != null}" class="badge bg-success">
-
-									Registrado </span> <span th:if="${comprobante == null}"
-									class="badge bg-secondary"> Sin comprobante </span>
-
-							</div>
-
-							<!-- Comprobante existente -->
-							<div th:if="${comprobante != null}">
-
-								<!-- Imagen -->
-								<div class="mb-4 text-center">
-
-									<a
-										th:if="${comprobante.archivoUrl != null
-                                        and !#strings.isEmpty(
-                                            comprobante.archivoUrl
-                                        )}"
-										th:href="${'http://localhost:8080'
-                                       + comprobante.archivoUrl}"
-										target="_blank" title="Abrir comprobante"> <img
-										th:src="${'http://localhost:8080'
-                                            + comprobante.archivoUrl}"
-										alt="Comprobante de pago" class="img-fluid rounded border"
-										style="width: 100%; max-height: 360px; object-fit: contain; background: #f8f9fa;">
-
-									</a>
-
-									<div class="alert alert-light border mb-0"
-										th:if="${comprobante.archivoUrl == null
-                                        or #strings.isEmpty(
-                                            comprobante.archivoUrl
-                                        )}">
-
-										No existe una imagen disponible.</div>
-
-								</div>
-
-								<!-- Datos -->
-								<div class="border rounded p-3 mb-3">
-
-									<div
-										class="d-flex justify-content-between
-                                            align-items-center
-                                            mb-3">
-
-										<span class="text-muted"> Valor del comprobante </span> <strong
-											class="text-success fs-5"> $ <span
-											th:text="${comprobante.monto != null
+										<span> Subtotal </span> <strong> $ <span
+											th:text="${pedido.total != null
                                             ? #numbers.formatDecimal(
-                                                comprobante.monto,
+                                                pedido.total,
                                                 1,
                                                 2
                                             )
                                             : '0.00'}">
-
 												0.00 </span>
 
 										</strong>
@@ -502,188 +522,580 @@
 									</div>
 
 									<div
-										class="d-flex justify-content-between
-                                            align-items-center
-                                            mb-3">
+										class="d-flex
+                                            justify-content-between
+                                            total-pedido">
 
-										<span class="text-muted"> Tipo de pago </span> <span
-											class="badge bg-primary"
-											th:text="${comprobante.tipoPago != null
-                                              ? comprobante.tipoPago
-                                              : 'Sin tipo'}">
+										<strong> Total del pedido </strong> <strong
+											class="text-danger fs-5"> $ <span
+											th:text="${pedido.total != null
+                                            ? #numbers.formatDecimal(
+                                                pedido.total,
+                                                1,
+                                                2
+                                            )
+                                            : '0.00'}">
+												0.00 </span>
 
-											ABONO_INICIAL </span>
+										</strong>
 
 									</div>
 
+								</div>
+
+							</div>
+
+						</div>
+
+						<!-- Observaciones -->
+						<div class="detalle-card mb-4">
+
+							<h4 class="mb-3">Observaciones del pedido</h4>
+
+							<div class="alert alert-light border mb-0">
+
+								<i class="lni lni-comments-alt me-2"></i> <span
+									th:text="${pedido.observacion != null
+                                and !#strings.isEmpty(pedido.observacion)
+                                ? pedido.observacion
+                                : 'Sin observaciones registradas'}">
+
+									Sin observaciones registradas </span>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<!-- COLUMNA DERECHA -->
+					<div class="col-xl-4 col-lg-5">
+
+						<!-- Pagos -->
+						<div class="detalle-card mb-4">
+
+							<h4 class="mb-3">Pagos del pedido</h4>
+
+							<!-- Resumen -->
+							<div class="resumen-pago mb-4">
+
+								<div class="resumen-linea">
+
+									<span> Total del pedido </span> <strong> $ <span
+										th:text="${pedido.total != null
+                                        ? #numbers.formatDecimal(
+                                            pedido.total,
+                                            1,
+                                            2
+                                        )
+                                        : '0.00'}">
+											0.00 </span>
+
+									</strong>
+
+								</div>
+
+								<div class="resumen-linea">
+
+									<span> Abono requerido (50%) </span> <strong
+										class="text-primary"> $ <span
+										th:text="${#numbers.formatDecimal(
+                                        abonoRequerido,
+                                        1,
+                                        2
+                                    )}">
+											0.00 </span>
+
+									</strong>
+
+								</div>
+
+								<div class="resumen-linea">
+
+									<span> Total registrado </span> <strong> $ <span
+										th:text="${#numbers.formatDecimal(
+                                        totalRegistrado,
+                                        1,
+                                        2
+                                    )}">
+											0.00 </span>
+
+									</strong>
+
+								</div>
+
+								<div class="resumen-linea">
+
+									<span> Total aprobado </span> <strong class="text-success">
+
+										$ <span
+										th:text="${#numbers.formatDecimal(
+                                        totalAprobado,
+                                        1,
+                                        2
+                                    )}">
+											0.00 </span>
+
+									</strong>
+
+								</div>
+
+								<hr>
+
+								<div class="resumen-linea">
+
+									<strong> Saldo pendiente </strong> <strong class="text-danger">
+
+										$ <span
+										th:text="${#numbers.formatDecimal(
+                                        saldoPendiente,
+                                        1,
+                                        2
+                                    )}">
+											0.00 </span>
+
+									</strong>
+
+								</div>
+
+							</div>
+
+							<!-- Estado del abono -->
+							<div class="alert alert-success estado-resumen"
+								th:if="${cumpleAbono}">
+
+								<i class="lni lni-checkmark-circle me-1"></i> El pedido cumple
+								con el abono mínimo requerido.
+
+							</div>
+
+							<div class="alert alert-warning estado-resumen"
+								th:unless="${cumpleAbono}">
+
+								<i class="lni lni-warning me-1"></i> El pedido todavía no cumple
+								con el abono mínimo.
+
+							</div>
+
+							<!-- Contador -->
+							<div
+								class="d-flex justify-content-between
+                                    align-items-center mb-3">
+
+								<h5 class="mb-0">Pagos registrados</h5>
+
+								<span class="badge bg-primary"
+									th:text="${comprobantes != null
+                                      ? #lists.size(comprobantes)
+                                        + ' pago(s)'
+                                      : '0 pago(s)'}">
+
+									0 pago(s) </span>
+
+							</div>
+
+							<!-- Sin pagos -->
+							<div class="comprobante-vacio mb-4"
+								th:if="${comprobantes == null
+                                or #lists.isEmpty(comprobantes)}">
+
+								<i class="lni lni-image"></i>
+
+								<h5 class="mt-3">No existen pagos registrados</h5>
+
+								<p class="text-muted mb-0">Todavía no se han cargado
+									comprobantes para este pedido.</p>
+
+							</div>
+
+							<!-- Lista de pagos -->
+							<div
+								th:if="${comprobantes != null
+                                and !#lists.isEmpty(comprobantes)}">
+
+								<div class="pago-detalle" th:each="pago : ${comprobantes}">
+
+									<!-- Cabecera -->
 									<div
 										class="d-flex justify-content-between
-                                            align-items-center">
+                                            align-items-start
+                                            gap-2 mb-2">
 
-										<span class="text-muted"> Fecha de carga </span> <span
-											th:text="${comprobante.fechaSubida != null
-                                        ? #dates.format(
-                                            comprobante.fechaSubida,
-                                            'dd/MM/yyyy HH:mm'
+										<div>
+
+											<strong> Pago # <span
+												th:text="${pago.idComprobante}"> 0 </span>
+
+											</strong> <small class="text-muted d-block"
+												th:text="${pago.fechaSubida != null
+                                                   ? #dates.format(
+                                                       pago.fechaSubida,
+                                                       'dd/MM/yyyy HH:mm'
+                                                   )
+                                                   : 'Sin fecha'}">
+
+												Sin fecha </small>
+
+										</div>
+
+										<!-- Estado -->
+										<div th:switch="${pago.idEstado}">
+
+											<span th:case="4" class="badge bg-warning text-dark">
+
+												Pendiente </span> <span th:case="2" class="badge bg-success">
+
+												Aprobado </span> <span th:case="3" class="badge bg-danger">
+
+												Rechazado </span> <span th:case="*" class="badge bg-secondary">
+
+												Estado <span th:text="${pago.idEstado}"> 0 </span>
+
+											</span>
+
+										</div>
+
+									</div>
+
+									<!-- Tipo -->
+									<div class="d-flex justify-content-between mb-2">
+
+										<span class="text-muted"> Tipo </span> <strong
+											th:text="${pago.tipoPago != null
+                                        ? pago.tipoPago
+                                        : 'Sin tipo'}">
+
+											ABONO_INICIAL </strong>
+
+									</div>
+
+									<!-- Monto -->
+									<div class="d-flex justify-content-between mb-3">
+
+										<span class="text-muted"> Monto </span> <strong
+											class="text-success"> $ <span
+											th:text="${pago.monto != null
+                                            ? #numbers.formatDecimal(
+                                                pago.monto,
+                                                1,
+                                                2
+                                            )
+                                            : '0.00'}">
+												0.00 </span>
+
+										</strong>
+
+									</div>
+
+									<!-- Observación -->
+									<div
+										th:if="${pago.observacion != null
+                                        and !#strings.isEmpty(pago.observacion)}"
+										class="alert alert-light border py-2">
+
+										<small th:text="${pago.observacion}"> Observación </small>
+
+									</div>
+
+									<!-- Ver comprobante -->
+									<a
+										th:if="${pago.archivoUrl != null
+                                        and !#strings.isEmpty(pago.archivoUrl)}"
+										th:href="${'http://localhost:8080'
+                                       + pago.archivoUrl}"
+										target="_blank" class="btn btn-outline-primary btn-sm w-100">
+
+										<i class="lni lni-eye me-1"></i> Ver comprobante
+
+									</a>
+
+									<!-- Acciones del administrador/vendedor -->
+									<div class="acciones-comprobante no-imprimir"
+										th:if="${!pedidoCerrado
+                                        and (
+                                            session.rolUsuario == 'ADMINISTRADOR'
+                                            or session.rolUsuario == 'VENDEDOR'
                                         )
-                                        : 'Sin fecha'}">
+                                        and pago.idEstado == 4}">
 
-											Sin fecha </span>
+										<p class="fw-semibold mb-2">Verificación del pago</p>
+
+										<!-- Aprobar -->
+										<form
+											th:action="@{/pedidos/{idPedido}/comprobante/{idComprobante}/aprobar(
+                                            idPedido=${pedido.idPedido},
+                                            idComprobante=${pago.idComprobante}
+                                        )}"
+											method="post" class="mb-2">
+
+											<input type="hidden" name="observacion"
+												value="Monto e imagen verificados correctamente">
+
+											<button type="submit" class="btn btn-success btn-sm w-100"
+												onclick="return confirm('¿Desea aprobar este comprobante?')">
+
+												<i class="lni lni-checkmark-circle me-1"></i> Aprobar pago
+
+											</button>
+
+										</form>
+
+										<!-- Mostrar formulario para rechazar -->
+										<button type="button"
+											class="btn btn-outline-danger btn-sm w-100"
+											data-bs-toggle="collapse"
+											th:attr="data-bs-target=${'#rechazarPago-' + pago.idComprobante},
+                                                     aria-controls=${'rechazarPago-' + pago.idComprobante}"
+											aria-expanded="false">
+
+											<i class="lni lni-close me-1"></i> Rechazar pago
+
+										</button>
+
+										<!-- Formulario de rechazo -->
+										<div class="collapse"
+											th:id="${'rechazarPago-' + pago.idComprobante}">
+
+											<div class="form-rechazo">
+
+												<form
+													th:action="@{/pedidos/{idPedido}/comprobante/{idComprobante}/rechazar(
+                                                    idPedido=${pedido.idPedido},
+                                                    idComprobante=${pago.idComprobante}
+                                                )}"
+													method="post">
+
+													<label class="form-label fw-semibold"> Motivo del
+														rechazo <span class="text-danger">*</span>
+
+													</label>
+
+													<textarea name="observacion" class="form-control mb-2"
+														rows="3" maxlength="500"
+														placeholder="Ejemplo: La imagen no es legible" required></textarea>
+
+													<button type="submit" class="btn btn-danger btn-sm w-100"
+														onclick="return confirm('¿Desea rechazar este comprobante?')">
+
+														Confirmar rechazo</button>
+
+												</form>
+
+											</div>
+
+										</div>
+
+									</div>
+
+									<!-- Resultado final -->
+									<div class="alert alert-success py-2 mt-3 mb-0"
+										th:if="${pago.idEstado == 2}">
+
+										<small> <i class="lni lni-checkmark-circle me-1"></i>
+
+											Pago aprobado y considerado en el total.
+
+										</small>
+
+									</div>
+
+									<div class="alert alert-danger py-2 mt-3 mb-0"
+										th:if="${pago.idEstado == 3}">
+
+										<small> <i class="lni lni-close me-1"></i> El
+											comprobante fue rechazado.
+
+										</small>
 
 									</div>
 
 								</div>
 
-								<!-- Observación -->
-								<div class="border rounded p-3"
-									th:if="${comprobante.observacion != null
-                                    and !#strings.isEmpty(
-                                        comprobante.observacion
-                                    )}">
+							</div>
 
-									<span class="text-muted d-block mb-1"> Observación del
-										comprobante </span>
+							<!-- Formulario de carga -->
+							<div
+								th:if="${!pedidoCerrado
+                                and !pagoCompleto
+                                and (
+                                    session.rolUsuario == 'ADMINISTRADOR'
+                                    or session.rolUsuario == 'VENDEDOR'
+                                    or session.rolUsuario == 'CLIENTE'
+                                )}"
+								class="no-imprimir">
 
-									<p class="mb-0" th:text="${comprobante.observacion}">
+								<hr class="my-4">
 
-										Observación</p>
+								<h5 class="mb-3">Registrar nuevo pago</h5>
 
-								</div>
+								<form
+									th:action="@{/pedidos/{idPedido}/comprobante(
+                                    idPedido=${pedido.idPedido}
+                                )}"
+									method="post" enctype="multipart/form-data"
+									id="formComprobante">
+
+									<!-- Archivo -->
+									<div class="mb-3">
+
+										<label for="archivo" class="form-label fw-semibold">
+
+											Imagen del comprobante <span class="text-danger">*</span>
+
+										</label> <input type="file" id="archivo" name="archivo"
+											class="form-control" accept="image/jpeg,image/png,image/webp"
+											required> <small class="text-muted"> Formatos
+											permitidos: JPG, PNG o WEBP. Máximo 5 MB. </small>
+
+									</div>
+
+									<!-- Vista previa -->
+									<div id="contenedorVistaPrevia" class="mb-3 d-none">
+
+										<label class="form-label fw-semibold"> Vista previa </label> <img
+											id="vistaPrevia" class="comprobante-imagen"
+											alt="Vista previa">
+
+									</div>
+
+									<!-- Monto -->
+									<div class="mb-3">
+
+										<label for="monto" class="form-label fw-semibold">
+
+											Valor del comprobante <span class="text-danger">*</span>
+
+										</label>
+
+										<div class="input-group">
+
+											<span class="input-group-text"> $ </span> <input
+												type="number" id="monto" name="monto" class="form-control"
+												min="0.01" step="0.01" placeholder="0.00" required>
+
+										</div>
+
+									</div>
+
+									<!-- Tipo -->
+									<div class="mb-3">
+
+										<label for="tipoPago" class="form-label fw-semibold">
+
+											Tipo de pago </label> <select id="tipoPago" name="tipoPago"
+											class="form-select">
+
+											<option value="ABONO_INICIAL">Abono inicial</option>
+
+											<option value="PAGO_FINAL">Pago final</option>
+
+										</select>
+
+									</div>
+
+									<!-- Observación -->
+									<div class="mb-4">
+
+										<label for="observacionComprobante"
+											class="form-label fw-semibold"> Observación <span
+											class="text-muted fw-normal"> (opcional) </span>
+
+										</label>
+
+										<textarea id="observacionComprobante" name="observacion"
+											class="form-control" rows="3" maxlength="500"
+											placeholder="Ingrese información adicional del pago"></textarea>
+
+									</div>
+
+									<button type="submit" class="btn btn-success w-100">
+
+										<i class="lni lni-upload me-1"></i> Guardar comprobante
+
+									</button>
+
+								</form>
 
 							</div>
 
-							<!-- Sin comprobante -->
-							<div th:if="${comprobante == null}">
+							<div class="alert alert-secondary no-imprimir mt-3"
+								th:if="${pedidoCerrado}">
 
-								<div class="alert alert-light border text-center py-4">
-
-									<i class="lni lni-image" style="font-size: 42px;"></i>
-
-									<h6 class="mt-3 mb-1">No existe un comprobante</h6>
-
-									<p class="text-muted mb-0">Todavía no se ha registrado una
-										imagen de pago para este pedido.</p>
-
-								</div>
+								<i class="lni lni-lock me-1"></i> No se pueden registrar nuevos
+								pagos porque el pedido está cerrado.
 
 							</div>
 
-							<!-- Formulario -->
+							<div class="alert alert-success no-imprimir mt-3"
+								th:if="${!pedidoCerrado and pagoCompleto}">
+
+								<i class="lni lni-checkmark-circle me-1"></i> El pedido está
+								pagado completamente. No se pueden registrar más comprobantes.
+
+							</div>
+
+						</div>
+
+						<!-- Gestión del pedido -->
+						<div class="detalle-card mb-4 no-imprimir"
+							th:if="${!pedidoCerrado
+                            and (
+                                session.rolUsuario == 'ADMINISTRADOR'
+                                or session.rolUsuario == 'VENDEDOR'
+                            )}">
+
+							<h4 class="mb-3">Gestión del pedido</h4>
+
+							<!-- Aprobar pedido -->
 							<form
-								th:if="${session.rolUsuario == 'ADMINISTRADOR'
-                                or session.rolUsuario == 'VENDEDOR'}"
-								th:action="@{/pedidos/{idPedido}/comprobante(
-                                  idPedido=${pedido.idPedido}
-                              )}"
-								method="post" enctype="multipart/form-data" class="mt-4"
-								id="formComprobante">
+								th:if="${pedido.nombreEstado != null
+        and (
+            #strings.equalsIgnoreCase(
+                pedido.nombreEstado,
+                'PENDIENTE'
+            )
+            or #strings.equalsIgnoreCase(
+                pedido.nombreEstado,
+                'PENDIENTE DE CONFIRMACION'
+            )
+        )}"
+								th:action="@{/pedidos/{idPedido}/aprobar(
+        idPedido=${pedido.idPedido}
+    )}"
+								method="post">
 
-								<hr class="mb-4">
+								<button type="submit"
+									class="btn btn-outline-success accion-pedido"
+									th:disabled="${!cumpleAbono}"
+									onclick="return confirm(
+                '¿Está seguro de aprobar este pedido?'
+            )">
 
-								<h5 class="mb-3">
-
-									<span
-										th:text="${comprobante == null
-                                    ? 'Registrar comprobante'
-                                    : 'Subir nuevo comprobante'}">
-
-										Registrar comprobante </span>
-
-								</h5>
-
-								<!-- Archivo -->
-								<div class="mb-3">
-
-									<label for="archivo" class="form-label fw-semibold">
-
-										Imagen del comprobante <span class="text-danger"> * </span>
-
-									</label> <input type="file" id="archivo" name="archivo"
-										class="form-control"
-										accept=".jpg,.jpeg,.png,.webp,
-                                               image/jpeg,image/png,image/webp"
-										required> <small class="text-muted"> Formatos
-										permitidos: JPG, PNG o WEBP. Máximo 5 MB. </small>
-
-								</div>
-
-								<!-- Vista previa -->
-								<div id="contenedorVistaPrevia" class="mb-3 d-none">
-
-									<span class="form-label fw-semibold d-block"> Vista
-										previa </span> <img id="vistaPrevia"
-										alt="Vista previa del comprobante"
-										class="img-fluid rounded border"
-										style="width: 100%; max-height: 250px; object-fit: contain;">
-
-								</div>
-
-								<!-- Monto -->
-								<div class="mb-3">
-
-									<label for="monto" class="form-label fw-semibold">
-
-										Valor del comprobante <span class="text-danger"> * </span>
-
-									</label>
-
-									<div class="input-group">
-
-										<span class="input-group-text"> $ </span> <input type="number"
-											id="monto" name="monto" class="form-control" min="0.01"
-											step="0.01" placeholder="0.00" required>
-
-									</div>
-
-								</div>
-
-								<!-- Tipo pago -->
-								<div class="mb-3">
-
-									<label for="tipoPago" class="form-label fw-semibold">
-
-										Tipo de pago </label> <select id="tipoPago" name="tipoPago"
-										class="form-select">
-
-										<option value="ABONO_INICIAL">Abono inicial</option>
-
-										<option value="PAGO_FINAL">Pago final</option>
-
-									</select>
-
-								</div>
-
-								<!-- Observación -->
-								<div class="mb-4">
-
-									<label for="observacionComprobante"
-										class="form-label fw-semibold"> Observación <span
-										class="text-muted fw-normal"> (opcional) </span>
-
-									</label>
-
-									<textarea id="observacionComprobante" name="observacion"
-										class="form-control" rows="3" maxlength="500"
-										placeholder="Ingrese información adicional del pago"></textarea>
-
-								</div>
-
-								<button type="submit" class="btn btn-success w-100">
-
-									<i class="lni lni-upload me-1"></i> Guardar comprobante
+									<i class="lni lni-checkmark-circle me-1"></i> Aprobar pedido
 
 								</button>
 
 							</form>
 
-							<!-- Mensaje para cliente -->
-							<div class="alert alert-light border mt-4 mb-0"
-								th:if="${session.rolUsuario == 'CLIENTE'
-                                and comprobante == null}">
+							<!-- Cancelar -->
+							<button type="button"
+								th:if="${pedido.nombreEstado != null
+        and (
+            #strings.equalsIgnoreCase(
+                pedido.nombreEstado,
+                'PENDIENTE'
+            )
+            or #strings.equalsIgnoreCase(
+                pedido.nombreEstado,
+                'PENDIENTE DE CONFIRMACION'
+            )
+        )}"
+								class="btn btn-outline-danger accion-pedido"
+								data-bs-toggle="modal" data-bs-target="#modalCancelarPedido">
 
-								El comprobante será registrado por el vendedor o administrador.
+								<i class="lni lni-close me-1"></i> Cancelar pedido
 
-							</div>
+							</button>
 
 						</div>
 
@@ -695,123 +1107,125 @@
 
 		</section>
 
-		<!-- JavaScript -->
+		<!-- Modal cancelar -->
+		<div class="modal fade" id="modalCancelarPedido"
+			th:if="${!pedidoCerrado}" tabindex="-1"
+			aria-labelledby="tituloModalCancelar" aria-hidden="true">
+
+			<div class="modal-dialog modal-dialog-centered">
+
+				<div class="modal-content">
+
+					<div class="modal-header">
+
+						<h5 class="modal-title" id="tituloModalCancelar">Cancelar
+							pedido</h5>
+
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Cerrar"></button>
+
+					</div>
+
+					<form
+						th:action="@{/pedidos/{idPedido}/cancelar(
+                        idPedido=${pedido.idPedido}
+                    )}"
+						method="post">
+
+						<div class="modal-body">
+
+							<div class="alert alert-warning">Esta acción cambiará el
+								estado del pedido a cancelado.</div>
+
+							<label for="motivoCancelacion" class="form-label fw-semibold">
+
+								Motivo de la cancelación <span class="text-danger">*</span>
+
+							</label>
+
+							<textarea id="motivoCancelacion" name="observacion"
+								class="form-control" rows="4" maxlength="500"
+								placeholder="Ingrese el motivo de la cancelación" required></textarea>
+
+						</div>
+
+						<div class="modal-footer">
+
+							<button type="button" class="btn btn-outline-secondary"
+								data-bs-dismiss="modal">Volver</button>
+
+							<button type="submit" class="btn btn-danger">
+
+								<i class="lni lni-close me-1"></i> Confirmar cancelación
+
+							</button>
+
+						</div>
+
+					</form>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- Vista previa -->
 		<script>
-			document
-					.addEventListener(
-							"DOMContentLoaded",
-							function() {
+			document.addEventListener("DOMContentLoaded", function() {
 
-								const archivo = document
-										.getElementById("archivo");
+				const archivo = document.getElementById("archivo");
 
-								const monto = document.getElementById("monto");
+				const vistaPrevia = document.getElementById("vistaPrevia");
 
-								const formulario = document
-										.getElementById("formComprobante");
+				const contenedor = document
+						.getElementById("contenedorVistaPrevia");
 
-								const contenedorVistaPrevia = document
-										.getElementById("contenedorVistaPrevia");
+				if (!archivo) {
+					return;
+				}
 
-								const vistaPrevia = document
-										.getElementById("vistaPrevia");
+				archivo.addEventListener("change", function() {
 
-								const tiposPermitidos = [ "image/jpeg",
-										"image/png", "image/webp" ];
+					const imagen = archivo.files[0];
 
-								const limite = 5 * 1024 * 1024;
+					if (!imagen) {
 
-								if (archivo) {
+						contenedor.classList.add("d-none");
 
-									archivo
-											.addEventListener(
-													"change",
-													function() {
+						return;
+					}
 
-														const imagen = archivo.files[0];
+					const permitidos = [ "image/jpeg", "image/png",
+							"image/webp" ];
 
-														if (!imagen) {
+					if (!permitidos.includes(imagen.type)) {
 
-															if (contenedorVistaPrevia) {
-																contenedorVistaPrevia.classList
-																		.add("d-none");
-															}
+						alert("Seleccione una imagen JPG, PNG o WEBP.");
 
-															return;
-														}
+						archivo.value = "";
 
-														if (!tiposPermitidos
-																.includes(imagen.type)) {
+						contenedor.classList.add("d-none");
 
-															alert("El comprobante debe ser una imagen JPG, PNG o WEBP.");
+						return;
+					}
 
-															archivo.value = "";
+					if (imagen.size > 5 * 1024 * 1024) {
 
-															if (contenedorVistaPrevia) {
-																contenedorVistaPrevia.classList
-																		.add("d-none");
-															}
+						alert("La imagen no puede superar los 5 MB.");
 
-															return;
-														}
+						archivo.value = "";
 
-														if (imagen.size > limite) {
+						contenedor.classList.add("d-none");
 
-															alert("La imagen no puede superar los 5 MB.");
+						return;
+					}
 
-															archivo.value = "";
+					vistaPrevia.src = URL.createObjectURL(imagen);
 
-															if (contenedorVistaPrevia) {
-																contenedorVistaPrevia.classList
-																		.add("d-none");
-															}
-
-															return;
-														}
-
-														if (vistaPrevia
-																&& contenedorVistaPrevia) {
-
-															vistaPrevia.src = URL
-																	.createObjectURL(imagen);
-
-															contenedorVistaPrevia.classList
-																	.remove("d-none");
-														}
-													});
-								}
-
-								if (formulario) {
-
-									formulario
-											.addEventListener(
-													"submit",
-													function(event) {
-
-														if (!archivo
-																|| archivo.files.length === 0) {
-
-															event
-																	.preventDefault();
-
-															alert("Seleccione la imagen del comprobante.");
-
-															return;
-														}
-
-														const valor = monto ? Number(monto.value)
-																: 0;
-
-														if (valor <= 0) {
-
-															event
-																	.preventDefault();
-
-															alert("Ingrese un valor de comprobante válido.");
-														}
-													});
-								}
-							});
+					contenedor.classList.remove("d-none");
+				});
+			});
 		</script>
 
 	</div>

@@ -10,74 +10,58 @@ import com.uisrael.pedidosweb.model.dto.response.CategoriaResponseDto;
 import com.uisrael.pedidosweb.services.ICategoriaService;
 
 @Service
-public class CategoriaServiceImpl implements ICategoriaService{
-	
+public class CategoriaServiceImpl implements ICategoriaService {
+
 	private final WebClient webClient;
 
-    public CategoriaServiceImpl(WebClient webClient) {
-        this.webClient = webClient;
-    }
+	public CategoriaServiceImpl(WebClient webClient) {
+		this.webClient = webClient;
+	}
 
 	@Override
 	public List<CategoriaResponseDto> listarCategorias() {
-		return webClient.get().uri("/categoria").retrieve().bodyToFlux(CategoriaResponseDto.class)
-                .collectList()
-                .block();
+		return webClient.get().uri("/categoria").retrieve().bodyToFlux(CategoriaResponseDto.class).collectList()
+				.block();
 	}
 
 	@Override
 	public void guardarCategoria(CategoriaRequestDto categoria) {
-		 webClient.post().uri("/categoria").bodyValue(categoria).retrieve()
-         .toBodilessEntity()
-         .block();
-		
+		webClient.post().uri("/categoria").bodyValue(categoria).retrieve().toBodilessEntity().block();
+
 	}
+
 	@Override
-    public void inactivarCategoria(int idCategoria) {
+	public void inactivarCategoria(int idCategoria) {
 
-        webClient.delete()
-                .uri("/categoria/{idCategoria}", idCategoria)
-                .retrieve()
-                .toBodilessEntity()
-                .block();
-    }
+		webClient.delete().uri("/categoria/{idCategoria}", idCategoria).retrieve().toBodilessEntity().block();
+	}
 
-    @Override
-    public void activarCategoria(int idCategoria) {
+	@Override
+	public void activarCategoria(int idCategoria) {
 
-        webClient.put()
-                .uri("/categoria/activar/{idCategoria}", idCategoria)
-                .retrieve()
-                .toBodilessEntity()
-                .block();
-    }
-    
-    @Override
-    public CategoriaResponseDto buscarPorId(int idCategoria) {
+		webClient.put().uri("/categoria/activar/{idCategoria}", idCategoria).retrieve().toBodilessEntity().block();
+	}
 
-        return webClient.get()
-                .uri(
-                        "/categoria/id/{idCategoria}",
-                        idCategoria
-                )
-                .retrieve()
-                .bodyToMono(CategoriaResponseDto.class)
-                .block();
-    }
-    
-    @Override
-    public void actualizarCategoria(
-            CategoriaRequestDto categoria) {
+	@Override
+	public CategoriaResponseDto buscarPorId(int idCategoria) {
 
-        webClient.put()
-                .uri(
-                        "/categoria/id/{idCategoria}",
-                        categoria.getIdCategoria()
-                )
-                .bodyValue(categoria)
-                .retrieve()
-                .toBodilessEntity()
-                .block();
-    }
-	
+		return webClient.get().uri("/categoria/id/{idCategoria}", idCategoria).retrieve()
+				.bodyToMono(CategoriaResponseDto.class).block();
+	}
+
+	@Override
+	public void actualizarCategoria(CategoriaRequestDto categoria) {
+
+		webClient.put().uri("/categoria/id/{idCategoria}", categoria.getIdCategoria()).bodyValue(categoria).retrieve()
+				.toBodilessEntity().block();
+	}
+
+	@Override
+	public List<CategoriaResponseDto> listarActivas() {
+
+		List<CategoriaResponseDto> categorias = webClient.get().uri("/categoria/activas").retrieve()
+				.bodyToFlux(CategoriaResponseDto.class).collectList().block();
+
+		return categorias != null ? categorias : List.of();
+	}
 }

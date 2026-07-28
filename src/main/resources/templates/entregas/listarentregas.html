@@ -1,46 +1,294 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{plantilla/plantillaui}">
+	layout:decorate="plantilla/plantillaui">
 
 <head>
-<meta charset="UTF-8" />
-<title>Listado de Entregas</title>
+
+<meta charset="UTF-8">
+<title>Entregas</title>
+
+<style>
+.entrega-estado {
+	display: inline-flex;
+	padding: 7px 12px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.estado-pendiente {
+	background: #fff7d6;
+	color: #9a6700;
+}
+
+.estado-programada {
+	background: #dbeafe;
+	color: #1d4ed8;
+}
+
+.estado-ruta {
+	background: #dcfce7;
+	color: #15803d;
+}
+
+.estado-reprogramada {
+	background: #f3e8ff;
+	color: #7e22ce;
+}
+
+.boton-accion {
+	width: 42px;
+	height: 42px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+</style>
+
 </head>
 
 <body>
-	<div layout:fragment="contenidopaginas">
-		<div class="d-flex justify-content-between align-items-center mb-4">
-			<h5 class="card-title fw-semibold">Gestión de Entregas</h5>
-			<a th:href="@{/entregas/crear}" class="btn btn-primary">Nueva Entrega</a>
-		</div>
 
-		<div class="table-responsive">
-			<!-- Tabla clara con bordes y encabezado claro -->
-			<table class="table table-hover align-middle border">
-				<thead class="table-light">
-					<tr>
-						<th># ID</th>
-						<th>Pedido</th>
-						<th>Tipo</th>
-						<th>Recibido Por</th>
-						<th>Observación</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="ent : ${listaentregas}">
-						<td th:text="${ent.idEntrega}"></td>
-						<td th:text="${ent.idPedido}"></td>
-						<td th:text="${ent.tipoEntrega}"></td>
-						<td th:text="${ent.recibidoPor}"></td>
-						<td th:text="${ent.observacion}"></td>
-					</tr>
-					<tr th:if="${#lists.isEmpty(listaentregas)}">
-						<td colspan="5" class="text-center text-muted">No hay entregas registradas.</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+	<div layout:fragment="contenidopaginas">
+
+		<section class="section">
+
+			<div class="container-fluid">
+
+				<div class="title-wrapper pt-30 mb-4">
+
+					<h2 class="mb-1">Entregas</h2>
+
+					<p class="text-muted">Consulta y organiza las entregas
+						pendientes.</p>
+
+				</div>
+
+				<div class="alert alert-danger" th:if="${error != null}"
+					th:text="${error}"></div>
+
+				<div class="card-style mb-30">
+
+					<!-- Filtros -->
+					<div class="row g-3 mb-4">
+
+						<div class="col-md-5">
+
+							<label class="form-label"> Buscar </label> <input type="text"
+								id="buscarEntrega" class="form-control"
+								placeholder="Buscar cliente, pedido o dirección">
+
+						</div>
+
+						<div class="col-md-3">
+
+							<label class="form-label"> Fecha desde </label> <input
+								type="date" id="fechaDesde" class="form-control">
+
+						</div>
+
+						<div class="col-md-3">
+
+							<label class="form-label"> Fecha hasta </label> <input
+								type="date" id="fechaHasta" class="form-control">
+
+						</div>
+
+					</div>
+
+					<div class="alert alert-light border text-center"
+						th:if="${listaEntregas == null
+                or #lists.isEmpty(listaEntregas)}">
+
+						No existen entregas activas.</div>
+
+					<div class="table-responsive"
+						th:if="${listaEntregas != null
+                and !#lists.isEmpty(listaEntregas)}">
+
+						<table class="table table-hover align-middle" id="tablaEntregas">
+
+							<thead class="table-light">
+
+								<tr>
+
+									<th>Entrega</th>
+									<th>Pedido</th>
+									<th>Cliente</th>
+									<th>Fecha solicitada</th>
+									<th>Dirección</th>
+									<th>Total</th>
+									<th>Estado</th>
+									<th class="text-center">Acciones</th>
+
+								</tr>
+
+							</thead>
+
+							<tbody>
+
+								<tr th:each="entrega : ${listaEntregas}"
+									th:attr="data-fecha=${entrega.fechaEntregaSolicitada != null
+                        ? #dates.format(
+                            entrega.fechaEntregaSolicitada,
+                            'yyyy-MM-dd'
+                        )
+                        : ''}">
+
+									<td><strong class="text-primary"> # <span
+											th:text="${entrega.idEntrega}"> 0 </span>
+
+									</strong></td>
+
+									<td># <span th:text="${entrega.idPedido}"> 0 </span>
+
+									</td>
+
+									<td><strong
+										th:text="${(
+                            entrega.nombreCliente != null
+                            ? entrega.nombreCliente
+                            : ''
+                        ) + ' ' + (
+                            entrega.apellidoCliente != null
+                            ? entrega.apellidoCliente
+                            : ''
+                        )}">
+
+											Cliente </strong> <small class="text-muted d-block"
+										th:text="${entrega.celularCliente}"> </small></td>
+
+									<td
+										th:text="${entrega.fechaEntregaSolicitada != null
+                        ? #dates.format(
+                            entrega.fechaEntregaSolicitada,
+                            'dd/MM/yyyy HH:mm'
+                        )
+                        : 'Por definir'}">
+
+										Por definir</td>
+
+									<td th:text="${entrega.direccionEntrega}">Dirección</td>
+
+									<td><strong class="text-success"> $ <span
+											th:text="${entrega.totalPedido != null
+                                ? #numbers.formatDecimal(
+                                    entrega.totalPedido,
+                                    1,
+                                    2
+                                )
+                                : '0.00'}">
+
+												0.00 </span>
+
+									</strong></td>
+
+									<td><span th:if="${entrega.idEstado == 13}"
+										class="entrega-estado estado-pendiente"> Pendiente </span> <span
+										th:if="${entrega.idEstado == 14}"
+										class="entrega-estado estado-programada"> Programada </span> <span
+										th:if="${entrega.idEstado == 15}"
+										class="entrega-estado estado-ruta"> En ruta </span> <span
+										th:if="${entrega.idEstado == 18}"
+										class="entrega-estado estado-reprogramada">
+
+											Reprogramada </span></td>
+
+									<td class="text-center"><a
+										th:href="@{/entregas/detalle/{idEntrega}(
+                                idEntrega=${entrega.idEntrega}
+                            )}"
+										class="btn btn-outline-primary boton-accion"
+										title="Ver detalle"> <i class="lni lni-eye"></i>
+
+									</a> <a
+										th:if="${entrega.celularCliente != null
+                                and !#strings.isEmpty(
+                                    entrega.celularCliente
+                                )}"
+										th:href="${'https://wa.me/'
+                                + (entrega.celularCliente.startsWith('0')
+                                    ? '593'
+                                      + #strings.substring(
+                                            entrega.celularCliente,
+                                            1
+                                        )
+                                    : entrega.celularCliente)
+                                + '?text=Hola%20'
+                                + (entrega.nombreCliente != null
+                                    ? entrega.nombreCliente
+                                    : '')
+                                + '%20'
+                                + (entrega.apellidoCliente != null
+                                    ? entrega.apellidoCliente
+                                    : '')
+                                + ',%20nos%20comunicamos%20del%20área%20de%20entregas.%20Por%20favor,%20compártanos%20su%20ubicación%20de%20Google%20Maps%20para%20coordinar%20la%20entrega%20del%20pedido%20%23'
+                                + entrega.idPedido}"
+										target="_blank" class="btn btn-success boton-accion"
+										title="Contactar por WhatsApp"> <i
+											class="lni lni-whatsapp"></i>
+
+									</a></td>
+
+								</tr>
+
+							</tbody>
+
+						</table>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+
+				const buscar = document.getElementById("buscarEntrega");
+
+				const fechaDesde = document.getElementById("fechaDesde");
+
+				const fechaHasta = document.getElementById("fechaHasta");
+
+				const filas = document
+						.querySelectorAll("#tablaEntregas tbody tr");
+
+				function filtrar() {
+
+					const texto = buscar.value.toLowerCase().trim();
+
+					const desde = fechaDesde.value;
+
+					const hasta = fechaHasta.value;
+
+					filas.forEach(function(fila) {
+
+						const contenido = fila.textContent.toLowerCase();
+
+						const fecha = fila.dataset.fecha;
+
+						const coincideTexto = contenido.includes(texto);
+
+						const coincideDesde = !desde || fecha >= desde;
+
+						const coincideHasta = !hasta || fecha <= hasta;
+
+						fila.style.display = coincideTexto && coincideDesde
+								&& coincideHasta ? "" : "none";
+					});
+				}
+
+				buscar.addEventListener("input", filtrar);
+				fechaDesde.addEventListener("change", filtrar);
+				fechaHasta.addEventListener("change", filtrar);
+			});
+		</script>
+
 	</div>
+
 </body>
 </html>

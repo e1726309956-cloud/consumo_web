@@ -24,229 +24,148 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/producto")
 public class ProductoController {
 
-    private final IProductoService servicioProducto;
-    private final ICategoriaService servicioCategoria;
+	private final IProductoService servicioProducto;
+	private final ICategoriaService servicioCategoria;
 
-    public ProductoController(
-            IProductoService servicioProducto,
-            ICategoriaService servicioCategoria) {
+	public ProductoController(IProductoService servicioProducto, ICategoriaService servicioCategoria) {
 
-        this.servicioProducto = servicioProducto;
-        this.servicioCategoria = servicioCategoria;
-    }
+		this.servicioProducto = servicioProducto;
+		this.servicioCategoria = servicioCategoria;
+	}
 
-    @GetMapping
-    public String leerPagina(
-            Model model,
-            HttpSession session) {
+	@GetMapping
+	public String leerPagina(Model model, HttpSession session) {
 
-        if (!esAdministrador(session)) {
-            return redireccionSegunSesion(session);
-        }
+		if (!esAdministrador(session)) {
+			return redireccionSegunSesion(session);
+		}
 
-        List<ProductoResponseDto> productos =
-                servicioProducto.listarProducto();
+		List<ProductoResponseDto> productos = servicioProducto.listarProducto();
 
-        model.addAttribute(
-                "listarProductos",
-                productos
-        );
+		model.addAttribute("listarProductos", productos);
 
-        return "productos/listarproductos";
-    }
+		return "productos/listarproductos";
+	}
 
-    @GetMapping("/nuevo")
-    public String nuevoProducto(
-            Model model,
-            HttpSession session) {
+	@GetMapping("/nuevo")
+	public String nuevoProducto(Model model, HttpSession session) {
 
-        if (!esAdministrador(session)) {
-            return redireccionSegunSesion(session);
-        }
+		if (!esAdministrador(session)) {
+			return redireccionSegunSesion(session);
+		}
 
-        ProductoRequestDto producto =
-                new ProductoRequestDto();
+		ProductoRequestDto producto = new ProductoRequestDto();
 
-        List<CategoriaResponseDto> categorias =
-                servicioCategoria.listarCategorias();
+		List<CategoriaResponseDto> categorias = servicioCategoria.listarActivas();
 
-        model.addAttribute(
-                "producto",
-                producto
-        );
+		model.addAttribute("producto", producto);
 
-        model.addAttribute(
-                "categorias",
-                categorias
-        );
+		model.addAttribute("categorias", categorias);
 
-        return "productos/nuevosproductos";
-    }
+		return "productos/nuevosproductos";
+	}
 
-    @PostMapping("/guardar")
-    public String guardarProducto(
-            @ModelAttribute("producto")
-            ProductoRequestDto producto,
+	@PostMapping("/guardar")
+	public String guardarProducto(@ModelAttribute("producto") ProductoRequestDto producto,
 
-            @RequestParam(
-                    value = "imagen",
-                    required = false
-            )
-            MultipartFile imagen,
+			@RequestParam(value = "imagen", required = false) MultipartFile imagen,
 
-            HttpSession session) {
+			HttpSession session) {
 
-        if (!esAdministrador(session)) {
-            return redireccionSegunSesion(session);
-        }
+		if (!esAdministrador(session)) {
+			return redireccionSegunSesion(session);
+		}
 
-        if (producto.getIdProducto() > 0) {
+		if (producto.getIdProducto() > 0) {
 
-            servicioProducto.actualizarProducto(
-                    producto,
-                    imagen
-            );
+			servicioProducto.actualizarProducto(producto, imagen);
 
-        } else {
+		} else {
 
-            servicioProducto.guardarProducto(
-                    producto,
-                    imagen
-            );
-        }
+			servicioProducto.guardarProducto(producto, imagen);
+		}
 
-        return "redirect:/producto";
-    }
+		return "redirect:/producto";
+	}
 
-    @GetMapping("/inactivar/{idProducto}")
-    public String inactivarProducto(
-            @PathVariable int idProducto,
-            HttpSession session) {
+	@GetMapping("/inactivar/{idProducto}")
+	public String inactivarProducto(@PathVariable int idProducto, HttpSession session) {
 
-        if (!esAdministrador(session)) {
-            return redireccionSegunSesion(session);
-        }
+		if (!esAdministrador(session)) {
+			return redireccionSegunSesion(session);
+		}
 
-        servicioProducto.inactivarProducto(
-                idProducto
-        );
+		servicioProducto.inactivarProducto(idProducto);
 
-        return "redirect:/producto";
-    }
+		return "redirect:/producto";
+	}
 
-    @GetMapping("/activar/{idProducto}")
-    public String activarProducto(
-            @PathVariable int idProducto,
-            HttpSession session) {
+	@GetMapping("/activar/{idProducto}")
+	public String activarProducto(@PathVariable int idProducto, HttpSession session) {
 
-        if (!esAdministrador(session)) {
-            return redireccionSegunSesion(session);
-        }
+		if (!esAdministrador(session)) {
+			return redireccionSegunSesion(session);
+		}
 
-        servicioProducto.activarProducto(
-                idProducto
-        );
+		servicioProducto.activarProducto(idProducto);
 
-        return "redirect:/producto";
-    }
+		return "redirect:/producto";
+	}
 
-    @GetMapping("/editar/{idProducto}")
-    public String editarProducto(
-            @PathVariable int idProducto,
-            Model model,
-            HttpSession session) {
+	@GetMapping("/editar/{idProducto}")
+	public String editarProducto(@PathVariable int idProducto, Model model, HttpSession session) {
 
-        if (!esAdministrador(session)) {
-            return redireccionSegunSesion(session);
-        }
+		if (!esAdministrador(session)) {
+			return redireccionSegunSesion(session);
+		}
 
-        ProductoResponseDto productoApi =
-                servicioProducto.buscarPorId(
-                        idProducto
-                );
+		ProductoResponseDto productoApi = servicioProducto.buscarPorId(idProducto);
 
-        ProductoRequestDto producto =
-                new ProductoRequestDto();
+		ProductoRequestDto producto = new ProductoRequestDto();
 
-        producto.setIdProducto(
-                productoApi.getIdProducto()
-        );
+		producto.setIdProducto(productoApi.getIdProducto());
 
-        producto.setNombre(
-                productoApi.getNombre()
-        );
+		producto.setNombre(productoApi.getNombre());
 
-        producto.setDescripcion(
-                productoApi.getDescripcion()
-        );
+		producto.setDescripcion(productoApi.getDescripcion());
 
-        producto.setPrecio(
-                productoApi.getPrecio()
-        );
+		producto.setPrecio(productoApi.getPrecio());
 
-        producto.setStock(
-                productoApi.getStock()
-        );
+		producto.setStock(productoApi.getStock());
 
-        producto.setImagenUrl(
-                productoApi.getImagenUrl()
-        );
+		producto.setImagenUrl(productoApi.getImagenUrl());
 
-        producto.setDisponible(
-                productoApi.isDisponible()
-        );
+		producto.setDisponible(productoApi.isDisponible());
 
-        producto.setFechaCreacion(
-                productoApi.getFechaCreacion()
-        );
+		producto.setFechaCreacion(productoApi.getFechaCreacion());
 
-        if (productoApi.getCategoria() != null) {
+		if (productoApi.getCategoria() != null) {
 
-            producto.setCategoria(
-                    productoApi
-                            .getCategoria()
-                            .getIdCategoria()
-            );
-        }
+			producto.setCategoria(productoApi.getCategoria().getIdCategoria());
+		}
 
-        model.addAttribute(
-                "producto",
-                producto
-        );
+		model.addAttribute("producto", producto);
 
-        model.addAttribute(
-                "categorias",
-                servicioCategoria
-                        .listarCategorias()
-        );
+		model.addAttribute("categorias", servicioCategoria.listarActivas());
 
-        return "productos/nuevosproductos";
-    }
+		return "productos/nuevosproductos";
+	}
 
-    private boolean esAdministrador(
-            HttpSession session) {
+	private boolean esAdministrador(HttpSession session) {
 
-        String rol =
-                (String) session.getAttribute(
-                        "rolUsuario"
-                );
+		String rol = (String) session.getAttribute("rolUsuario");
 
-        return "ADMINISTRADOR"
-                .equalsIgnoreCase(rol);
-    }
+		return "ADMINISTRADOR".equalsIgnoreCase(rol);
+	}
 
-    private String redireccionSegunSesion(
-            HttpSession session) {
+	private String redireccionSegunSesion(HttpSession session) {
 
-        String rol =
-                (String) session.getAttribute(
-                        "rolUsuario"
-                );
+		String rol = (String) session.getAttribute("rolUsuario");
 
-        if (rol == null) {
-            return "redirect:/auth/login";
-        }
+		if (rol == null) {
+			return "redirect:/auth/login";
+		}
 
-        return "redirect:/catalogo";
-    }
+		return "redirect:/catalogo";
+	}
 }

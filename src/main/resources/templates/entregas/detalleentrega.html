@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="plantilla/plantillaui">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Detalle de entrega</title>
+
+<style>
+.detalle-card {
+	background: #ffffff;
+	border: 1px solid #e8edf3;
+	border-radius: 15px;
+	padding: 24px;
+	box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+}
+
+.dato-entrega {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 10px 0;
+}
+
+.dato-entrega i {
+	color: #64748b;
+	font-size: 20px;
+	margin-top: 3px;
+}
+
+.estado-entrega {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	border-radius: 999px;
+	padding: 7px 13px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.estado-pendiente {
+	background: #fff7d6;
+	color: #9a6700;
+	border: 1px solid #fde68a;
+}
+
+.estado-programada {
+	background: #dbeafe;
+	color: #1d4ed8;
+	border: 1px solid #bfdbfe;
+}
+
+.estado-ruta {
+	background: #dcfce7;
+	color: #15803d;
+	border: 1px solid #bbf7d0;
+}
+
+.estado-reprogramada {
+	background: #f3e8ff;
+	color: #7e22ce;
+	border: 1px solid #e9d5ff;
+}
+
+.estado-entregada {
+	background: #dcfce7;
+	color: #15803d;
+	border: 1px solid #86efac;
+}
+
+.estado-cancelada, .estado-no-entregada {
+	background: #fee2e2;
+	color: #b91c1c;
+	border: 1px solid #fecaca;
+}
+
+.resumen-pago {
+	background: #f0fdf4;
+	border: 1px solid #bbf7d0;
+	border-radius: 13px;
+	padding: 18px;
+}
+
+.resumen-linea {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 15px;
+	margin-bottom: 12px;
+}
+
+.resumen-linea:last-child {
+	margin-bottom: 0;
+}
+
+.pago-card {
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	padding: 15px;
+	margin-bottom: 14px;
+}
+
+.comprobante-vacio {
+	background: #f8fafc;
+	border: 1px dashed #cbd5e1;
+	border-radius: 12px;
+	padding: 35px 20px;
+	text-align: center;
+}
+
+.comprobante-vacio i {
+	color: #64748b;
+	font-size: 46px;
+}
+
+.vista-previa {
+	width: 100%;
+	max-height: 280px;
+	object-fit: contain;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	background: #f8fafc;
+}
+
+.tabla-productos th {
+	white-space: nowrap;
+}
+
+.total-productos {
+	background: #fff1f2;
+	border-radius: 10px;
+	padding: 12px 16px;
+}
+
+.acciones-entrega .btn {
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.bloque-finalizacion {
+	background: #f0fdf4;
+	border: 1px solid #86efac;
+	border-radius: 13px;
+	padding: 18px;
+}
+
+.bloque-pago-pendiente {
+	background: #fff7ed;
+	border: 1px solid #fed7aa;
+	border-radius: 13px;
+	padding: 16px;
+}
+
+@media ( max-width : 991px) {
+	.detalle-card {
+		padding: 18px;
+	}
+}
+
+@media print {
+	.no-imprimir, .btn, form, .modal {
+		display: none !important;
+	}
+	.detalle-card {
+		box-shadow: none;
+		break-inside: avoid;
+	}
+}
+</style>
+
+</head>
+
+<body>
+
+	<div layout:fragment="contenidopaginas">
+
+		<section class="section">
+
+			<div class="container-fluid">
+
+				<!-- Volver -->
+				<div class="pt-30 mb-3 no-imprimir">
+
+					<a th:href="@{/entregas}" class="text-decoration-none"> <i
+						class="lni lni-arrow-left me-1"></i> Volver a entregas
+
+					</a>
+
+				</div>
+
+				<!-- Encabezado -->
+				<div
+					class="d-flex justify-content-between
+                        align-items-center
+                        flex-wrap
+                        gap-3
+                        mb-4">
+
+					<div>
+
+						<div
+							class="d-flex align-items-center
+                                flex-wrap gap-3 mb-2">
+
+							<h2 class="mb-0">
+
+								<i class="lni lni-delivery me-2 text-primary"></i> Entrega # <span
+									th:text="${entrega.idEntrega}"> 0 </span>
+
+							</h2>
+
+							<!-- Estado pendiente -->
+							<span
+								th:if="${entrega.nombreEstado != null
+                                and #strings.equalsIgnoreCase(
+                                    entrega.nombreEstado,
+                                    'PENDIENTE'
+                                )}"
+								class="estado-entrega estado-pendiente"> <i
+								class="lni lni-timer"></i> Pendiente
+
+							</span>
+
+							<!-- Programada -->
+							<span
+								th:if="${entrega.nombreEstado != null
+                                and #strings.equalsIgnoreCase(
+                                    entrega.nombreEstado,
+                                    'PROGRAMADA'
+                                )}"
+								class="estado-entrega estado-programada"> <i
+								class="lni lni-calendar"></i> Programada
+
+							</span>
+
+							<!-- En ruta -->
+							<span
+								th:if="${entrega.nombreEstado != null
+                                and #strings.equalsIgnoreCase(
+                                    entrega.nombreEstado,
+                                    'EN RUTA'
+                                )}"
+								class="estado-entrega estado-ruta"> <i
+								class="lni lni-car"></i> En ruta
+
+							</span>
+
+							<!-- Reprogramada -->
+							<span
+								th:if="${entrega.nombreEstado != null
+                                and #strings.equalsIgnoreCase(
+                                    entrega.nombreEstado,
+                                    'REPROGRAMADA'
+                                )}"
+								class="estado-entrega estado-reprogramada"> Reprogramada
+
+							</span>
+
+							<!-- Entregada -->
+							<span
+								th:if="${entrega.nombreEstado != null
+                                and #strings.equalsIgnoreCase(
+                                    entrega.nombreEstado,
+                                    'ENTREGADA'
+                                )}"
+								class="estado-entrega estado-entregada"> <i
+								class="lni lni-checkmark-circle"></i> Entregada
+
+							</span>
+
+							<!-- No entregada -->
+							<span
+								th:if="${entrega.nombreEstado != null
+                                and #strings.equalsIgnoreCase(
+                                    entrega.nombreEstado,
+                                    'NO ENTREGADA'
+                                )}"
+								class="estado-entrega estado-no-entregada"> No entregada
+
+							</span>
+
+							<!-- Cancelada -->
+							<span
+								th:if="${entrega.nombreEstado != null
+                                and #strings.equalsIgnoreCase(
+                                    entrega.nombreEstado,
+                                    'CANCELADA'
+                                )}"
+								class="estado-entrega estado-cancelada"> Cancelada </span>
+
+						</div>
+
+						<p class="text-muted mb-0">
+
+							Pedido # <strong class="text-dark" th:text="${entrega.idPedido}">
+								0 </strong>
+
+						</p>
+
+					</div>
+
+					<button type="button" class="btn btn-outline-primary no-imprimir"
+						onclick="window.print()">
+
+						<i class="lni lni-printer me-1"></i> Imprimir entrega
+
+					</button>
+
+				</div>
+
+				<!-- Mensajes -->
+				<div class="alert alert-success" th:if="${mensaje != null}">
+
+					<i class="lni lni-checkmark-circle me-1"></i> <span
+						th:text="${mensaje}"> Operación realizada correctamente. </span>
+
+				</div>
+
+				<div class="alert alert-danger" th:if="${error != null}">
+
+					<i class="lni lni-close me-1"></i> <span th:text="${error}">
+						No fue posible realizar la operación. </span>
+
+				</div>
+
+				<div class="row g-4">
+
+					<!-- COLUMNA PRINCIPAL -->
+					<div class="col-xl-8 col-lg-7">
+
+						<!-- Información del cliente -->
+						<div class="detalle-card mb-4">
+
+							<h4 class="mb-4">Información del cliente</h4>
+
+							<div class="row">
+
+								<div class="col-md-6">
+
+									<div class="dato-entrega">
+
+										<i class="lni lni-user"></i>
+
+										<div>
+
+											<small class="text-muted d-block"> Cliente </small> <strong
+												th:text="${(
+                                                entrega.nombreCliente != null
+                                                    ? entrega.nombreCliente
+                                                    : ''
+                                            )
+                                            + ' '
+                                            + (
+                                                entrega.apellidoCliente != null
+                                                    ? entrega.apellidoCliente
+                                                    : ''
+                                            )}">
+
+												Nombre del cliente </strong>
+
+										</div>
+
+									</div>
+
+									<div class="dato-entrega">
+
+										<i class="lni lni-phone"></i>
+
+										<div>
+
+											<small class="text-muted d-block"> Teléfono </small> <strong
+												th:text="${entrega.celularCliente != null
+                                            ? entrega.celularCliente
+                                            : 'Sin teléfono'}">
+
+												Sin teléfono </strong>
+
+										</div>
+
+									</div>
+
+									<div class="dato-entrega">
+
+										<i class="lni lni-envelope"></i>
+
+										<div>
+
+											<small class="text-muted d-block"> Correo </small> <strong
+												th:text="${entrega.correoCliente != null
+                                            ? entrega.correoCliente
+                                            : 'Sin correo'}">
+
+												Sin correo </strong>
+
+										</div>
+
+									</div>
+
+								</div>
+
+								<div class="col-md-6">
+
+									<div class="dato-entrega">
+
+										<i class="lni lni-map-marker"></i>
+
+										<div>
+
+											<small class="text-muted d-block"> Dirección de
+												entrega </small> <strong
+												th:text="${entrega.direccionEntrega != null
+                                            ? entrega.direccionEntrega
+                                            : 'Sin dirección'}">
+
+												Sin dirección </strong>
+
+										</div>
+
+									</div>
+
+									<div class="dato-entrega">
+
+										<i class="lni lni-calendar"></i>
+
+										<div>
+
+											<small class="text-muted d-block"> Fecha solicitada </small>
+
+											<strong
+												th:text="${entrega.fechaEntregaSolicitada != null
+                                            ? #dates.format(
+                                                entrega.fechaEntregaSolicitada,
+                                                'dd/MM/yyyy HH:mm'
+                                            )
+                                            : 'Por definir'}">
+
+												Por definir </strong>
+
+										</div>
+
+									</div>
+
+									<div class="dato-entrega">
+
+										<i class="lni lni-package"></i>
+
+										<div>
+
+											<small class="text-muted d-block"> Tipo de entrega </small> <strong
+												th:text="${entrega.tipoEntrega != null
+                                            ? entrega.tipoEntrega
+                                            : 'DOMICILIO'}">
+
+												DOMICILIO </strong>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</div>
+
+							<!-- WhatsApp -->
+							<a
+								th:if="${entrega.celularCliente != null
+                                and !#strings.isEmpty(
+                                    entrega.celularCliente
+                                )}"
+								th:href="${'https://wa.me/'
+                                + (
+                                    entrega.celularCliente.startsWith('0')
+                                        ? '593'
+                                          + #strings.substring(
+                                                entrega.celularCliente,
+                                                1
+                                            )
+                                        : entrega.celularCliente
+                                )
+                                + '?text=Hola%20'
+                                + (
+                                    entrega.nombreCliente != null
+                                        ? entrega.nombreCliente
+                                        : ''
+                                )
+                                + '%20'
+                                + (
+                                    entrega.apellidoCliente != null
+                                        ? entrega.apellidoCliente
+                                        : ''
+                                )
+                                + ',%20nos%20comunicamos%20del%20área%20de%20entregas.%20Por%20favor,%20compártanos%20su%20ubicación%20de%20Google%20Maps%20para%20coordinar%20la%20entrega%20del%20pedido%20%23'
+                                + entrega.idPedido}"
+								target="_blank" class="btn btn-success mt-3 no-imprimir"> <i
+								class="lni lni-whatsapp me-1"></i> Solicitar ubicación por
+								WhatsApp
+
+							</a>
+
+						</div>
+
+						<!-- Productos -->
+						<div class="detalle-card mb-4">
+
+							<div
+								class="d-flex justify-content-between
+                                    align-items-center
+                                    flex-wrap
+                                    gap-2
+                                    mb-4">
+
+								<div>
+
+									<h4 class="mb-1">Productos de la entrega</h4>
+
+									<p class="text-muted mb-0">Productos correspondientes al
+										pedido.</p>
+
+								</div>
+
+								<span class="badge bg-primary"
+									th:text="${entrega.detalles != null
+                                      ? #lists.size(entrega.detalles)
+                                        + ' producto(s)'
+                                      : '0 producto(s)'}">
+
+									0 producto(s) </span>
+
+							</div>
+
+							<!-- Sin productos -->
+							<div class="alert alert-light border text-center py-5"
+								th:if="${entrega.detalles == null
+                                or #lists.isEmpty(entrega.detalles)}">
+
+								<i class="lni lni-package" style="font-size: 50px;"></i>
+
+								<h5 class="mt-3">No existen productos registrados</h5>
+
+							</div>
+
+							<!-- Tabla -->
+							<div class="table-responsive"
+								th:if="${entrega.detalles != null
+                                and !#lists.isEmpty(entrega.detalles)}">
+
+								<table class="table align-middle tabla-productos mb-0">
+
+									<thead>
+
+										<tr>
+
+											<th>Producto</th>
+											<th class="text-center">Cantidad</th>
+											<th class="text-end">Precio unitario</th>
+											<th class="text-end">Subtotal</th>
+
+										</tr>
+
+									</thead>
+
+									<tbody>
+
+										<tr th:each="detalle : ${entrega.detalles}">
+
+											<td><strong> Producto # <span
+													th:text="${detalle.idProducto}"> 0 </span>
+
+											</strong></td>
+
+											<td class="text-center" th:text="${detalle.cantidad}">0
+
+											</td>
+
+											<td class="text-end">$ <span
+												th:text="${#numbers.formatDecimal(
+                                            detalle.precioUnitario,
+                                            1,
+                                            2
+                                        )}">
+													0.00 </span>
+
+											</td>
+
+											<td class="text-end"><strong> $ <span
+													th:text="${#numbers.formatDecimal(
+                                                detalle.subtotal,
+                                                1,
+                                                2
+                                            )}">
+														0.00 </span>
+
+											</strong></td>
+
+										</tr>
+
+									</tbody>
+
+								</table>
+
+							</div>
+
+							<div class="d-flex justify-content-end mt-4">
+
+								<div class="total-productos" style="min-width: 300px;">
+
+									<div class="d-flex justify-content-between">
+
+										<strong> Total del pedido </strong> <strong
+											class="text-danger fs-5"> $ <span
+											th:text="${#numbers.formatDecimal(
+                                            totalPedido,
+                                            1,
+                                            2
+                                        )}">
+												0.00 </span>
+
+										</strong>
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+						<!-- Observación -->
+						<div class="detalle-card mb-4">
+
+							<h4 class="mb-3">Observación de la entrega</h4>
+
+							<div class="alert alert-light border mb-0">
+
+								<span
+									th:text="${entrega.observacion != null
+                                and !#strings.isEmpty(entrega.observacion)
+                                ? entrega.observacion
+                                : 'Sin observaciones registradas'}">
+
+									Sin observaciones registradas </span>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<!-- COLUMNA DERECHA -->
+					<div class="col-xl-4 col-lg-5">
+
+						<!-- Resumen de pago -->
+						<div class="detalle-card mb-4">
+
+							<h4 class="mb-3">Estado del pago</h4>
+
+							<div class="resumen-pago">
+
+								<div class="resumen-linea">
+
+									<span> Total del pedido </span> <strong> $ <span
+										th:text="${#numbers.formatDecimal(
+                                        totalPedido,
+                                        1,
+                                        2
+                                    )}">
+											0.00 </span>
+
+									</strong>
+
+								</div>
+
+								<div class="resumen-linea">
+
+									<span> Total registrado </span> <strong> $ <span
+										th:text="${#numbers.formatDecimal(
+                                        totalRegistrado,
+                                        1,
+                                        2
+                                    )}">
+											0.00 </span>
+
+									</strong>
+
+								</div>
+
+								<div class="resumen-linea">
+
+									<span> Total aprobado </span> <strong class="text-success">
+
+										$ <span
+										th:text="${#numbers.formatDecimal(
+                                        totalAprobado,
+                                        1,
+                                        2
+                                    )}">
+											0.00 </span>
+
+									</strong>
+
+								</div>
+
+								<hr>
+
+								<div class="resumen-linea">
+
+									<strong> Saldo pendiente </strong> <strong
+										th:classappend="${pagoCompleto
+                                    ? 'text-success'
+                                    : 'text-danger'}">
+
+										$ <span
+										th:text="${#numbers.formatDecimal(
+                                        saldoPendiente,
+                                        1,
+                                        2
+                                    )}">
+											0.00 </span>
+
+									</strong>
+
+								</div>
+
+							</div>
+
+							<div class="alert alert-warning mt-3 mb-0"
+								th:if="${!pagoCompleto}">
+
+								<i class="lni lni-warning me-1"></i> Para finalizar la entrega
+								debe aprobarse el saldo restante.
+
+							</div>
+
+							<div class="alert alert-success mt-3 mb-0"
+								th:if="${pagoCompleto}">
+
+								<i class="lni lni-checkmark-circle me-1"></i> El pedido está
+								pagado completamente.
+
+							</div>
+
+						</div>
+
+						<!-- Comprobantes -->
+						<div class="detalle-card mb-4">
+
+							<div
+								class="d-flex justify-content-between
+                                    align-items-center mb-3">
+
+								<h4 class="mb-0">Comprobantes</h4>
+
+								<span class="badge bg-primary"
+									th:text="${comprobantes != null
+                                      ? #lists.size(comprobantes)
+                                        + ' pago(s)'
+                                      : '0 pago(s)'}">
+
+									0 pago(s) </span>
+
+							</div>
+
+							<!-- Sin comprobantes -->
+							<div class="comprobante-vacio"
+								th:if="${comprobantes == null
+                                or #lists.isEmpty(comprobantes)}">
+
+								<i class="lni lni-image"></i>
+
+								<h5 class="mt-3">No existen comprobantes</h5>
+
+								<p class="text-muted mb-0">Todavía no se han registrado
+									pagos.</p>
+
+							</div>
+
+							<!-- Lista -->
+							<div
+								th:if="${comprobantes != null
+                                and !#lists.isEmpty(comprobantes)}">
+
+								<div class="pago-card" th:each="pago : ${comprobantes}">
+
+									<div
+										class="d-flex justify-content-between
+                                            align-items-start mb-2">
+
+										<div>
+
+											<strong> Pago # <span
+												th:text="${pago.idComprobante}"> 0 </span>
+
+											</strong> <small class="text-muted d-block"
+												th:text="${pago.fechaSubida != null
+                                                   ? #dates.format(
+                                                       pago.fechaSubida,
+                                                       'dd/MM/yyyy HH:mm'
+                                                   )
+                                                   : 'Sin fecha'}">
+
+												Sin fecha </small>
+
+										</div>
+
+										<span th:if="${pago.idEstado == 2}" class="badge bg-success">
+
+											Aprobado </span> <span th:if="${pago.idEstado == 3}"
+											class="badge bg-danger"> Rechazado </span> <span
+											th:if="${pago.idEstado == 4}"
+											class="badge bg-warning text-dark"> Pendiente </span>
+
+									</div>
+
+									<div class="d-flex justify-content-between mb-2">
+
+										<span class="text-muted"> Tipo </span> <strong
+											th:text="${pago.tipoPago}"> PAGO_FINAL </strong>
+
+									</div>
+
+									<div class="d-flex justify-content-between mb-3">
+
+										<span class="text-muted"> Monto </span> <strong
+											class="text-success"> $ <span
+											th:text="${#numbers.formatDecimal(
+                                            pago.monto,
+                                            1,
+                                            2
+                                        )}">
+												0.00 </span>
+
+										</strong>
+
+									</div>
+
+									<div class="alert alert-light border py-2"
+										th:if="${pago.observacion != null
+                                        and !#strings.isEmpty(
+                                            pago.observacion
+                                        )}">
+
+										<small th:text="${pago.observacion}"> Observación </small>
+
+									</div>
+
+									<a
+										th:if="${pago.archivoUrl != null
+                                        and !#strings.isEmpty(
+                                            pago.archivoUrl
+                                        )}"
+										th:href="${'http://localhost:8080'
+                                       + pago.archivoUrl}"
+										target="_blank" class="btn btn-outline-primary btn-sm w-100">
+
+										<i class="lni lni-eye me-1"></i> Ver comprobante
+
+									</a>
+
+									<!-- Aprobar comprobante pendiente -->
+									<form th:if="${pago.idEstado == 4}"
+										th:action="@{/entregas/{idEntrega}/comprobante/{idComprobante}/aprobar(
+                                          idEntrega=${entrega.idEntrega},
+                                          idComprobante=${pago.idComprobante}
+                                      )}"
+										method="post" class="mt-2 no-imprimir">
+
+										<button type="submit" class="btn btn-success btn-sm w-100"
+											onclick="return confirm(
+                                                '¿Desea aprobar este comprobante?'
+                                            )">
+
+											<i class="lni lni-checkmark-circle me-1"></i> Aprobar pago
+
+										</button>
+
+									</form>
+
+								</div>
+
+							</div>
+
+						</div>
+
+						<!-- Registrar pago restante -->
+						<div class="detalle-card mb-4 no-imprimir"
+							th:if="${!pagoCompleto}">
+
+							<h4 class="mb-2">Registrar pago restante</h4>
+
+							<div class="bloque-pago-pendiente mb-3">
+
+								Saldo pendiente: <strong class="text-danger"> $ <span
+									th:text="${#numbers.formatDecimal(
+                                    saldoPendiente,
+                                    1,
+                                    2
+                                )}">
+										0.00 </span>
+
+								</strong>
+
+							</div>
+
+							<form
+								th:action="@{/entregas/{idEntrega}/comprobante(
+                                idEntrega=${entrega.idEntrega}
+                            )}"
+								method="post" enctype="multipart/form-data">
+
+								<div class="mb-3">
+
+									<label for="archivoPago" class="form-label fw-semibold">
+
+										Comprobante del pago <span class="text-danger">*</span>
+
+									</label> <input type="file" id="archivoPago" name="archivo"
+										class="form-control" accept="image/jpeg,image/png,image/webp"
+										required> <small class="text-muted"> JPG, PNG
+										o WEBP. Máximo 5 MB. </small>
+
+								</div>
+
+								<div id="contenedorVistaPago" class="mb-3 d-none">
+
+									<img id="vistaPago" class="vista-previa"
+										alt="Vista previa del comprobante">
+
+								</div>
+
+								<div class="mb-3">
+
+									<label for="montoPago" class="form-label fw-semibold">
+
+										Valor recibido <span class="text-danger">*</span>
+
+									</label>
+
+									<div class="input-group">
+
+										<span class="input-group-text"> $ </span> <input type="number"
+											id="montoPago" name="monto" class="form-control" min="0.01"
+											step="0.01" th:max="${saldoPendiente}"
+											th:value="${saldoPendiente}" required>
+
+									</div>
+
+								</div>
+
+								<div class="mb-3">
+
+									<label for="observacionPago" class="form-label fw-semibold">
+
+										Observación </label>
+
+									<textarea id="observacionPago" name="observacion"
+										class="form-control" rows="3" maxlength="500"
+										placeholder="Información del pago restante"></textarea>
+
+								</div>
+
+								<button type="submit" class="btn btn-primary w-100">
+
+									<i class="lni lni-upload me-1"></i> Guardar pago restante
+
+								</button>
+
+							</form>
+
+						</div>
+
+						<!-- Finalizar entrega -->
+						<div class="detalle-card mb-4 no-imprimir"
+							th:if="${pagoCompleto
+                            and entrega.idEstado != 16
+                            and entrega.idEstado != 19}">
+
+							<h4 class="mb-3">Finalizar entrega</h4>
+
+							<div class="bloque-finalizacion mb-3">
+
+								<i class="lni lni-checkmark-circle me-1"></i> El saldo se
+								encuentra completamente pagado. Registre la evidencia para
+								cerrar la entrega.
+
+							</div>
+
+							<form
+								th:action="@{/entregas/{idEntrega}/finalizar(
+                                idEntrega=${entrega.idEntrega}
+                            )}"
+								method="post" enctype="multipart/form-data">
+
+								<div class="mb-3">
+
+									<label for="evidencia" class="form-label fw-semibold">
+
+										Evidencia de entrega <span class="text-danger">*</span>
+
+									</label> <input type="file" id="evidencia" name="evidencia"
+										class="form-control" accept="image/jpeg,image/png,image/webp"
+										required> <small class="text-muted">
+										Fotografía de la entrega realizada. </small>
+
+								</div>
+
+								<div id="contenedorVistaEvidencia" class="mb-3 d-none">
+
+									<img id="vistaEvidencia" class="vista-previa"
+										alt="Vista previa de evidencia">
+
+								</div>
+
+								<div class="mb-3">
+
+									<label for="recibidoPor" class="form-label fw-semibold">
+
+										Recibido por <span class="text-danger">*</span>
+
+									</label> <input type="text" id="recibidoPor" name="recibidoPor"
+										class="form-control" maxlength="100"
+										placeholder="Nombre de la persona que recibió" required>
+
+								</div>
+
+								<div class="mb-3">
+
+									<label for="observacionFinal" class="form-label fw-semibold">
+
+										Observación final </label>
+
+									<textarea id="observacionFinal" name="observacion"
+										class="form-control" rows="3" maxlength="500"
+										placeholder="Información adicional de la entrega"></textarea>
+
+								</div>
+
+								<button type="submit" class="btn btn-success w-100"
+									onclick="return confirm(
+                                        '¿Está seguro de finalizar esta entrega?'
+                                    )">
+
+									<i class="lni lni-checkmark-circle me-1"></i> Finalizar entrega
+
+								</button>
+
+							</form>
+
+						</div>
+
+						<!-- Gestión de la entrega -->
+						<div class="detalle-card mb-4 acciones-entrega no-imprimir"
+							th:if="${entrega.idEstado != 16
+                            and entrega.idEstado != 17
+                            and entrega.idEstado != 19}">
+
+							<h4 class="mb-3">Gestión de la entrega</h4>
+
+							<!-- Programar -->
+							<form
+								th:if="${entrega.idEstado == 13
+                                or entrega.idEstado == 18}"
+								th:action="@{/entregas/{idEntrega}/programar(
+                                  idEntrega=${entrega.idEntrega}
+                              )}"
+								method="post">
+
+								<input type="hidden" name="observacion"
+									value="Entrega programada para despacho">
+
+								<button type="submit" class="btn btn-outline-primary"
+									onclick="return confirm(
+                                        '¿Desea programar esta entrega?'
+                                    )">
+
+									<i class="lni lni-calendar me-1"></i> Programar entrega
+
+								</button>
+
+							</form>
+
+							<!-- En ruta -->
+							<form th:if="${entrega.idEstado == 14}"
+								th:action="@{/entregas/{idEntrega}/en-ruta(
+                                  idEntrega=${entrega.idEntrega}
+                              )}"
+								method="post">
+
+								<input type="hidden" name="observacion"
+									value="El pedido salió a ruta de entrega">
+
+								<button type="submit" class="btn btn-outline-success"
+									onclick="return confirm(
+                                        '¿Desea marcar esta entrega como en ruta?'
+                                    )">
+
+									<i class="lni lni-car me-1"></i> Marcar en ruta
+
+								</button>
+
+							</form>
+
+							<!-- Reprogramar -->
+							<button type="button" class="btn btn-outline-warning"
+								data-bs-toggle="modal" data-bs-target="#modalReprogramar">
+
+								Reprogramar entrega</button>
+
+							<!-- No entregada -->
+							<button type="button" class="btn btn-outline-secondary"
+								data-bs-toggle="modal" data-bs-target="#modalNoEntregada">
+
+								Marcar como no entregada</button>
+
+							<!-- Cancelar -->
+							<button type="button" class="btn btn-outline-danger"
+								data-bs-toggle="modal" data-bs-target="#modalCancelarEntrega">
+
+								<i class="lni lni-close me-1"></i> Cancelar entrega
+
+							</button>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section>
+
+		<!-- Modal reprogramar -->
+		<div class="modal fade" id="modalReprogramar" tabindex="-1"
+			aria-hidden="true">
+
+			<div class="modal-dialog modal-dialog-centered">
+
+				<div class="modal-content">
+
+					<form
+						th:action="@{/entregas/{idEntrega}/reprogramar(
+                        idEntrega=${entrega.idEntrega}
+                    )}"
+						method="post">
+
+						<div class="modal-header">
+
+							<h5 class="modal-title">Reprogramar entrega</h5>
+
+							<button type="button" class="btn-close" data-bs-dismiss="modal">
+							</button>
+
+						</div>
+
+						<div class="modal-body">
+
+							<label class="form-label fw-semibold"> Motivo de la
+								reprogramación </label>
+
+							<textarea name="observacion" class="form-control" rows="4"
+								maxlength="500" required></textarea>
+
+						</div>
+
+						<div class="modal-footer">
+
+							<button type="button" class="btn btn-outline-secondary"
+								data-bs-dismiss="modal">Volver</button>
+
+							<button type="submit" class="btn btn-warning">Confirmar
+								reprogramación</button>
+
+						</div>
+
+					</form>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- Modal no entregada -->
+		<div class="modal fade" id="modalNoEntregada" tabindex="-1"
+			aria-hidden="true">
+
+			<div class="modal-dialog modal-dialog-centered">
+
+				<div class="modal-content">
+
+					<form
+						th:action="@{/entregas/{idEntrega}/no-entregada(
+                        idEntrega=${entrega.idEntrega}
+                    )}"
+						method="post">
+
+						<div class="modal-header">
+
+							<h5 class="modal-title">Marcar como no entregada</h5>
+
+							<button type="button" class="btn-close" data-bs-dismiss="modal">
+							</button>
+
+						</div>
+
+						<div class="modal-body">
+
+							<label class="form-label fw-semibold"> Motivo </label>
+
+							<textarea name="observacion" class="form-control" rows="4"
+								maxlength="500" required></textarea>
+
+						</div>
+
+						<div class="modal-footer">
+
+							<button type="button" class="btn btn-outline-secondary"
+								data-bs-dismiss="modal">Volver</button>
+
+							<button type="submit" class="btn btn-secondary">
+
+								Confirmar</button>
+
+						</div>
+
+					</form>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- Modal cancelar entrega -->
+		<div class="modal fade" id="modalCancelarEntrega" tabindex="-1"
+			aria-hidden="true">
+
+			<div class="modal-dialog modal-dialog-centered">
+
+				<div class="modal-content">
+
+					<form
+						th:action="@{/entregas/{idEntrega}/cancelar(
+                        idEntrega=${entrega.idEntrega}
+                    )}"
+						method="post">
+
+						<div class="modal-header">
+
+							<h5 class="modal-title">Cancelar entrega</h5>
+
+							<button type="button" class="btn-close" data-bs-dismiss="modal">
+							</button>
+
+						</div>
+
+						<div class="modal-body">
+
+							<div class="alert alert-warning">Esta acción cambiará el
+								estado de la entrega a cancelada.</div>
+
+							<label class="form-label fw-semibold"> Motivo de
+								cancelación <span class="text-danger">*</span>
+
+							</label>
+
+							<textarea name="observacion" class="form-control" rows="4"
+								maxlength="500" required></textarea>
+
+						</div>
+
+						<div class="modal-footer">
+
+							<button type="button" class="btn btn-outline-secondary"
+								data-bs-dismiss="modal">Volver</button>
+
+							<button type="submit" class="btn btn-danger">Confirmar
+								cancelación</button>
+
+						</div>
+
+					</form>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<!-- Vista previa -->
+		<script>
+			document
+					.addEventListener(
+							"DOMContentLoaded",
+							function() {
+
+								configurarVistaPrevia("archivoPago",
+										"vistaPago", "contenedorVistaPago");
+
+								configurarVistaPrevia("evidencia",
+										"vistaEvidencia",
+										"contenedorVistaEvidencia");
+
+								function configurarVistaPrevia(inputId,
+										imagenId, contenedorId) {
+
+									const input = document
+											.getElementById(inputId);
+
+									const imagen = document
+											.getElementById(imagenId);
+
+									const contenedor = document
+											.getElementById(contenedorId);
+
+									if (!input || !imagen || !contenedor) {
+										return;
+									}
+
+									input
+											.addEventListener(
+													"change",
+													function() {
+
+														const archivo = input.files[0];
+
+														if (!archivo) {
+
+															contenedor.classList
+																	.add("d-none");
+
+															return;
+														}
+
+														const permitidos = [
+																"image/jpeg",
+																"image/png",
+																"image/webp" ];
+
+														if (!permitidos
+																.includes(archivo.type)) {
+
+															alert("Seleccione una imagen JPG, PNG o WEBP.");
+
+															input.value = "";
+
+															contenedor.classList
+																	.add("d-none");
+
+															return;
+														}
+
+														if (archivo.size > 5 * 1024 * 1024) {
+
+															alert("La imagen no puede superar los 5 MB.");
+
+															input.value = "";
+
+															contenedor.classList
+																	.add("d-none");
+
+															return;
+														}
+
+														imagen.src = URL
+																.createObjectURL(archivo);
+
+														contenedor.classList
+																.remove("d-none");
+													});
+								}
+							});
+		</script>
+
+	</div>
+
+</body>
+</html>

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.uisrael.pedidosweb.model.dto.request.CambiarEstadoPedidoRequestDto;
 import com.uisrael.pedidosweb.model.dto.request.PedidoRequestDto;
 import com.uisrael.pedidosweb.model.dto.response.PedidoResponseDto;
 import com.uisrael.pedidosweb.services.IPedidoService;
@@ -70,5 +71,12 @@ public class PedidoServiceImpl implements IPedidoService {
 
 		return webClient.get().uri("/pedidos/{idPedido}", idPedido).retrieve().bodyToMono(PedidoResponseDto.class)
 				.block();
+	}
+
+	@Override
+	public PedidoResponseDto cambiarEstado(int idPedido, CambiarEstadoPedidoRequestDto request) {
+
+		return webClient.put().uri("/pedidos/{idPedido}/estado", idPedido).bodyValue(request).retrieve()
+				.bodyToMono(PedidoResponseDto.class).block();
 	}
 }

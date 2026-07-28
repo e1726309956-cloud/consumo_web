@@ -13,9 +13,13 @@ public class PedidoResponseDto {
 	private String observacion;
 	private Double total;
 	private String nombreUsuario;
+	private String apellidoCliente;
 	private int idEstado;
 	private int idUsuario;
 	private List<DetallePedidoResponseDto> detalles;
 	private String nombreCliente;
 	private String celularCliente;
+	
+	private String nombreEstado;
+	private String tipoEstado;
 }

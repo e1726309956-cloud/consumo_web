@@ -13,4 +13,5 @@ public interface ICategoriaService {
     void activarCategoria(int idCategoria);
     CategoriaResponseDto buscarPorId(int idCategoria);
     void actualizarCategoria(CategoriaRequestDto categoria);
+    List<CategoriaResponseDto> listarActivas();
 }
