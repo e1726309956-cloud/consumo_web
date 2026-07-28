@@ -1,10 +1,9 @@
-package com.uisrael.pedidosweb.modelo.dt.request;
+package com.uisrael.pedidosweb.model.dto.response;
 
 import lombok.Data;
 
 @Data
-public class DetallePedidoRequestDto {
-
+public class DetallePedidoResponseDto {
 	private int idDetallePedido;
 	private int cantidad;
 	private double precioUnitario;
@@ -12,4 +11,5 @@ public class DetallePedidoRequestDto {
 	private int idProducto;
 	private int idPedido;
 	
+
 }

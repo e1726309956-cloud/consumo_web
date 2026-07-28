@@ -4,8 +4,11 @@
 	layout:decorate="plantilla/plantillaui">
 
 <head>
+
 <meta charset="UTF-8">
+
 <title>Listado de pedidos</title>
+
 </head>
 
 <body>
@@ -17,38 +20,119 @@
 			<div class="container-fluid">
 
 				<!-- Encabezado -->
-				<div class="title-wrapper pt-30 mb-4">
+				<div class="title-wrapper pt-30 mb-3">
 
-					<div class="row align-items-center">
+					<div
+						class="d-flex justify-content-between
+                            align-items-center
+                            flex-wrap
+                            gap-2">
 
-						<div class="col-md-7">
+						<h2 class="mb-0"
+							th:text="${session.rolUsuario == 'CLIENTE'
+                            ? 'Mis pedidos'
+                            : 'Pedidos'}">
 
-							<h2>Pedidos</h2>
+							Pedidos</h2>
 
-							<p class="text-muted mb-0"
-								th:text="${session.rolUsuario == 'ADMINISTRADOR'
-                               ? 'Consulta y administra los pedidos realizados por los clientes.'
-                               : 'Consulta los pedidos que has realizado y su estado actual.'}">
+						<a th:if="${session.rolUsuario == 'CLIENTE'}"
+							th:href="@{/catalogo}" class="btn btn-outline-primary btn-sm">
 
-								Consulta los pedidos registrados.</p>
+							<i class="lni lni-arrow-left me-1"></i> Volver al catálogo
+
+						</a>
+
+					</div>
+
+				</div>
+
+				<!-- Confirmación completa del pedido -->
+				<div class="alert alert-success border"
+					th:if="${pedidoConfirmado != null}">
+
+					<div class="d-flex align-items-start gap-3">
+
+						<div>
+
+							<i class="lni lni-checkmark-circle" style="font-size: 42px;"></i>
 
 						</div>
 
-						<div class="col-md-5 text-md-end mt-3 mt-md-0">
+						<div class="flex-grow-1">
 
-							<!-- Cliente -->
-							<a th:if="${session.rolUsuario == 'CLIENTE'}"
-								th:href="@{/catalogo}" class="btn btn-outline-primary"> <i
-								class="lni lni-arrow-left me-1"></i> Volver al catálogo
+							<h5 class="mb-2">¡Pedido generado correctamente!</h5>
 
-							</a>
+							<p class="mb-2">
 
-							<!-- Administrador -->
-							<a th:if="${session.rolUsuario == 'ADMINISTRADOR'}"
-								th:href="@{/}" class="btn btn-outline-secondary"> <i
-								class="lni lni-dashboard me-1"></i> Ir al dashboard
+								Tu pedido fue registrado con el número <strong
+									class="text-primary"> # <span
+									th:text="${pedidoConfirmado.idPedido}"> 0 </span>
 
-							</a>
+								</strong>
+
+							</p>
+
+							<div class="row g-3 mb-3">
+
+								<div class="col-md-4">
+
+									<small class="text-muted d-block"> Total </small> <strong
+										class="text-success"> $ <span
+										th:text="${pedidoConfirmado.total != null
+                                        ? #numbers.formatDecimal(
+                                            pedidoConfirmado.total,
+                                            1,
+                                            2
+                                        )
+                                        : '0.00'}">
+
+											0.00 </span>
+
+									</strong>
+
+								</div>
+
+								<div class="col-md-4">
+
+									<small class="text-muted d-block"> Fecha de entrega </small> <strong
+										th:text="${pedidoConfirmado.fechaEntrega != null
+                                    ? #dates.format(
+                                        pedidoConfirmado.fechaEntrega,
+                                        'dd/MM/yyyy HH:mm'
+                                    )
+                                    : 'Por definir'}">
+
+										Por definir </strong>
+
+								</div>
+
+								<div class="col-md-4">
+
+									<small class="text-muted d-block"> Estado inicial </small> <span
+										class="badge bg-warning text-dark"> Pendiente de
+										confirmación </span>
+
+								</div>
+
+							</div>
+
+							<div class="d-flex flex-wrap gap-2">
+
+								<a
+									th:href="@{/pedidos/detalle/{idPedido}(
+                                    idPedido=${pedidoConfirmado.idPedido}
+                                )}"
+									class="btn btn-success btn-sm"> <i class="lni lni-eye me-1"></i>
+
+									Ver detalle
+
+								</a> <a th:href="@{/catalogo}"
+									class="btn btn-outline-success btn-sm"> <i
+									class="lni lni-shopping-basket me-1"></i> Seguir comprando
+
+								</a>
+
+							</div>
 
 						</div>
 
@@ -56,20 +140,35 @@
 
 				</div>
 
-				<!-- Mensajes -->
-				<div class="alert alert-success" th:if="${mensaje}"
+				<!-- Mensaje simple de éxito -->
+				<div class="alert alert-success"
+					th:if="${mensaje != null
+                    and pedidoConfirmado == null}"
 					th:text="${mensaje}">Operación realizada correctamente.</div>
 
-				<div class="alert alert-danger" th:if="${error}" th:text="${error}">
+				<!-- Mensaje de advertencia -->
+				<div class="alert alert-warning" th:if="${advertencia != null}">
 
-					No fue posible realizar la operación.</div>
+					<i class="lni lni-warning me-1"></i> <span th:text="${advertencia}">
+
+						El pedido fue generado, pero ocurrió una advertencia. </span>
+
+				</div>
+
+				<!-- Mensaje de error -->
+				<div class="alert alert-danger" th:if="${error != null}"
+					th:text="${error}">No fue posible realizar la operación.</div>
 
 				<!-- Tarjeta principal -->
 				<div class="card-style mb-30">
 
+					<!-- Título y contador -->
 					<div
 						class="d-flex justify-content-between
-                            align-items-center flex-wrap gap-3 mb-4">
+                            align-items-center
+                            flex-wrap
+                            gap-3
+                            mb-4">
 
 						<div>
 
@@ -90,12 +189,14 @@
 						</div>
 
 						<span class="badge bg-primary" th:if="${listapedido != null}"
-							th:text="${#lists.size(listapedido) + ' pedido(s)'}"> 0
-							pedidos </span>
+							th:text="${#lists.size(listapedido)
+                              + ' pedido(s)'}">
+
+							0 pedido(s) </span>
 
 					</div>
 
-					<!-- Filtro visual -->
+					<!-- Buscador y filtro -->
 					<div class="row mb-4">
 
 						<div class="col-lg-5 col-md-7">
@@ -110,7 +211,7 @@
 									class="lni lni-search-alt"></i>
 
 								</span> <input type="text" id="buscarPedido" class="form-control"
-									placeholder="Buscar por número, dirección o estado">
+									placeholder="Buscar por número, dirección u observación">
 
 							</div>
 
@@ -124,11 +225,15 @@
 
 								<option value="">Todos</option>
 
-								<option value="pendiente">Pendiente</option>
+								<option value="1">Pendiente de confirmación</option>
 
-								<option value="preparacion">En preparación</option>
+								<option value="2">En preparación</option>
 
-								<option value="entregado">Entregado</option>
+								<option value="3">Listo para entrega</option>
+
+								<option value="4">Entregado</option>
+
+								<option value="5">Cancelado</option>
 
 							</select>
 
@@ -136,7 +241,7 @@
 
 					</div>
 
-					<!-- Sin pedidos -->
+					<!-- Mensaje cuando no hay pedidos -->
 					<div class="alert alert-light border text-center py-5"
 						th:if="${listapedido == null
                         or #lists.isEmpty(listapedido)}">
@@ -180,6 +285,10 @@
 
 									<th>Pedido</th>
 
+									<th th:if="${session.rolUsuario == 'ADMINISTRADOR'}">
+										Cliente</th>
+
+
 									<th>Fecha del pedido</th>
 
 									<th>Fecha de entrega</th>
@@ -201,35 +310,36 @@
 							<tbody>
 
 								<tr th:each="pedido : ${listapedido}"
-									th:attr="data-estado=${pedido.estado != null
-                                    ? #strings.toLowerCase(pedido.estado)
-                                    : ''}">
+									th:attr="data-estado=${pedido.idEstado}">
 
-									<!-- Número -->
+									<!-- Número de pedido -->
 									<td><span class="fw-semibold text-primary"> # <span
 											th:text="${pedido.idPedido}"> 1 </span>
 
 									</span></td>
 
-									<!-- Fecha pedido -->
+									<td th:if="${session.rolUsuario == 'ADMINISTRADOR'}"><span
+										th:text="${pedido.nombreCliente}"> Cliente </span></td>
+										
+									<!-- Fecha del pedido -->
 									<td><i class="lni lni-calendar me-1 text-primary"></i> <span
 										th:text="${pedido.fechaPedido != null
-                                        ? #dates.format(
-                                            pedido.fechaPedido,
-                                            'dd/MM/yyyy HH:mm'
-                                        )
-                                        : 'Sin fecha'}">
+                                    ? #dates.format(
+                                        pedido.fechaPedido,
+                                        'dd/MM/yyyy HH:mm'
+                                    )
+                                    : 'Sin fecha'}">
 
-											26/07/2026 10:00 </span></td>
+											Sin fecha </span></td>
 
-									<!-- Fecha entrega -->
+									<!-- Fecha de entrega -->
 									<td><span
 										th:text="${pedido.fechaEntrega != null
-                                        ? #dates.format(
-                                            pedido.fechaEntrega,
-                                            'dd/MM/yyyy'
-                                        )
-                                        : 'Por definir'}">
+                                    ? #dates.format(
+                                        pedido.fechaEntrega,
+                                        'dd/MM/yyyy'
+                                    )
+                                    : 'Por definir'}">
 
 											Por definir </span></td>
 
@@ -240,11 +350,13 @@
 
 											<i class="lni lni-map-marker me-1 text-danger"></i> <span
 												th:text="${pedido.direccionEntrega != null
-                                            and !#strings.isEmpty(pedido.direccionEntrega)
-                                            ? pedido.direccionEntrega
-                                            : 'Sin dirección'}">
+                                        and !#strings.isEmpty(
+                                            pedido.direccionEntrega
+                                        )
+                                        ? pedido.direccionEntrega
+                                        : 'Sin dirección'}">
 
-												Dirección </span>
+												Sin dirección </span>
 
 										</div>
 
@@ -253,64 +365,93 @@
 									<!-- Observación -->
 									<td><span
 										th:if="${pedido.observacion != null
-                                            and !#strings.isEmpty(pedido.observacion)}"
+                                    and !#strings.isEmpty(
+                                        pedido.observacion
+                                    )}"
 										th:text="${pedido.observacion}"> Observación </span> <span
 										class="text-muted"
 										th:unless="${pedido.observacion != null
-                                            and !#strings.isEmpty(pedido.observacion)}">
+                                        and !#strings.isEmpty(
+                                            pedido.observacion
+                                        )}">
 
 											Sin observaciones </span></td>
 
 									<!-- Total -->
 									<td><strong class="text-success"> $ <span
-											th:text="${#numbers.formatDecimal(
+											th:text="${pedido.total != null
+                                        ? #numbers.formatDecimal(
                                             pedido.total,
                                             1,
                                             2
-                                        )}">
+                                        )
+                                        : '0.00'}">
 
 												0.00 </span>
 
 									</strong></td>
 
 									<!-- Estado -->
-									<td><span th:if="${pedido.estado != null}" class="badge"
-										th:classappend="${#strings.equalsIgnoreCase(
-                                              pedido.estado,
-                                              'ENTREGADO'
-                                          )}
-                                              ? ' bg-success'
-                                              : (${#strings.containsIgnoreCase(
-                                                  pedido.estado,
-                                                  'PREPAR'
-                                              )}
-                                                  ? ' bg-warning text-dark'
-                                                  : ' bg-secondary')"
-										th:text="${pedido.estado}"> Pendiente </span> <span
-										th:unless="${pedido.estado != null}"
-										class="badge bg-secondary"> Sin estado </span></td>
+									<td>
+
+										<div th:switch="${pedido.idEstado}">
+
+											<span th:case="1" class="badge bg-warning text-dark">
+
+												Pendiente de confirmación </span> <span th:case="2"
+												class="badge bg-info text-dark"> En preparación </span> <span
+												th:case="3" class="badge bg-primary"> Listo para
+												entrega </span> <span th:case="4" class="badge bg-success">
+
+												Entregado </span> <span th:case="5" class="badge bg-danger">
+
+												Cancelado </span> <span th:case="*" class="badge bg-secondary">
+
+												Estado ID: <span th:text="${pedido.idEstado}"> 0 </span>
+
+											</span>
+
+										</div>
+
+									</td>
 
 									<!-- Acciones -->
 									<td class="text-center">
 										<!-- Ver detalle --> <a
 										th:href="@{/pedidos/detalle/{idPedido}(
-                                            idPedido=${pedido.idPedido}
-                                        )}"
+                                        idPedido=${pedido.idPedido}
+                                    )}"
 										class="btn btn-outline-primary btn-sm me-1"
 										title="Ver detalle"> <i class="lni lni-eye"></i>
 
-									</a> <!-- Historial --> <a
-										th:href="@{/pedidos/historial/{idPedido}(
-                                            idPedido=${pedido.idPedido}
-                                        )}"
-										class="btn btn-outline-secondary btn-sm me-1"
-										title="Ver historial"> <i class="lni lni-timer"></i>
+									</a> <!-- WhatsApp --> <a
+										th:if="${session.rolUsuario == 'ADMINISTRADOR'
+        and pedido.celularCliente != null
+        and !#strings.isEmpty(pedido.celularCliente)}"
+										th:href="${'https://wa.me/'
+        + (pedido.celularCliente.startsWith('0')
+            ? '593'
+              + #strings.substring(
+                    pedido.celularCliente,
+                    1
+                )
+            : pedido.celularCliente)
+        + '?text=Hola%20'
+        + (pedido.nombreCliente != null
+            ? pedido.nombreCliente
+            : '')
+        + ',%20nos%20comunicamos%20para%20coordinar%20la%20entrega%20de%20su%20pedido%20%23'
+        + pedido.idPedido
+        + '.%20Por%20favor,%20compártanos%20su%20ubicación%20o%20confirme%20la%20dirección%20de%20entrega.'}"
+										target="_blank" class="btn btn-success btn-sm me-1"
+										title="Contactar por WhatsApp"> <i
+											class="lni lni-whatsapp"></i>
 
 									</a> <!-- Editar solo administrador --> <a
 										th:if="${session.rolUsuario == 'ADMINISTRADOR'}"
 										th:href="@{/pedidos/editar/{idPedido}(
-                                            idPedido=${pedido.idPedido}
-                                        )}"
+                                        idPedido=${pedido.idPedido}
+                                    )}"
 										class="btn btn-outline-warning btn-sm" title="Editar pedido">
 
 											<i class="lni lni-pencil"></i>
@@ -333,64 +474,68 @@
 
 		</section>
 
+		<!-- JavaScript del buscador y filtro -->
+		<script>
+			document
+					.addEventListener(
+							"DOMContentLoaded",
+							function() {
+
+								const buscar = document
+										.getElementById("buscarPedido");
+
+								const filtroEstado = document
+										.getElementById("filtroEstado");
+
+								const filas = document
+										.querySelectorAll("#tablaPedidos tbody tr");
+
+								function filtrarPedidos() {
+
+									const texto = buscar ? buscar.value
+											.toLowerCase().trim() : "";
+
+									const estado = filtroEstado ? filtroEstado.value
+											.trim()
+											: "";
+
+									filas
+											.forEach(function(fila) {
+
+												const contenido = fila.textContent
+														.toLowerCase().trim();
+
+												const estadoFila = fila.dataset.estado ? fila.dataset.estado
+														.trim()
+														: "";
+
+												const coincideTexto = contenido
+														.includes(texto);
+
+												const coincideEstado = estado === ""
+														|| estadoFila === estado;
+
+												fila.style.display = coincideTexto
+														&& coincideEstado ? ""
+														: "none";
+											});
+								}
+
+								if (buscar) {
+
+									buscar.addEventListener("input",
+											filtrarPedidos);
+								}
+
+								if (filtroEstado) {
+
+									filtroEstado.addEventListener("change",
+											filtrarPedidos);
+								}
+							});
+		</script>
+
 	</div>
-
-	<!-- Filtro visual -->
-	<script>
-
-    document.addEventListener("DOMContentLoaded", function () {
-
-        const buscar =
-            document.getElementById("buscarPedido");
-
-        const filtroEstado =
-            document.getElementById("filtroEstado");
-
-        const filas =
-            document.querySelectorAll("#tablaPedidos tbody tr");
-
-        function filtrarPedidos() {
-
-            const texto =
-                buscar.value.toLowerCase().trim();
-
-            const estado =
-                filtroEstado.value.toLowerCase().trim();
-
-            filas.forEach(function (fila) {
-
-                const contenido =
-                    fila.textContent.toLowerCase();
-
-                const estadoFila =
-                    fila.dataset.estado || "";
-
-                const coincideTexto =
-                    contenido.includes(texto);
-
-                const coincideEstado =
-                    estado === ""
-                    || estadoFila.includes(estado);
-
-                fila.style.display =
-                    coincideTexto && coincideEstado
-                    ? ""
-                    : "none";
-            });
-        }
-
-        buscar?.addEventListener(
-            "input",
-            filtrarPedidos
-        );
-
-        filtroEstado?.addEventListener(
-            "change",
-            filtrarPedidos
-        );
-    });
-
-</script>
 
 </body>
 </html>

@@ -1,10 +1,19 @@
 package com.uisrael.pedidosweb.services;
 
 import java.util.List;
-import com.uisrael.pedidosweb.modelo.dt.request.ComprobantePagoRequestDto;
-import com.uisrael.pedidosweb.modelo.dt.response.ComprobantePagoResponseDto;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.uisrael.pedidosweb.model.dto.request.ComprobantePagoRequestDto;
+import com.uisrael.pedidosweb.model.dto.response.ComprobantePagoResponseDto;
 
 public interface IComprobantePagoService {
-    List<ComprobantePagoResponseDto> listarComprobantesPago();
-    Void guardarComprobantePago(ComprobantePagoRequestDto nuevo);
+	List<ComprobantePagoResponseDto> listarComprobantesPago();
+
+	Void guardarComprobantePago(ComprobantePagoRequestDto nuevo);
+
+	ComprobantePagoResponseDto buscarPorPedido(int idPedido);
+
+	ComprobantePagoResponseDto subirComprobante(int idPedido, MultipartFile archivo, String tipoPago, Double monto,
+			String observacion);
 }

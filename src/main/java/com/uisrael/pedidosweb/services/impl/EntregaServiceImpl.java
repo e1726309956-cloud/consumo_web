@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import com.uisrael.pedidosweb.modelo.dt.request.EntregaRequestDto;
-import com.uisrael.pedidosweb.modelo.dt.response.EntregaResponseDto;
+import com.uisrael.pedidosweb.model.dto.request.EntregaRequestDto;
+import com.uisrael.pedidosweb.model.dto.response.EntregaResponseDto;
 import com.uisrael.pedidosweb.services.IEntregaService;
 
 @Service

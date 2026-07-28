@@ -1,4 +1,4 @@
-package com.uisrael.pedidosweb.modelo.dt.response;
+package com.uisrael.pedidosweb.model.dto.response;
 
 import java.util.Date;
 import lombok.Data;

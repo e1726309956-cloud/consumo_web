@@ -1,6 +1,7 @@
-package com.uisrael.pedidosweb.modelo.dt.response;
+package com.uisrael.pedidosweb.model.dto.response;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 @Data
@@ -14,4 +15,7 @@ public class PedidoResponseDto {
 	private String nombreUsuario;
 	private int idEstado;
 	private int idUsuario;
+	private List<DetallePedidoResponseDto> detalles;
+	private String nombreCliente;
+	private String celularCliente;
 }

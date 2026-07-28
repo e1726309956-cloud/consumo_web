@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.uisrael.pedidosweb.modelo.dt.request.EntregaRequestDto;
+import com.uisrael.pedidosweb.model.dto.request.EntregaRequestDto;
 import com.uisrael.pedidosweb.services.IEntregaService;
 import com.uisrael.pedidosweb.services.IEstadosGeneralesService;
 import com.uisrael.pedidosweb.services.IPedidoService;

@@ -1,4 +1,4 @@
-package com.uisrael.pedidosweb.modelo.dt.request;
+package com.uisrael.pedidosweb.model.dto.request;
 
 import java.util.Date;
 

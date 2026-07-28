@@ -1,8 +1,9 @@
 package com.uisrael.pedidosweb.services;
 
 import java.util.List;
-import com.uisrael.pedidosweb.modelo.dt.request.EstadosGeneralesRequestDto;
-import com.uisrael.pedidosweb.modelo.dt.response.EstadosGeneralesResponseDto;
+
+import com.uisrael.pedidosweb.model.dto.request.EstadosGeneralesRequestDto;
+import com.uisrael.pedidosweb.model.dto.response.EstadosGeneralesResponseDto;
 
 public interface IEstadosGeneralesService {
     List<EstadosGeneralesResponseDto> listarEstadosGenerales();

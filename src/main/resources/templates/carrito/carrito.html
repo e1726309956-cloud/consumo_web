@@ -4,9 +4,14 @@
 	layout:decorate="plantilla/plantillaui">
 
 <head>
+
 <meta charset="UTF-8">
-<title>Categorias</title>
-<link rel="stylesheet" href="../assets/css/categoria.css">
+
+<title>Mi carrito</title>
+
+<link rel="stylesheet" th:href="@{/assets/css/categoria.css}"
+	href="/assets/css/categoria.css">
+
 </head>
 
 <body>
@@ -33,7 +38,7 @@
 
 						<div class="col-md-6 text-md-end mt-3 mt-md-0">
 
-							<a th:href="@{/producto}" class="btn btn-outline-primary"> <i
+							<a th:href="@{/catalogo}" class="btn btn-outline-primary"> <i
 								class="lni lni-arrow-left me-1"></i> Seguir comprando
 
 							</a>
@@ -43,6 +48,14 @@
 					</div>
 
 				</div>
+
+				<!-- Mensaje de éxito -->
+				<div class="alert alert-success" th:if="${mensaje != null}"
+					th:text="${mensaje}">Operación realizada correctamente.</div>
+
+				<!-- Mensaje de error -->
+				<div class="alert alert-danger" th:if="${error != null}"
+					th:text="${error}">No fue posible realizar la operación.</div>
 
 				<!-- Carrito vacío -->
 				<div class="card-style text-center py-5"
@@ -55,7 +68,7 @@
 					<p class="text-muted">Agrega arreglos florales o dulces desde
 						el catálogo.</p>
 
-					<a th:href="@{/producto}" class="btn btn-primary mt-2"> <i
+					<a th:href="@{/catalogo}" class="btn btn-primary mt-2"> <i
 						class="lni lni-shopping-basket me-1"></i> Ver productos
 
 					</a>
@@ -63,7 +76,9 @@
 				</div>
 
 				<!-- Carrito con productos -->
-				<div th:if="${carrito != null and !#lists.isEmpty(carrito)}">
+				<div
+					th:if="${carrito != null
+                    and !#lists.isEmpty(carrito)}">
 
 					<div class="row">
 
@@ -91,11 +106,17 @@
 										<thead class="table-light">
 
 											<tr>
+
 												<th>Producto</th>
+
 												<th>Precio</th>
+
 												<th>Cantidad</th>
+
 												<th>Subtotal</th>
+
 												<th class="text-center">Acción</th>
+
 											</tr>
 
 										</thead>
@@ -109,22 +130,22 @@
 
 													<div
 														class="d-flex
-                                                            align-items-center
-                                                            gap-3">
+                                                        align-items-center
+                                                        gap-3">
 
 														<img
 															th:src="${item.imagenUrl != null
-                                                            and !#strings.isEmpty(item.imagenUrl)
-                                                            ? item.imagenUrl
-                                                            : '/assets/images/productos/sin-imagen.png'}"
+                                                        and !#strings.isEmpty(item.imagenUrl)
+                                                        ? item.imagenUrl
+                                                        : '/assets/images/productos/sin-imagen.png'}"
 															src="/assets/images/productos/sin-imagen.png"
 															th:alt="${item.nombre}" alt="Producto"
 															style="width: 85px; height: 85px; object-fit: cover; border-radius: 12px; border: 1px solid #e5e7eb;">
 
 														<div>
 
-															<h6 class="mb-1" th:text="${item.nombre}">Ramo de
-																rosas</h6>
+															<h6 class="mb-1" th:text="${item.nombre}">Nombre del
+																producto</h6>
 
 															<small class="text-muted"> Código: <span
 																th:text="${item.idProducto}"> 1 </span>
@@ -139,11 +160,14 @@
 
 												<!-- Precio -->
 												<td><span class="fw-semibold"> $ <span
-														th:text="${#numbers.formatDecimal(
+														th:text="${item.precio != null
+                                                        ? #numbers.formatDecimal(
                                                             item.precio,
                                                             1,
                                                             2
-                                                        )}">
+                                                        )
+                                                        : '0.00'}">
+
 															0.00 </span>
 
 												</span></td>
@@ -157,8 +181,8 @@
                                                     )}"
 														method="post"
 														class="d-flex
-                                                             align-items-center
-                                                             gap-2">
+                                                         align-items-center
+                                                         gap-2">
 
 														<input type="number" name="cantidad" min="0"
 															th:value="${item.cantidad}" class="form-control"
@@ -166,8 +190,8 @@
 
 														<button type="submit"
 															class="btn
-                                                                   btn-outline-primary
-                                                                   btn-sm"
+                                                               btn-outline-primary
+                                                               btn-sm"
 															title="Actualizar cantidad">
 
 															<i class="lni lni-reload"></i>
@@ -181,10 +205,11 @@
 												<!-- Subtotal -->
 												<td><strong class="text-primary"> $ <span
 														th:text="${#numbers.formatDecimal(
-                                                            item.subtotal,
-                                                            1,
-                                                            2
-                                                        )}">
+                                                        item.subtotal,
+                                                        1,
+                                                        2
+                                                    )}">
+
 															0.00 </span>
 
 												</strong></td>
@@ -192,15 +217,13 @@
 												<!-- Eliminar -->
 												<td class="text-center"><a
 													th:href="@{/carrito/eliminar/{idProducto}(
-                                                        idProducto=${item.idProducto}
-                                                    )}"
-													class="btn
-                                                          btn-outline-danger
-                                                          btn-sm"
+                                                    idProducto=${item.idProducto}
+                                                )}"
+													class="btn btn-outline-danger btn-sm"
 													title="Eliminar del carrito"
 													onclick="return confirm(
-                                                       '¿Deseas eliminar este producto del carrito?'
-                                                   )">
+                                                   '¿Deseas eliminar este producto del carrito?'
+                                               )">
 
 														<i class="lni lni-trash-can"></i>
 
@@ -218,27 +241,21 @@
 
 						</div>
 
-						<!-- Resumen -->
+						<!-- Resumen y generación del pedido -->
 						<div class="col-lg-4">
 
 							<div class="card-style mb-30">
 
 								<h4 class="mb-4">Resumen del pedido</h4>
 
-								<div
-									class="d-flex
-                                        justify-content-between
-                                        mb-3">
+								<div class="d-flex justify-content-between mb-3">
 
 									<span class="text-muted"> Cantidad de productos </span> <strong
 										th:text="${cantidadTotal}"> 0 </strong>
 
 								</div>
 
-								<div
-									class="d-flex
-                                        justify-content-between
-                                        mb-3">
+								<div class="d-flex justify-content-between mb-3">
 
 									<span class="text-muted"> Subtotal </span> <strong> $
 
@@ -248,16 +265,14 @@
                                             1,
                                             2
                                         )}">
+
 											0.00 </span>
 
 									</strong>
 
 								</div>
 
-								<div
-									class="d-flex
-                                        justify-content-between
-                                        mb-3">
+								<div class="d-flex justify-content-between mb-3">
 
 									<span class="text-muted"> Envío </span> <span
 										class="text-success fw-semibold"> Por definir </span>
@@ -267,10 +282,8 @@
 								<hr>
 
 								<div
-									class="d-flex
-                                        justify-content-between
-                                        align-items-center
-                                        mb-4">
+									class="d-flex justify-content-between
+                                        align-items-center mb-4">
 
 									<h5 class="mb-0">Total estimado</h5>
 
@@ -282,17 +295,87 @@
                                             1,
                                             2
                                         )}">
+
 											0.00 </span>
 
 									</h4>
 
 								</div>
 
-								<a th:href="@{/pedido/confirmar}" class="btn btn-primary w-100">
+								<!-- Formulario para generar el pedido -->
+								<form th:action="@{/carrito/generar}" method="post"
+									enctype="multipart/form-data">
 
-									<i class="lni lni-checkmark-circle me-1"></i> Generar pedido
+									<!-- Fecha de entrega -->
+									<div class="mb-3">
 
-								</a> <a th:href="@{/carrito/vaciar}"
+										<label for="fechaEntrega" class="form-label fw-semibold">
+
+											Fecha y hora de entrega <span class="text-danger"> * </span>
+
+										</label> <input type="datetime-local" id="fechaEntrega"
+											name="fechaEntrega" class="form-control" required>
+
+									</div>
+
+									<!-- Dirección de entrega -->
+									<div class="mb-3">
+
+										<label for="direccionEntrega" class="form-label fw-semibold">
+
+											Dirección de entrega <span class="text-danger"> * </span>
+
+										</label>
+
+										<textarea id="direccionEntrega" name="direccionEntrega"
+											class="form-control" rows="3" minlength="5" maxlength="500"
+											placeholder="Ingrese la dirección completa" required></textarea>
+
+									</div>
+
+									<!-- Observación -->
+									<div class="mb-3">
+
+										<label for="observacion" class="form-label fw-semibold">
+
+											Observación <span class="text-muted fw-normal">
+												(opcional) </span>
+
+										</label>
+
+										<textarea id="observacion" name="observacion"
+											class="form-control" rows="2" maxlength="500"
+											placeholder="Indicaciones adicionales para la entrega"></textarea>
+
+									</div>
+
+									<!-- Comprobante -->
+									<div class="mb-4">
+
+										<label for="comprobante" class="form-label fw-semibold">
+
+											Comprobante de pago <span class="text-muted fw-normal">
+												(opcional) </span>
+
+										</label> <input type="file" id="comprobante" name="comprobante"
+											class="form-control"
+											accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+
+										<small class="text-muted"> Formatos permitidos: JPG,
+											PNG o WEBP. Máximo 5 MB. </small>
+
+									</div>
+
+									<button type="submit" class="btn btn-primary w-100">
+
+										<i class="lni lni-checkmark-circle me-1"></i> Generar pedido
+
+									</button>
+
+								</form>
+
+								<!-- Vaciar carrito -->
+								<a th:href="@{/carrito/vaciar}"
 									class="btn btn-outline-danger w-100 mt-3"
 									onclick="return confirm(
                                    '¿Deseas eliminar todos los productos del carrito?'
@@ -313,6 +396,67 @@
 			</div>
 
 		</section>
+
+		<!-- Validaciones del formulario -->
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+
+				const fechaEntrega = document.getElementById("fechaEntrega");
+
+				const comprobante = document.getElementById("comprobante");
+
+				/*
+				 * Impide seleccionar una fecha
+				 * anterior a la fecha actual.
+				 */
+				if (fechaEntrega) {
+
+					const ahora = new Date();
+
+					ahora.setMinutes(ahora.getMinutes()
+							- ahora.getTimezoneOffset());
+
+					fechaEntrega.min = ahora.toISOString().slice(0, 16);
+				}
+
+				/*
+				 * Validación básica del comprobante
+				 * antes de enviar el formulario.
+				 */
+				if (comprobante) {
+
+					comprobante.addEventListener("change", function() {
+
+						const archivo = comprobante.files[0];
+
+						if (!archivo) {
+							return;
+						}
+
+						const tiposPermitidos = [ "image/jpeg", "image/png",
+								"image/webp" ];
+
+						const limite = 5 * 1024 * 1024;
+
+						if (!tiposPermitidos.includes(archivo.type)) {
+
+							alert("El comprobante debe ser JPG, PNG o WEBP.");
+
+							comprobante.value = "";
+
+							return;
+						}
+
+						if (archivo.size > limite) {
+
+							alert("El comprobante no puede superar los 5 MB.");
+
+							comprobante.value = "";
+						}
+					});
+				}
+			});
+		</script>
 
 	</div>
 

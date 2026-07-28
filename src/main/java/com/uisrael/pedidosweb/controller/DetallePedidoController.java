@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.uisrael.pedidosweb.modelo.dt.request.DetallePedidoRequestDto;
-import com.uisrael.pedidosweb.modelo.dt.response.DetallePedidoResponseDto;
+import com.uisrael.pedidosweb.model.dto.request.DetallePedidoRequestDto;
+import com.uisrael.pedidosweb.model.dto.response.DetallePedidoResponseDto;
 import com.uisrael.pedidosweb.services.IDetallePedidoService;
 
 import org.springframework.ui.Model;

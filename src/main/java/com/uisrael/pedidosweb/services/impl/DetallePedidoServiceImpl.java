@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.uisrael.pedidosweb.modelo.dt.request.DetallePedidoRequestDto;
-import com.uisrael.pedidosweb.modelo.dt.response.DetallePedidoResponseDto;
+import com.uisrael.pedidosweb.model.dto.request.DetallePedidoRequestDto;
+import com.uisrael.pedidosweb.model.dto.response.DetallePedidoResponseDto;
 import com.uisrael.pedidosweb.services.IDetallePedidoService;
 
 @Service

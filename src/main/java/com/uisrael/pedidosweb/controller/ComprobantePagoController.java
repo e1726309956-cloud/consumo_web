@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.uisrael.pedidosweb.modelo.dt.request.ComprobantePagoRequestDto;
-import com.uisrael.pedidosweb.modelo.dt.response.ComprobantePagoResponseDto;
+import com.uisrael.pedidosweb.model.dto.request.ComprobantePagoRequestDto;
+import com.uisrael.pedidosweb.model.dto.response.ComprobantePagoResponseDto;
 import com.uisrael.pedidosweb.services.IComprobantePagoService;
+
+
 
 @Controller
 // Acepta tanto /comprobantespago como /comprobantesPago para evitar errores de tipeo
@@ -39,4 +41,5 @@ public class ComprobantePagoController {
         servicioComprobantePago.guardarComprobantePago(comprobantePago);
         return "redirect:/comprobantespago";
     }
+    
 }

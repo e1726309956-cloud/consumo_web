@@ -4,8 +4,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.uisrael.pedidosweb.modelo.dt.request.EstadosGeneralesRequestDto;
-import com.uisrael.pedidosweb.modelo.dt.response.EstadosGeneralesResponseDto;
+import com.uisrael.pedidosweb.model.dto.request.EstadosGeneralesRequestDto;
+import com.uisrael.pedidosweb.model.dto.response.EstadosGeneralesResponseDto;
 import com.uisrael.pedidosweb.services.IEstadosGeneralesService;
 
 @Service
