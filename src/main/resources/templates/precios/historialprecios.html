@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="plantilla/plantillaui">
+
+<head>
+<meta charset="UTF-8">
+<title>Gestión de precios</title>
+</head>
+
+<body>
+
+	<div layout:fragment="contenidopaginas">
+
+		<section class="section">
+
+			<div class="container-fluid">
+
+				<div class="pt-30 mb-3">
+
+					<a th:href="@{/producto}"> <i class="lni lni-arrow-left me-1"></i>
+						Volver a productos
+					</a>
+
+				</div>
+
+				<div class="card-style mb-4">
+
+					<h3 class="mb-1">Gestión de precio</h3>
+
+					<p class="text-muted">
+						Producto: <strong th:text="${producto.nombre}"> Producto
+						</strong>
+					</p>
+
+					<div class="alert alert-success" th:if="${mensaje != null}"
+						th:text="${mensaje}"></div>
+
+					<div class="alert alert-danger" th:if="${error != null}"
+						th:text="${error}"></div>
+
+					<div class="alert alert-info" th:if="${precioActivo != null}">
+
+						Precio vigente: <strong> $ <span
+							th:text="${#numbers.formatDecimal(
+                            precioActivo.precio,
+                            1,
+                            2
+                        )}">
+								0.00 </span>
+						</strong>
+
+					</div>
+
+					<div class="alert alert-warning" th:if="${precioActivo == null}">
+
+						El producto todavía no tiene un precio activo.</div>
+
+					<form
+						th:action="@{/precios/producto/{idProducto}(
+                        idProducto=${producto.idProducto}
+                    )}"
+						method="post">
+
+						<div class="mb-3">
+
+							<label for="precio" class="form-label"> Nuevo precio </label> <input
+								type="number" id="precio" name="precio" class="form-control"
+								min="0.01" step="0.01" placeholder="0.00" required>
+
+						</div>
+
+						<button type="submit" class="btn btn-success">Guardar
+							nuevo precio</button>
+
+					</form>
+
+				</div>
+
+				<div class="card-style">
+
+					<h4 class="mb-3">Historial de precios</h4>
+
+					<div class="alert alert-light border"
+						th:if="${historialPrecios == null
+                        or #lists.isEmpty(historialPrecios)}">
+
+						No existen precios registrados.</div>
+
+					<div class="table-responsive"
+						th:if="${historialPrecios != null
+                        and !#lists.isEmpty(historialPrecios)}">
+
+						<table class="table align-middle">
+
+							<thead>
+
+								<tr>
+									<th>Precio</th>
+									<th>Fecha inicio</th>
+									<th>Fecha fin</th>
+									<th>Estado</th>
+								</tr>
+
+							</thead>
+
+							<tbody>
+
+								<tr th:each="precio : ${historialPrecios}">
+
+									<td>$ <span
+										th:text="${#numbers.formatDecimal(
+                                        precio.precio,
+                                        1,
+                                        2
+                                    )}">
+											0.00 </span>
+									</td>
+
+									<td
+										th:text="${precio.fechaInicio != null
+									    ? #dates.format(precio.fechaInicio, 'dd/MM/yyyy HH:mm')
+									    : 'Sin fecha'}">
+									</td>
+
+									<td
+																			th:text="${precio.fechaFin != null
+									    ? #dates.format(precio.fechaFin, 'dd/MM/yyyy HH:mm')
+									    : 'Vigente'}">
+									</td>
+
+									<td><span th:if="${precio.activo}"
+										class="badge bg-success"> Vigente </span> <span
+										th:unless="${precio.activo}" class="badge bg-secondary">
+
+											Histórico </span></td>
+
+								</tr>
+
+							</tbody>
+
+						</table>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section>
+
+	</div>
+
+</body>
+</html>

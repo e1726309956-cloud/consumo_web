@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.uisrael.pedidosweb.model.dto.request.CambiarEstadoPedidoRequestDto;
 import com.uisrael.pedidosweb.model.dto.request.PedidoRequestDto;
+import com.uisrael.pedidosweb.model.dto.response.ErrorApiResponseDto;
 import com.uisrael.pedidosweb.model.dto.response.PedidoResponseDto;
 import com.uisrael.pedidosweb.services.IPedidoService;
 
@@ -30,9 +31,41 @@ public class PedidoServiceImpl implements IPedidoService {
 	}
 
 	@Override
-	public PedidoResponseDto guardarpedido(PedidoRequestDto nuevo) {
+	public PedidoResponseDto guardarpedido(PedidoRequestDto pedido) {
 
-		return webClient.post().uri("/pedidos").contentType(MediaType.APPLICATION_JSON).bodyValue(nuevo).retrieve()
+		return webClient.post().uri("/pedidos").bodyValue(pedido).retrieve()
+
+				.onStatus(status -> status.value() == 409,
+						response -> response.bodyToMono(ErrorApiResponseDto.class).flatMap(error -> {
+
+							String mensaje = error.getMensaje() != null && !error.getMensaje().isBlank()
+									? error.getMensaje()
+									: "Uno de los productos ya no tiene stock suficiente.";
+
+							return reactor.core.publisher.Mono.error(new RuntimeException(mensaje));
+						}))
+
+				.onStatus(status -> status.is4xxClientError(),
+						response -> response.bodyToMono(ErrorApiResponseDto.class).flatMap(error -> {
+
+							String mensaje = error.getMensaje() != null && !error.getMensaje().isBlank()
+									? error.getMensaje()
+									: "No fue posible generar el pedido.";
+
+							return reactor.core.publisher.Mono.error(new RuntimeException(mensaje));
+						}))
+
+				.onStatus(status -> status.is5xxServerError(),
+						response -> response.bodyToMono(ErrorApiResponseDto.class)
+								.defaultIfEmpty(new ErrorApiResponseDto()).flatMap(error -> {
+
+									String mensaje = error.getMensaje() != null && !error.getMensaje().isBlank()
+											? error.getMensaje()
+											: "El servidor no pudo procesar el pedido. Intente nuevamente.";
+
+									return reactor.core.publisher.Mono.error(new RuntimeException(mensaje));
+								}))
+
 				.bodyToMono(PedidoResponseDto.class).block();
 	}
 

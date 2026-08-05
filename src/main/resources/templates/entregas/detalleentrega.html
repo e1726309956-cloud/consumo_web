@@ -154,6 +154,33 @@
 	padding: 16px;
 }
 
+.imagen-producto-entrega {
+	width: 60px;
+	height: 60px;
+	object-fit: cover;
+	border-radius: 8px;
+	border: 1px solid #e5e7eb;
+	background: #f8fafc;
+	flex-shrink: 0;
+}
+
+.imagen-producto-entrega-vacia {
+	width: 60px;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	border: 1px solid #e5e7eb;
+	background: #f8fafc;
+	color: #64748b;
+	flex-shrink: 0;
+}
+
+.imagen-producto-entrega-vacia i {
+	font-size: 25px;
+}
+
 @media ( max-width : 991px) {
 	.detalle-card {
 		padding: 18px;
@@ -566,10 +593,52 @@
 
 										<tr th:each="detalle : ${entrega.detalles}">
 
-											<td><strong> Producto # <span
-													th:text="${detalle.idProducto}"> 0 </span>
+											<td>
 
-											</strong></td>
+												<div class="d-flex align-items-center gap-3">
+
+													<!-- Imagen real -->
+													<img
+														th:if="${detalle.imagenUrl != null
+					and !#strings.isEmpty(detalle.imagenUrl)}"
+														th:src="${detalle.imagenUrl}"
+														th:alt="${detalle.nombreProducto != null
+					? detalle.nombreProducto
+					: 'Producto'}"
+														class="imagen-producto-entrega">
+
+													<!-- Ícono alternativo si no existe imagen -->
+													<div
+														th:if="${detalle.imagenUrl == null
+					or #strings.isEmpty(detalle.imagenUrl)}"
+														class="imagen-producto-entrega-vacia">
+
+														<i class="lni lni-image"></i>
+
+													</div>
+
+													<div>
+
+														<strong class="d-block"
+															th:text="${detalle.nombreProducto != null
+																and !#strings.isEmpty(detalle.nombreProducto)
+																? detalle.nombreProducto
+																: 'Producto #' + detalle.idProducto}">
+
+															Nombre del producto </strong> <small class="text-muted d-block">
+
+															Código: <span th:text="${detalle.idProducto}"> 0 </span>
+
+														</small> <small class="text-muted d-block"> Detalle: <span
+															th:text="${detalle.idDetallePedido}"> 0 </span>
+
+														</small>
+
+													</div>
+
+												</div>
+
+											</td>
 
 											<td class="text-center" th:text="${detalle.cantidad}">0
 

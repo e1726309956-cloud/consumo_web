@@ -36,130 +36,86 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public String iniciarSesion(
-	        @ModelAttribute("login") LoginRequestDto login,
-	        HttpSession session,
-	        RedirectAttributes redirectAttributes) {
+	public String iniciarSesion(@ModelAttribute("login") LoginRequestDto login, HttpSession session,
+			RedirectAttributes redirectAttributes) {
 
-	    try {
+		try {
 
-	        UsuarioResponseDto usuario =
-	                usuarioService.iniciarSesion(login);
+			UsuarioResponseDto usuario = usuarioService.iniciarSesion(login);
 
-	        if (usuario == null) {
+			if (usuario == null) {
 
-	            redirectAttributes.addFlashAttribute(
-	                    "error",
-	                    "No fue posible iniciar sesión"
-	            );
+				redirectAttributes.addFlashAttribute("error", "No fue posible iniciar sesión");
 
-	            return "redirect:/auth/login";
-	        }
+				return "redirect:/auth/login";
+			}
 
-	        if (!"true".equalsIgnoreCase(usuario.getEstado())) {
+			if (!"true".equalsIgnoreCase(usuario.getEstado())) {
 
-	            redirectAttributes.addFlashAttribute(
-	                    "error",
-	                    "El usuario se encuentra inactivo"
-	            );
+				redirectAttributes.addFlashAttribute("error", "El usuario se encuentra inactivo");
 
-	            return "redirect:/auth/login";
-	        }
+				return "redirect:/auth/login";
+			}
 
-	        if (usuario.getRoles() == null
-	                || usuario.getRoles().isEmpty()) {
+			if (usuario.getRoles() == null || usuario.getRoles().isEmpty()) {
 
-	            redirectAttributes.addFlashAttribute(
-	                    "error",
-	                    "El usuario no tiene un perfil asignado"
-	            );
+				redirectAttributes.addFlashAttribute("error", "El usuario no tiene un perfil asignado");
 
-	            return "redirect:/auth/login";
-	        }
+				return "redirect:/auth/login";
+			}
 
-	        String rol =
-	                usuario.getRoles()
-	                        .get(0)
-	                        .getNombre();
+			String rol = usuario.getRoles().get(0).getNombre();
 
-	        session.setAttribute(
-	                "usuarioSesion",
-	                usuario
-	        );
+			session.setAttribute("usuarioSesion", usuario);
 
-	        session.setAttribute(
-	                "idUsuario",
-	                usuario.getIdUsuario()
-	        );
+			session.setAttribute("idUsuario", usuario.getIdUsuario());
 
-	        session.setAttribute(
-	                "nombreUsuario",
-	                usuario.getNombre()
-	        );
+			session.setAttribute("nombreUsuario", usuario.getNombre());
 
-	        session.setAttribute(
-	                "rolUsuario",
-	                rol
-	        );
+			session.setAttribute("rolUsuario", rol);
 
-	        session.setAttribute(
-	                "correoUsuario",
-	                usuario.getCorreo()
-	        );
+			session.setAttribute("correoUsuario", usuario.getCorreo());
 
-	        if ("ADMINISTRADOR".equalsIgnoreCase(rol)) {
+			if ("ADMINISTRADOR".equalsIgnoreCase(rol)) {
 
-	            redirectAttributes.addFlashAttribute(
-	                    "mensaje",
-	                    "Bienvenido al panel administrativo"
-	            );
+				redirectAttributes.addFlashAttribute("mensaje", "Bienvenido al panel administrativo");
 
-	            return "redirect:/producto";
-	        }
+				return "redirect:/producto";
+			}
 
-	        if ("CLIENTE".equalsIgnoreCase(rol)) {
+			if ("CLIENTE".equalsIgnoreCase(rol)) {
 
-	            redirectAttributes.addFlashAttribute(
-	                    "mensaje",
-	                    "Bienvenido al catálogo"
-	            );
+				redirectAttributes.addFlashAttribute("mensaje", "Bienvenido al catálogo");
 
-	            return "redirect:/catalogo";
-	        }
+				return "redirect:/catalogo";
+			}
 
-	        session.invalidate();
+			session.invalidate();
 
-	        redirectAttributes.addFlashAttribute(
-	                "error",
-	                "El perfil del usuario no está autorizado"
-	        );
+			redirectAttributes.addFlashAttribute("error", "El perfil del usuario no está autorizado");
 
-	        return "redirect:/auth/login";
+			return "redirect:/auth/login";
 
-	    } catch (WebClientResponseException e) {
+		} catch (WebClientResponseException e) {
 
-	        redirectAttributes.addFlashAttribute(
-	                "error",
-	                "Correo o contraseña incorrectos"
-	        );
+			redirectAttributes.addFlashAttribute("error", "Correo o contraseña incorrectos");
 
-	        return "redirect:/auth/login";
+			return "redirect:/auth/login";
 
-	    } catch (Exception e) {
+		} catch (Exception e) {
 
-	        redirectAttributes.addFlashAttribute(
-	                "error",
-	                "No fue posible iniciar sesión"
-	        );
+			redirectAttributes.addFlashAttribute("error", "No fue posible iniciar sesión");
 
-	        return "redirect:/auth/login";
-	    }
+			return "redirect:/auth/login";
+		}
 	}
 
 	@GetMapping("/logout")
-	public String cerrarSesion(HttpSession session) {
+	public String cerrarSesion(HttpSession session, RedirectAttributes redirectAttributes) {
 
 		session.invalidate();
+
+		redirectAttributes.addFlashAttribute("mensaje", "Sesión cerrada correctamente");
 
 		return "redirect:/auth/login";
 	}
@@ -211,4 +167,5 @@ public class AuthController {
 			return "redirect:/auth/registro";
 		}
 	}
+
 }

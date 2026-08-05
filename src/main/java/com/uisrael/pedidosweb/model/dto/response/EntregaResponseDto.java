@@ -30,6 +30,9 @@ public class EntregaResponseDto {
     private String recibidoPor;
     private String evidenciaEntregaUrl;
     private String observacion;
+    
+    private String nombreProducto;
+    private String imagenUrl;
 
     private List<DetallePedidoResponseDto> detalles;
 }

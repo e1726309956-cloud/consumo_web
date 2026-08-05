@@ -11,5 +11,8 @@ public class DetallePedidoResponseDto {
 	private int idProducto;
 	private int idPedido;
 	
+	private String nombreProducto;
+	private String imagenUrl;
+	
 
 }

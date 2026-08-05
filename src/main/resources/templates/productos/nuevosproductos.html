@@ -79,10 +79,23 @@
 									<!-- Precio -->
 									<div class="col-md-6 mb-3">
 
-										<label for="precio" class="form-label"> Precio </label> <input
-											type="number" id="precio" class="form-control"
-											th:field="*{precio}" step="0.01" min="0.01"
-											placeholder="0.00" required>
+										<label for="precio" class="form-label"> Precio </label>
+
+										<!-- Producto nuevo: permite ingresar el precio inicial -->
+										<input th:if="${producto.idProducto == 0}" type="number"
+											id="precio" class="form-control" th:field="*{precio}"
+											step="0.01" min="0.01" placeholder="0.00" required>
+
+										<!-- Producto existente: solo muestra el precio -->
+										<input th:if="${producto.idProducto > 0}" type="number"
+											id="precio" class="form-control" th:field="*{precio}"
+											step="0.01" readonly> <small
+											th:if="${producto.idProducto > 0}" class="text-muted">
+
+											Para cambiar el precio, utiliza la opción <strong>Gestionar
+												precio</strong>.
+
+										</small>
 
 									</div>
 
@@ -148,7 +161,15 @@
 
 								<div class="d-flex justify-content-end gap-2">
 
-									<a th:href="@{/producto}" class="btn btn-secondary">
+									<!-- Gestionar precio: solo al editar -->
+									<a th:if="${producto.idProducto > 0}"
+																	th:href="@{/precios/producto/{idProducto}(
+							            idProducto=${producto.idProducto}
+							        	)}"
+										class="btn btn-success"> <i
+										class="lni lni-dollar me-1"></i> Gestionar precio
+
+									</a> <a th:href="@{/producto}" class="btn btn-secondary">
 										Cancelar </a>
 
 									<button type="submit" class="btn btn-primary"

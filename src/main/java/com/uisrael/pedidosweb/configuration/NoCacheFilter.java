@@ -1,0 +1,36 @@
+package com.uisrael.pedidosweb.configuration;
+
+import java.io.IOException;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@Component
+public class NoCacheFilter extends OncePerRequestFilter {
+
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+
+		String ruta = request.getRequestURI();
+
+		boolean recursoEstatico = ruta.startsWith("/assets/") || ruta.startsWith("/imagenes/")
+				|| ruta.equals("/favicon.ico");
+
+		if (!recursoEstatico) {
+
+			response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+
+			response.setHeader("Pragma", "no-cache");
+
+			response.setDateHeader("Expires", 0);
+		}
+
+		filterChain.doFilter(request, response);
+	}
+}

@@ -16,6 +16,7 @@ import com.uisrael.pedidosweb.model.dto.request.ProductoRequestDto;
 import com.uisrael.pedidosweb.model.dto.response.CategoriaResponseDto;
 import com.uisrael.pedidosweb.model.dto.response.ProductoResponseDto;
 import com.uisrael.pedidosweb.services.ICategoriaService;
+import com.uisrael.pedidosweb.services.IPrecioProductoService;
 import com.uisrael.pedidosweb.services.IProductoService;
 
 import jakarta.servlet.http.HttpSession;
@@ -26,11 +27,14 @@ public class ProductoController {
 
 	private final IProductoService servicioProducto;
 	private final ICategoriaService servicioCategoria;
+	private final IPrecioProductoService precioProductoService;
 
-	public ProductoController(IProductoService servicioProducto, ICategoriaService servicioCategoria) {
-
+	public ProductoController(IProductoService servicioProducto, ICategoriaService servicioCategoria,
+			IPrecioProductoService precioProductoService) {
+		super();
 		this.servicioProducto = servicioProducto;
 		this.servicioCategoria = servicioCategoria;
+		this.precioProductoService = precioProductoService;
 	}
 
 	@GetMapping

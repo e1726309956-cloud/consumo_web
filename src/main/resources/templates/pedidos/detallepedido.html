@@ -112,6 +112,14 @@
 	padding-top: 14px;
 }
 
+.imagen-producto-pedido{
+    width:60px;
+    height:60px;
+    object-fit:cover;
+    border-radius:8px;
+    border:1px solid #dee2e6;
+}
+
 .form-rechazo {
 	background: #fff7f7;
 	border: 1px solid #fecaca;
@@ -443,22 +451,40 @@
 
 												<div class="d-flex align-items-center gap-3">
 
-													<div
-														class="rounded bg-light
-                                                        d-flex align-items-center
-                                                        justify-content-center"
-														style="width: 58px; height: 58px;">
+													<!-- Imagen del producto -->
+													<img
+														th:if="${detalle.imagenUrl != null
+					and !#strings.isEmpty(detalle.imagenUrl)}"
+														th:src="${detalle.imagenUrl}"
+														th:alt="${detalle.nombreProducto != null
+					? detalle.nombreProducto
+					: 'Producto'}"
+														class="imagen-producto-pedido">
 
-														<i class="lni lni-package" style="font-size: 26px;"></i>
+													<!-- Imagen alternativa cuando no existe -->
+													<div
+														th:if="${detalle.imagenUrl == null
+					or #strings.isEmpty(detalle.imagenUrl)}"
+														class="imagen-producto-vacia">
+
+														<i class="lni lni-image"></i>
 
 													</div>
 
 													<div>
 
-														<strong> Producto # <span
-															th:text="${detalle.idProducto}"> 0 </span>
+														<!-- Nombre real -->
+														<strong class="d-block"
+															th:text="${detalle.nombreProducto != null
+						and !#strings.isEmpty(detalle.nombreProducto)
+						? detalle.nombreProducto
+						: 'Producto #' + detalle.idProducto}">
 
-														</strong> <small class="text-muted d-block"> Detalle # <span
+															Nombre del producto </strong> <small class="text-muted d-block">
+
+															Código: <span th:text="${detalle.idProducto}"> 0 </span>
+
+														</small> <small class="text-muted d-block"> Detalle: <span
 															th:text="${detalle.idDetallePedido}"> 0 </span>
 
 														</small>
